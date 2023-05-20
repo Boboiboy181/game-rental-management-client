@@ -9,4 +9,5 @@ signupbtn.onclick=function(){
 signinbtn.onclick=function(){
     formbox.classList.remove('active')
     body.classList.remove('active')
+    zzz
 }
