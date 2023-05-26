@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Nhập thông tin sản phẩm</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Phiếu nhập thông tin sản phẩm</h1>
+
+  <form id="product-form">
+    <label for="product-name">Tên game:</label>
+    <input type="text" id="product-name" name="product-name" placeholder="Tên game" required><br>
+
+    <label for="product-quantity">Số lượng sản phẩm:</label>
+    <input type="number" id="product-quantity" name="product-quantity" placeholder="Số lượng sản phẩm" required><br>
+
+    <label for="product-import-date">Ngày nhập hàng:</label>
+    <input type="date" id="product-import-date" name="product-import-date" required><br>
+
+    <label for="product-price">Giá tiền:</label>
+    <input type="number" id="product-price" name="product-price" placeholder="Giá tiền" required><br>
+
+    <label for="product-manufacturer">Nhà sản xuất:</label>
+    <input type="text" id="product-manufacturer" name="product-manufacturer" placeholder="Nhà sản xuất" required><br>
+
+    <label for="product-category">Thể loại:</label>
+    <input type="text" id="product-category" name="product-category" placeholder="Thể loại" required><br>
+
+    <label for="product-release-date">Ngày phát hành:</label>
+    <input type="date" id="product-release-date" name="product-release-date" required><br>
+
+    <label for="product-language">Ngôn ngữ:</label>
+    <input type="text" id="product-language" name="product-language" placeholder="Ngôn ngữ" required><br>
+
+    <label for="product-platform">Hệ máy:</label>
+    <input type="text" id="product-platform" name="product-platform" placeholder="Hệ máy" required><br>
+
+    <label for="product-description">Giới thiệu sản phẩm:</label>
+    <textarea id="product-description" name="product-description" placeholder="Giới thiệu sản phẩm" required></textarea><br>
+
+    <br>
+    <button type="submit">Thêm</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Tên game</th>
+        <th>Số lượng</th>
+        <th>Ngày nhập hàng</th>
+        <th>Giá tiền</th>
+        <th>Nhà sản xuất</th>
+        <th>Thể loại</th>
+        <th>Ngày phát hành</th>
+        <th>Ngôn ngữ</th>
+        <th>Hệ máy</th>
+        <th>Giới thiệu</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody id="product-table-body"></tbody>
+  </table>
+  <script src="product.js"></script>
+</body>
+</html>
