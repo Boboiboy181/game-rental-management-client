@@ -11,8 +11,7 @@ function addCustomer(event) {
   const phone = document.getElementById('phone').value;
   const address = document.getElementById('address').value;
   const gender = document.querySelector('input[name="gender"]:checked').value;
-  const ageGroup = document.querySelector('input[name="age-group"]:checked').value;
-
+  
   // Create a new customer object
   const customer = {
     fullName,
@@ -20,7 +19,6 @@ function addCustomer(event) {
     phone,
     address,
     gender,
-    ageGroup
   };
 
   // Add the customer to the array
@@ -34,12 +32,6 @@ function addCustomer(event) {
   document.getElementById('male').checked = false;
   document.getElementById('female').checked = false;
   document.getElementById('other').checked = false;
-  document.getElementById('age-group-1').checked = false;
-  document.getElementById('age-group-2').checked = false;
-  document.getElementById('age-group-3').checked = false;
-  document.getElementById('age-group-4').checked = false;
-
-  console.log('Customer added successfully:', customer);
 
   // Update the table to display the new customer
   displayCustomers();
@@ -52,6 +44,10 @@ function displayCustomers() {
 
   customers.forEach(function (customer, index) {
     const row = document.createElement('tr');
+
+    const sttCell = document.createElement('td');
+    sttCell.textContent = index + 1; // Add 1 to index for the serial number
+    row.appendChild(sttCell);
 
     const fullNameCell = document.createElement('td');
     fullNameCell.textContent = customer.fullName;
@@ -70,23 +66,34 @@ function displayCustomers() {
     row.appendChild(addressCell);
 
     const genderCell = document.createElement('td');
-    genderCell.textContent = customer.gender;
+    // Map the gender value to the desired display text
+    let genderText;
+    switch (customer.gender) {
+      case 'male':
+        genderText = 'Nam';
+        break;
+      case 'female':
+        genderText = 'Nữ';
+        break;
+      case 'other':
+        genderText = 'Khác';
+        break;
+      default:
+        genderText = '';
+    }
+    genderCell.textContent = genderText;
     row.appendChild(genderCell);
-
-    const ageGroupCell = document.createElement('td');
-    ageGroupCell.textContent = customer.ageGroup;
-    row.appendChild(ageGroupCell);
 
     const actionsCell = document.createElement('td');
     const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
+    deleteButton.textContent = 'Xóa';
     deleteButton.addEventListener('click', function () {
       showConfirmationDialog('delete', index);
     });
     actionsCell.appendChild(deleteButton);
 
     const updateButton = document.createElement('button');
-    updateButton.textContent = 'Update';
+    updateButton.textContent = 'Cập nhật';
     updateButton.addEventListener('click', function () {
       showConfirmationDialog('update', index);
     });
@@ -114,7 +121,7 @@ function showConfirmationDialog(action, index) {
 function deleteCustomer(index) {
   // Remove the customer at the given index from the array
   const deletedCustomer = customers.splice(index, 1);
-  console.log('Customer deleted successfully:', deletedCustomer[0]);
+  console.log('Xóa thông tin khách hàng thành công.', deletedCustomer[0]);
 
   // Update the table to reflect the changes
   displayCustomers();
@@ -131,7 +138,6 @@ function updateCustomer(index) {
   document.getElementById('phone').value = customer.phone;
   document.getElementById('address').value = customer.address;
   document.getElementById(customer.gender).checked = true;
-  document.getElementById('age-group-' + customer.ageGroup).checked = true;
 
   // Remove the customer from the array (optional)
   // customers.splice(index, 1);

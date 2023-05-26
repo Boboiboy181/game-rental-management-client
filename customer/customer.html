@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Customer Information Form</title>
+  <title>Nhập thông tin khách hàng</title>
   <style>
     table {
       border-collapse: collapse;
@@ -24,52 +24,43 @@
   </style>
 </head>
 <body>
-  <h1>Customer Information Form</h1>
+  <h1>Phiếu nhập thông tin khách hàng</h1>
 
   <form id="customer-form">
-    <label for="full-name">Full Name:</label>
-    <input type="text" id="full-name" name="full-name" placeholder="Enter your full name" required><br>
+    <label for="full-name">Tên khách hàng:</label>
+    <input type="text" id="full-name" name="full-name" placeholder="Họ và tên của khách hàng" required><br>
 
-    <label for="email">Email Address:</label>
-    <input type="email" id="email" name="email" placeholder="Enter your email address" required><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" placeholder="Địa chỉ email của khách hàng" required><br>
 
-    <label for="phone">Phone Number:</label>
-    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required><br>
+    <label for="phone">SĐT:</label>
+    <input type="tel" id="phone" name="phone" placeholder="SĐT của khách hàng" required><br>
 
-    <label for="address">Address:</label>
-    <input type="text" id="address" name="address" placeholder="Enter your address" required><br>
+    <label for="address">Địa chỉ</label>
+    <input type="text" id="address" name="address" placeholder="Địa chỉ của khách hàng" required><br>
 
-    <p>Please select your gender:</p>
+    <p>Giới tính của khách hàng là:</p>
     <input type="radio" id="male" name="gender" value="male">
-    <label for="male">Male</label><br>
+    <label for="male">Nam</label><br>
     <input type="radio" id="female" name="gender" value="female">
-    <label for="female">Female</label><br>
+    <label for="female">Nữ</label><br>
     <input type="radio" id="other" name="gender" value="other">
-    <label for="other">Other</label><br>
-
-    <p>Please select your age group:</p>
-    <input type="radio" id="age-group-1" name="age-group" value="18-24">
-    <label for="age-group-1">18-24</label><br>
-    <input type="radio" id="age-group-2" name="age-group" value="25-34">
-    <label for="age-group-2">25-34</label><br>
-    <input type="radio" id="age-group-3" name="age-group" value="35-44">
-    <label for="age-group-3">35-44</label><br>
-    <input type="radio" id="age-group-4" name="age-group" value="45+">
-    <label for="age-group-4">45+</label><br>
+    <label for="other">Khác</label><br>
 
     <br>
-    <button type="submit">Submit</button>
+    <button type="submit">Thêm</button>
   </form>
 
   <table>
     <thead>
       <tr>
-        <th>Full Name</th>
+        <th>STT</th>
+        <th>Họ và tên</th>
         <th>Email</th>
-        <th>Phone</th>
-        <th>Address</th>
-        <th>Gender</th>
-        <th>Age Group</th>
+        <th>SĐT</th>
+        <th>Địa chỉ</th>
+        <th>Giới tính</th>
+        <th>Hành động</th>
       </tr>
     </thead>
     <tbody id="customer-table-body"></tbody>
