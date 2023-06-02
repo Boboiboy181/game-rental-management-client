@@ -10,7 +10,8 @@ function addCustomer(event) {
   const email = document.getElementById('email').value;
   const phone = document.getElementById('phone').value;
   const address = document.getElementById('address').value;
-  const gender = document.querySelector('input[name="gender"]:checked').value;
+  const genderSelect = document.getElementById('gender');
+  const gender = genderSelect.options[genderSelect.selectedIndex].value;
   
   // Create a new customer object
   const customer = {
@@ -29,13 +30,17 @@ function addCustomer(event) {
   document.getElementById('email').value = '';
   document.getElementById('phone').value = '';
   document.getElementById('address').value = '';
-  document.getElementById('male').checked = false;
-  document.getElementById('female').checked = false;
-  document.getElementById('other').checked = false;
+  document.getElementById('gender').selectedIndex = 0;
 
   // Update the table to display the new customer
   displayCustomers();
 }
+
+// Rest of the code remains the same...
+
+
+  // Update the table to display the new customer
+  displayCustomers();
 
 // Function to display all customers in a table
 function displayCustomers() {

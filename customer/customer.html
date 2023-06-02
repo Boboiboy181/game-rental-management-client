@@ -38,14 +38,16 @@
 
     <label for="address">Địa chỉ</label>
     <input type="text" id="address" name="address" placeholder="Địa chỉ của khách hàng" required><br>
-
-    <p>Giới tính của khách hàng là:</p>
-    <input type="radio" id="male" name="gender" value="male">
-    <label for="male">Nam</label><br>
-    <input type="radio" id="female" name="gender" value="female">
-    <label for="female">Nữ</label><br>
-    <input type="radio" id="other" name="gender" value="other">
-    <label for="other">Khác</label><br>
+    <div>
+      <label for="gender" style="display: inline-block; vertical-align: middle;">
+        <p style="display: inline;">Giới tính của khách hàng là:</p>
+      </label>
+      <select id="gender" name="gender" style="display: inline-block; vertical-align: middle;">
+        <option value="male">Nam</option>
+        <option value="female">Nữ</option>
+        <option value="other">Khác</option>
+      </select>
+    </div><br>
 
     <br>
     <button type="submit">Thêm</button>
