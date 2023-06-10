@@ -1,7 +1,7 @@
 const App = () => {
   return (
-    <div className="h-full flex justify-center align-baseline">
-      <h1>Hello World</h1>
+    <div className="h-screen flex justify-center align-baseline">
+      <h1>Hello</h1>
     </div>
   );
 };
