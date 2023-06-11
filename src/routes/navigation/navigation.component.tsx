@@ -4,23 +4,26 @@ import { Link, Outlet } from 'react-router-dom';
 const Navigation = () => {
   return (
     <Fragment>
-      <div className="h-20 w-full flex justify-around items-center border-solid border-gray-300 border-b">
+      <div className="h-20 w-full flex justify-between px-14 items-center border-solid border-gray-300 border-b text-center">
         <input
           className="rounded-md border-2  bg-white px-2 py-1 focus:outline-none focus:border-indigo-500"
           type="search"
           placeholder="Search game"
         />
         <Link className="" to="/">
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center relative left-[-40px]">
             <img
               className="h-12 w-12"
               src="https://tailwindui.com/img/logos/mark.svg"
               alt="Tailwind CSS Logo"
             />
+            <p className="text-blue-700 font-cursive text-2xl ml-1">
+              Fanstactic
+            </p>
           </div>
         </Link>
         <Link className="" to="/checkout">
-          <button className="rounded-md bg-blue-500 text-white px-6 py-2 hover:bg-indigo-500 flex items-center justify-around w-full">
+          <button className="rounded-md bg-blue-600 text-white px-6 py-2 hover:bg-indigo-600 flex items-center justify-around w-full">
             Checkout
             <svg
               xmlns="http://www.w3.org/2000/svg"

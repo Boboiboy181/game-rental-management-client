@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 const Checkout = () => {
   return (
     <Fragment>
-      <div className="h-screen flex justify-between bg-slate-100 pt-16 px-8 pb-24 flex-wrap">
+      <div className="h-full flex justify-between pt-16 px-14 pb-24 flex-wrap">
         <div className="contact-information basis-[47.5%]">
           <h4 className="text-lg mb-4">Contact Information</h4>
           <form action="">
@@ -29,24 +29,86 @@ const Checkout = () => {
                 placeholder="Phone number"
               />
             </div>
+            <fieldset className="flex justify-between items-center">
+              <legend className="mb-3">
+                Please select your day of rental:
+              </legend>
+              <div>
+                <input
+                  className="appearance-none checked:bg-gray-300 mr-2"
+                  type="radio"
+                  name=""
+                  id="one-day"
+                />
+                <label htmlFor="one-day">1 day</label>
+              </div>
+              <div>
+                <input
+                  className="appearance-none checked:bg-gray-300 mr-2"
+                  type="radio"
+                  name=""
+                  id="three-day"
+                />
+                <label htmlFor="three-day">3 days</label>
+              </div>
+              <div>
+                <input
+                  className="appearance-none checked:bg-gray-300 mr-2"
+                  type="radio"
+                  name=""
+                  id="seven-days"
+                />
+                <label htmlFor="seven-days">7 days</label>
+              </div>
+              <div>
+                <input
+                  className="appearance-none checked:bg-gray-300 mr-2"
+                  type="radio"
+                  name=""
+                  id="fourteen-days"
+                />
+                <label htmlFor="fourteen-days">14 days</label>
+              </div>
+              <div>
+                <input
+                  className="appearance-none checked:bg-gray-300 mr-2"
+                  type="radio"
+                  name=""
+                  id="thirty-days"
+                />
+                <label htmlFor="thirty-days">30 days</label>
+              </div>
+              <div>
+                <input
+                  className="appearance-none checked:bg-gray-300 mr-2"
+                  type="radio"
+                  name=""
+                  id="sixty-days"
+                />
+                <label htmlFor="sixty-days">60 days</label>
+              </div>
+            </fieldset>
+            <button
+              className="rounded-md bg-blue-500 text-white px-6 py-2 transition duration-500 hover:bg-indigo-500 w-full mt-5"
+              type="submit"
+            >
+              Confirm order
+            </button>
           </form>
-          <button className="rounded-md bg-blue-500 text-white px-6 py-2 transition duration-500 hover:bg-indigo-500 w-full mt-5">
-            Confirm order
-          </button>
         </div>
         <div className="pre-order-summary basis-[47.5%]">
           <h4 className="text-xl mb-4">Order Summary</h4>
           <div className="bg-white border rounded-md overflow-hidden">
             <ul className="product-list">
-              <li className="flex border-b p-6">
-                <div className="image-container basis-[30%] rounded-md">
+              <li className="flex border-b p-6 justify-between">
+                <div className="image-container w-1/6 rounded-md h-1/6">
                   <img
-                    className="w-full overflow-hidden rounded-md"
+                    className="w-full h-full object-contain rounded-md"
                     src="https://res.cloudinary.com/dmiznj9ec/image/upload/v1686103577/m3xctcwzf0s2eaidkjbh.png"
                     alt="product-image"
                   />
                 </div>
-                <div className="product-description basis-[70%] pl-6">
+                <div className="product-description basis-[90%] pl-6">
                   <div className="flex justify-between">
                     <p className="text-lg">FIFA 22</p>
                     <svg
@@ -68,7 +130,7 @@ const Checkout = () => {
                   <p className="text-black/[.5] text-[14px]">
                     Language: English
                   </p>
-                  <div className="flex justify-between items-center mt-10">
+                  <div className="flex justify-between items-center mt-3">
                     <p>30.000</p>
                     <select name="" id="" className="rounded-md cursor-pointer">
                       <option value="1">1</option>
@@ -80,15 +142,15 @@ const Checkout = () => {
                   </div>
                 </div>
               </li>
-              <li className="flex border-b p-6">
-                <div className="image-container basis-[30%] rounded-md">
+              <li className="flex border-b p-6 justify-between">
+                <div className="image-container w-1/6 rounded-md h-1/6">
                   <img
-                    className="w-full overflow-hidden rounded-md"
+                    className="w-full h-full object-contain rounded-md"
                     src="https://res.cloudinary.com/dmiznj9ec/image/upload/v1686103577/m3xctcwzf0s2eaidkjbh.png"
                     alt="product-image"
                   />
                 </div>
-                <div className="product-description basis-[70%] pl-6">
+                <div className="product-description basis-[90%] pl-6">
                   <div className="flex justify-between">
                     <p className="text-lg">FIFA 22</p>
                     <svg
@@ -110,7 +172,7 @@ const Checkout = () => {
                   <p className="text-black/[.5] text-[14px]">
                     Language: English
                   </p>
-                  <div className="flex justify-between items-center mt-10">
+                  <div className="flex justify-between items-center mt-3">
                     <p>30.000</p>
                     <select name="" id="" className="rounded-md cursor-pointer">
                       <option value="1">1</option>

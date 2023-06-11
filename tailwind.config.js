@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Be Vietnam Pro', 'Poppins', 'sans-serif'],
+        cursive: ['Pacifico', 'cursive'],
       },
     },
   },
