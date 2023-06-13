@@ -1,19 +1,6 @@
 import { MouseEventHandler } from 'react';
 import ProductCard from './product-card.component';
-
-type Product = {
-  _id: string;
-  productName: string;
-  price: number;
-  quantity: number;
-  manufacturer: string;
-  genre: string;
-  releaseDate: string;
-  language: string;
-  system: string;
-  description: string;
-  imageUrl: string;
-};
+import { Product } from '../types/product.type.ts';
 
 type ProductListProps = {
   products: Product[];
