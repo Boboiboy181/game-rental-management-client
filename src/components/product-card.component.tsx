@@ -10,7 +10,7 @@ const ProductCard = ({ product, onClickHandler }: ProductCardProps) => {
   return (
     <div
       key={product._id}
-      className="w-1/5 text-center cursor-pointer transition duration-500 ease-in-out transform hover:-translate-y-2 hover:shadow-xl hover:rounded-md"
+      className="w-1/5 mb-3 text-center cursor-pointer transition duration-500 ease-in-out transform hover:-translate-y-2 hover:shadow-xl hover:rounded-md"
       onClick={onClickHandler(product._id)}
     >
       <div className="image-container w-[220px] h-[300px] overflow-hidden rounded-md m-auto">
