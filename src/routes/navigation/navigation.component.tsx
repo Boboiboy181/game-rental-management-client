@@ -14,10 +14,10 @@ const Navigation = () => {
           <div className="flex justify-center items-center relative left-[-40px]">
             <img
               className="h-12 w-12"
-              src="https://tailwindui.com/img/logos/mark.svg"
+              src="https://vitejs.dev/logo.svg"
               alt="Tailwind CSS Logo"
             />
-            <p className="text-blue-700 font-cursive text-2xl ml-1">
+            <p className="font-cursive text-3xl ml-1 bg-gradient-to-r text-transparent bg-clip-text from-cyan-500 to-purple-600">
               Fanstactic
             </p>
           </div>

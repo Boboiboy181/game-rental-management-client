@@ -1,6 +1,8 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 
 const Checkout = () => {
+  const [cart, setCart] = useState([]);
+
   return (
     <Fragment>
       <div className="h-full flex justify-between pt-16 px-14 pb-24 flex-wrap">
