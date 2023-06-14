@@ -1,40 +1,28 @@
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
-
-type Product = {
-  _id: string;
-  productName: string;
-  price: number;
-  quantity: number;
-  manufacturer: string;
-  genre: string;
-  releaseDate: string;
-  language: string;
-  system: string;
-  description: string;
-  imageUrl: string;
-};
+import { useContext, useEffect, useState } from 'react';
+import { CartContext } from '../contexts/cart.context.tsx';
+import { ProductQuantity } from '../types/product-quantity.type.ts';
 
 const ProductDetail = () => {
   const { productId } = useParams();
-  const [product, setProduct] = useState<Product>({} as Product);
+  const [product, setProduct] = useState<ProductQuantity>(
+    {} as ProductQuantity,
+  );
+  const { addItemToCart } = useContext(CartContext);
 
   // get product by id
   useEffect(() => {
     const fetchProduct = async () => {
-      const { data }: { data: Product } = await axios.get(
+      const { data }: { data: ProductQuantity } = await axios.get(
         `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${productId}`,
       );
       setProduct(data);
     };
-
     fetchProduct();
   }, [productId]);
 
-  const handleOnClick = () => {
-    alert('clicked');
-  };
+  const handleOnClick = () => addItemToCart(product);
 
   return (
     <div className="pt-16 px-14 pb-24">
