@@ -23,7 +23,7 @@ const addCartItem = (
   if (existingCartItem) {
     return cartItems.map((cartItem: ProductWithPreOrderQuantity) =>
       cartItem._id === productToAdd._id
-        ? { ...cartItem, quantity: cartItem.quantity + 1 }
+        ? { ...cartItem, preOrderQuantity: cartItem.preOrderQuantity + 1 }
         : cartItem,
     );
   }

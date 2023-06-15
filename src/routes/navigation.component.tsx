@@ -5,13 +5,13 @@ const Navigation = () => {
   return (
     <Fragment>
       <div className="h-20 w-full flex justify-between px-14 items-center border-solid border-gray-300 border-b text-center">
-        <input
+        {/* <input
           className="rounded-md border-2  bg-white px-2 py-1 focus:outline-none focus:border-indigo-500"
           type="search"
           placeholder="Search game"
-        />
+        /> */}
         <Link className="" to="/">
-          <div className="flex justify-center items-center relative left-[-40px]">
+          <div className="flex justify-center items-center relative">
             <img
               className="h-12 w-12"
               src="https://vitejs.dev/logo.svg"
@@ -22,6 +22,14 @@ const Navigation = () => {
             </p>
           </div>
         </Link>
+        {/* <nav>
+          <ul className="flex">
+            <li className="px-4">Our store</li>
+            <li className="px-4">Your Information</li>
+            <li className="px-4">Sign in</li>
+            <li className="px-4">Sign up</li>
+          </ul>
+        </nav> */}
         <Link className="" to="/checkout">
           <button className="rounded-md bg-blue-600 text-white px-6 py-2 hover:bg-indigo-600 flex items-center justify-around w-full">
             Checkout
