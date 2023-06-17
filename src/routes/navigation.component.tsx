@@ -4,14 +4,14 @@ import { Link, Outlet } from 'react-router-dom';
 const Navigation = () => {
   return (
     <Fragment>
-      <div className="h-20 w-full flex justify-between px-14 items-center border-solid border-gray-300 border-b text-center">
-        {/* <input
+      <div className="h-20 w-full flex justify-between px-16 items-center border-solid border-gray-300 border-b text-center">
+        <input
           className="rounded-md border-2  bg-white px-2 py-1 focus:outline-none focus:border-indigo-500"
           type="search"
           placeholder="Search game"
-        /> */}
+        />
         <Link className="" to="/">
-          <div className="flex justify-center items-center relative">
+          <div className="flex justify-center items-center relative right-9">
             <img
               className="h-12 w-12"
               src="https://vitejs.dev/logo.svg"

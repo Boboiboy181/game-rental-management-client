@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react';
-import { RentalDaysEnum } from '../enums/rental-days.enum';
 import axios from 'axios';
 import { PreOrder } from '../types/pre-order.type';
 import { CartContext } from '../contexts/cart.context';
@@ -7,13 +6,13 @@ import { CartContext } from '../contexts/cart.context';
 type FormFields = {
   customerName: string;
   phoneNumber: string;
-  numberOfRentalDays: RentalDaysEnum;
+  numberOfRentalDays: string;
 };
 
 const defaultFormFields: FormFields = {
   customerName: '',
   phoneNumber: '',
-  numberOfRentalDays: RentalDaysEnum.ONE_DAY,
+  numberOfRentalDays: 'ONE_DAY',
 };
 
 const ContactInfo = () => {
@@ -25,27 +24,35 @@ const ContactInfo = () => {
     setFormFields({ ...formFields, [e.target.name]: e.target.value });
   };
 
-  console.log(numberOfRentalDays);
-
   const preOrderItems = cartItems.map((cartItem) => {
     return {
       gameID: cartItem._id,
       preOrderQuantity: cartItem.preOrderQuantity,
+      numberOfRentalDays: 1,
     };
   });
 
-  const postPreOrder = async (preOrder: PreOrder) =>
-    await axios.post('http://localhost:3000/pre-order', preOrder);
+  const postPreOrder = async (preOrder: PreOrder) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/pre-order',
+        preOrder,
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     const preOrder: PreOrder = {
       customerID: '',
       phoneNumber,
       customerName,
-      numberOfRentalDays: RentalDaysEnum[numberOfRentalDays],
+      numberOfRentalDays,
       rentedGames: preOrderItems,
     };
-
     postPreOrder(preOrder);
   };
 
@@ -81,107 +88,8 @@ const ContactInfo = () => {
             required
           />
         </div>
-        <fieldset className="flex justify-between items-center">
-          <legend className="mb-3">Please select your day of rental:</legend>
-          <div>
-            <input
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              type="radio"
-              name="numberOfRentalDays"
-              id="one-day"
-              value={RentalDaysEnum.ONE_DAY}
-              onChange={handleChange}
-            />
-            <label
-              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              htmlFor="one-day"
-            >
-              1 day
-            </label>
-          </div>
-          <div>
-            <input
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              type="radio"
-              name="numberOfRentalDays"
-              id="three-day"
-              value={RentalDaysEnum.THREE_DAYS}
-              onChange={handleChange}
-            />
-            <label
-              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              htmlFor="three-day"
-            >
-              3 days
-            </label>
-          </div>
-          <div>
-            <input
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              type="radio"
-              name="numberOfRentalDays"
-              id="seven-days"
-              value={RentalDaysEnum.SEVEN_DAYS}
-              onChange={handleChange}
-            />
-            <label
-              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              htmlFor="seven-days"
-            >
-              7 days
-            </label>
-          </div>
-          <div>
-            <input
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              type="radio"
-              name="numberOfRentalDays"
-              id="fourteen-days"
-              value={RentalDaysEnum.FOURTEEN_DAYS}
-              onChange={handleChange}
-            />
-            <label
-              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              htmlFor="fourteen-days"
-            >
-              14 days
-            </label>
-          </div>
-          <div>
-            <input
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              type="radio"
-              name="numberOfRentalDays"
-              id="thirty-days"
-              value={RentalDaysEnum.THIRTY_DAYS}
-              onChange={handleChange}
-            />
-            <label
-              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              htmlFor="thirty-days"
-            >
-              30 days
-            </label>
-          </div>
-          <div>
-            <input
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              type="radio"
-              name="numberOfRentalDays"
-              id="sixty-days"
-              value={RentalDaysEnum.SIXTY_DAYS}
-              onChange={handleChange}
-            />
-            <label
-              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              htmlFor="sixty-days"
-            >
-              60 days
-            </label>
-          </div>
-        </fieldset>
         <button
-          className="rounded-md bg-blue-500 text-white px-6 py-2 transition duration-500 hover:bg-indigo-500 w-full mt-5"
+          className="rounded-md bg-blue-500 text-white px-6 py-2 transition duration-500 hover:bg-indigo-500 w-full"
           type="submit"
         >
           Confirm order

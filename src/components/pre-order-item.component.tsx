@@ -1,10 +1,18 @@
+import { useContext } from 'react';
 import { ProductQuantity } from '../types/product-quantity.type';
+import { CartContext } from '../contexts/cart.context';
 
 type PreOrderItemProps = {
   cartItem: ProductQuantity;
 };
 
 const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
+  const { cartItems } = useContext(CartContext);
+
+  const deleteItem = () => {
+    cartItems.pop();
+  };
+
   return (
     <li className="flex border-b p-6 justify-between">
       <div className="image-container w-1/6 rounded-md h-1/6">
@@ -24,6 +32,7 @@ const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
             strokeWidth={1.5}
             stroke="currentColor"
             className="w-6 h-6 cursor-pointer"
+            onClick={deleteItem}
           >
             <path
               strokeLinecap="round"
@@ -37,7 +46,7 @@ const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
           Language: {cartItem.language}
         </p>
         <p className="text-black/[.5] text-[14px]">
-          Quantity: {cartItem.preOrderQuantity}
+          Order quantity: {cartItem.preOrderQuantity}
         </p>
         <div className="flex justify-between items-center mt-3">
           <p>{cartItem.price}</p>

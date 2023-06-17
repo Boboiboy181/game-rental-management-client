@@ -6,5 +6,6 @@ export type PreOrder = {
   rentedGames: {
     gameID: string;
     preOrderQuantity: number;
+    numberOfRentalDays: number;
   }[];
 };
