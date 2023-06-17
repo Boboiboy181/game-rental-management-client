@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../contexts/cart.context.tsx';
 import { ProductQuantity } from '../types/product-quantity.type.ts';
-import * as React from 'react';
 import RentalDayListComponent from '../components/rental-day-list.component';
 
 const ProductDetail = () => {
@@ -11,6 +11,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState<ProductQuantity>(
     {} as ProductQuantity,
   );
+  const [price, setPrice] = useState<number>(0);
   const { addItemToCart } = useContext(CartContext);
 
   // get product by id
@@ -20,13 +21,10 @@ const ProductDetail = () => {
         `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${productId}`,
       );
       setProduct(data);
+      setPrice(data.price);
     };
     fetchProduct();
   }, [productId]);
-
-  const [price, setPrice] = useState<number>(product.price);
-
-  const handleOnClick = () => addItemToCart(product);
 
   const priceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -51,6 +49,14 @@ const ProductDetail = () => {
     }
   };
 
+  const formatter = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  });
+  const formattedPrice = formatter.format(price);
+
+  const handleOnClick = () => addItemToCart(product);
+
   return (
     <div className="pt-16 pl-14 pr-14 pb-24">
       <p className="text-black/[.5] mb-6">
@@ -73,7 +79,9 @@ const ProductDetail = () => {
             <p>Manufacture: {product.manufacturer}</p>
             <p>System: {product.system}</p>
           </div>
-          <p className="text-3xl font-semibold mt-5 text-red-500">{price}</p>
+          <p className="text-3xl font-semibold mt-5 text-red-500">
+            {formattedPrice}
+          </p>
           <RentalDayListComponent onChangeHandler={priceChange} />
           <div className="flex justify-between items-center mt-5">
             <button

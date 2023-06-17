@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;200;300;400;500;600;700&family=Pacifico&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.active {
+    @apply bg-blue-600;
+
+    &:hover {
+        @apply bg-blue-300 text-black;
+    }
+
+    & label {
+        @apply text-white;
+    }
+}
+
+.not-active {
+    @apply bg-gray-300;
+
+    &:hover {
+        @apply bg-gray-400 text-black;
+    }
+
+    & label {
+        @apply text-black;
+    }
+}
