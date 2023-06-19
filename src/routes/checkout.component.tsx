@@ -26,7 +26,7 @@ const Checkout = () => {
       </button>
     </div>
   ) : (
-    <div className="h-full flex justify-between pt-16 px-14 pb-24 flex-wrap">
+    <div className="h-full flex justify-between pt-16 px-14 pb-24 flex-wrap md:flex-wrap">
       <ContactInfo />
       <OrderSummary />
     </div>

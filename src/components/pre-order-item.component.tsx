@@ -1,16 +1,29 @@
-import { useContext } from 'react';
-import { ProductQuantity } from '../types/product-quantity.type';
+import React, { useContext, useEffect, useState } from 'react';
+import { ProductForOrder } from '../types/product-order.type';
 import { CartContext } from '../contexts/cart.context';
+import { RentalDaysEnum } from '../enums/rental-days.enum';
 
 type PreOrderItemProps = {
-  cartItem: ProductQuantity;
+  cartItem: ProductForOrder;
 };
 
 const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
-  const { cartItems } = useContext(CartContext);
+  const { updateCartItem } = useContext(CartContext);
+  const [orderQuantity, setOrderQuantity] = useState<number>(
+    cartItem.preOrderQuantity,
+  );
 
-  const deleteItem = () => {
-    cartItems.pop();
+  useEffect(() => {
+    updateCartItem(cartItem, orderQuantity);
+  }, [orderQuantity]);
+
+  const selectHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setOrderQuantity(Number(e.target.value));
+  };
+
+  const numberOfRentalDays = (rentalOption: string): string => {
+    const rentalIndex = Object.values(RentalDaysEnum).indexOf(rentalOption);
+    return Object.keys(RentalDaysEnum)[rentalIndex];
   };
 
   return (
@@ -32,7 +45,6 @@ const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
             strokeWidth={1.5}
             stroke="currentColor"
             className="w-6 h-6 cursor-pointer"
-            onClick={deleteItem}
           >
             <path
               strokeLinecap="round"
@@ -45,12 +57,22 @@ const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
         <p className="text-black/[.5] text-[14px]">
           Language: {cartItem.language}
         </p>
-        <p className="text-black/[.5] text-[14px]">
+        <p className="text-red-500 text-[14px]">
           Order quantity: {cartItem.preOrderQuantity}
+        </p>
+        <p className="text-red-500 text-[14px]">
+          Number of rental days:{' '}
+          {numberOfRentalDays(cartItem.numberOfRentalDays)}
         </p>
         <div className="flex justify-between items-center mt-3">
           <p>{cartItem.price}</p>
-          <select name="" id="" className="rounded-md cursor-pointer">
+          <select
+            name=""
+            id=""
+            className="rounded-md cursor-pointer"
+            value={orderQuantity}
+            onChange={selectHandler}
+          >
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>

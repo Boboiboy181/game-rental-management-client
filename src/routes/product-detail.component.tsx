@@ -3,21 +3,23 @@ import axios from 'axios';
 import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../contexts/cart.context.tsx';
-import { ProductQuantity } from '../types/product-quantity.type.ts';
+import { ProductForOrder } from '../types/product-order.type.ts';
 import RentalDayListComponent from '../components/rental-day-list.component';
 
 const ProductDetail = () => {
   const { productId } = useParams();
-  const [product, setProduct] = useState<ProductQuantity>(
-    {} as ProductQuantity,
+  const [product, setProduct] = useState<ProductForOrder>(
+    {} as ProductForOrder,
   );
   const [price, setPrice] = useState<number>(0);
-  const { addItemToCart } = useContext(CartContext);
+  const { cartItems, addItemToCart } = useContext(CartContext);
+  const [numberOfRentalDays, setNumberOfRentalDays] =
+    useState<string>('ONE_DAY');
 
   // get product by id
   useEffect(() => {
     const fetchProduct = async () => {
-      const { data }: { data: ProductQuantity } = await axios.get(
+      const { data }: { data: ProductForOrder } = await axios.get(
         `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${productId}`,
       );
       setProduct(data);
@@ -55,7 +57,21 @@ const ProductDetail = () => {
   });
   const formattedPrice = formatter.format(price);
 
-  const handleOnClick = () => addItemToCart(product);
+  // check the game is in the cart or not
+  const isGameInCart = (product: ProductForOrder) => {
+    const game = cartItems.find((item: ProductForOrder) => {
+      return item._id === product._id;
+    });
+    return game;
+  };
+
+  const handleOnClick = () => {
+    if (!isGameInCart(product)) {
+      addItemToCart(product, numberOfRentalDays);
+    } else {
+      console.log('Game is already in the cart');
+    }
+  };
 
   return (
     <div className="pt-16 pl-14 pr-14 pb-24">
@@ -63,14 +79,14 @@ const ProductDetail = () => {
         Our shop / Products / {`${product.productName}`}
       </p>
       <div className="flex items-center">
-        <div className="w-1/3 overflow-hidden m-auto rounded-xl">
+        <div className="w-[40%] overflow-hidden m-auto rounded-xl">
           <img
             className=""
             src={`${product.imageUrl}`}
             alt={`${product.productName} image`}
           />
         </div>
-        <div className="w-2/3 product-information px-10">
+        <div className="w-[60%] product-information px-10">
           <h4 className="text-2xl">{product.productName}</h4>
           <div className="text-black/[0.5] mt-2">
             <p>Genre: {product.genre}</p>
@@ -82,10 +98,13 @@ const ProductDetail = () => {
           <p className="text-3xl font-semibold mt-5 text-red-500">
             {formattedPrice}
           </p>
-          <RentalDayListComponent onChangeHandler={priceChange} />
+          <RentalDayListComponent
+            onChangeHandler={priceChange}
+            setRentalDays={setNumberOfRentalDays}
+          />
           <div className="flex justify-between items-center mt-5">
             <button
-              className="rounded-md bg-blue-600 text-white px-6 py-2 transition duration-500 hover:bg-indigo-600 w-full"
+              className="rounded-md bg-blue-600 text-white px-6 py-2 transition duration-500 hover:bg-indigo-600 w-full focus:-translate-y-[.1rem] focus:outline-none focus:shadow-md"
               type="submit"
               onClick={handleOnClick}
             >

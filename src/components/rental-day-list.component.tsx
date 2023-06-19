@@ -2,10 +2,12 @@ import * as React from 'react';
 
 type RentalDayListComponentProps = {
   onChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setRentalDays: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const RentalDayListComponent = ({
   onChangeHandler,
+  setRentalDays,
 }: RentalDayListComponentProps) => {
   const activeOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // add class active on selected class
@@ -16,15 +18,18 @@ const RentalDayListComponent = ({
     rentalDayOptions.forEach((option) => {
       option.classList.remove('active');
     });
-
     e.currentTarget.classList.add('active');
+  };
+  const handleSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
+    setRentalDays(e.target.value);
   };
 
   return (
     <fieldset className="flex justify-between items-center mt-5">
       <legend className="mb-3">Select your day of rental:</legend>
       <div
-        className="rental-day-option border border-gray-200 rounded-md text-center cursor-pointer hover:bg-slate-200 active"
+        className="rental-day-option border border-gray-200 rounded-md text-center hover:bg-slate-200 active cursor-pointer"
         onClick={activeOnClick}
       >
         <input
@@ -33,10 +38,13 @@ const RentalDayListComponent = ({
           name="numberOfRentalDays"
           id="one-day"
           value="ONE_DAY"
-          onChange={onChangeHandler}
+          onChange={(e) => {
+            onChangeHandler(e);
+            handleSelected(e);
+          }}
         />
         <label
-          className="text-sm font-medium text-gray-900 dark:text-gray-300 text-center cursor-pointer w-ful h-full px-9 py-3 block"
+          className="text-sm font-medium text-gray-900 dark:text-gray-300 text-center cursor-pointer w-ful h-full px-7 py-3 block"
           htmlFor="one-day"
         >
           1 day
@@ -52,10 +60,13 @@ const RentalDayListComponent = ({
           name="numberOfRentalDays"
           id="three-day"
           value="THREE_DAYS"
-          onChange={onChangeHandler}
+          onChange={(e) => {
+            onChangeHandler(e);
+            handleSelected(e);
+          }}
         />
         <label
-          className="text-sm font-medium text-gray-900 dark:text-gray-300 text-center cursor-pointer w-ful h-full px-9 py-3 block"
+          className="text-sm font-medium text-gray-900 dark:text-gray-300 text-center cursor-pointer w-ful h-full px-7 py-3 block"
           htmlFor="three-day"
         >
           3 days
@@ -71,10 +82,13 @@ const RentalDayListComponent = ({
           name="numberOfRentalDays"
           id="seven-days"
           value="SEVEN_DAYS"
-          onChange={onChangeHandler}
+          onChange={(e) => {
+            onChangeHandler(e);
+            handleSelected(e);
+          }}
         />
         <label
-          className="text-sm font-medium text-gray-900 dark:text-gray-300 text-center cursor-pointer w-ful h-full px-9 py-3 block"
+          className="text-sm font-medium text-gray-900 dark:text-gray-300 text-center cursor-pointer w-ful h-full px-7 py-3 block"
           htmlFor="seven-days"
         >
           7 days
@@ -90,10 +104,13 @@ const RentalDayListComponent = ({
           name="numberOfRentalDays"
           id="fourteen-days"
           value="FOURTEEN_DAYS"
-          onChange={onChangeHandler}
+          onChange={(e) => {
+            onChangeHandler(e);
+            handleSelected(e);
+          }}
         />
         <label
-          className="text-sm font-medium text-gray-900 dark:text-gray-300 text-center cursor-pointer w-ful h-full px-9 py-3 block"
+          className="text-sm font-medium text-gray-900 dark:text-gray-300 text-center cursor-pointer w-ful h-full px-7 py-3 block"
           htmlFor="fourteen-days"
         >
           14 days
@@ -109,10 +126,13 @@ const RentalDayListComponent = ({
           name="numberOfRentalDays"
           id="thirty-days"
           value="THIRTY_DAYS"
-          onChange={onChangeHandler}
+          onChange={(e) => {
+            onChangeHandler(e);
+            handleSelected(e);
+          }}
         />
         <label
-          className="text-sm font-medium text-gray-900 dark:text-gray-300 text-center cursor-pointer w-ful h-full px-9 py-3 block"
+          className="text-sm font-medium text-gray-900 dark:text-gray-300 text-center cursor-pointer w-ful h-full px-7 py-3 block"
           htmlFor="thirty-days"
         >
           30 days
@@ -128,10 +148,13 @@ const RentalDayListComponent = ({
           name="numberOfRentalDays"
           id="sixty-days"
           value="SIXTY_DAYS"
-          onChange={onChangeHandler}
+          onChange={(e) => {
+            onChangeHandler(e);
+            handleSelected(e);
+          }}
         />
         <label
-          className="text-sm font-medium text-gray-900 dark:text-gray-300 text-center cursor-pointer w-ful h-full px-9 py-3 block"
+          className="text-sm font-medium text-gray-900 dark:text-gray-300 text-center cursor-pointer w-ful h-full px-7 py-3 block"
           htmlFor="sixty-days"
         >
           60 days
