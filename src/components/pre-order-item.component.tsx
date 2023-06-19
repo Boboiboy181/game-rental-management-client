@@ -8,7 +8,7 @@ type PreOrderItemProps = {
 };
 
 const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
-  const { updateCartItem } = useContext(CartContext);
+  const { updateCartItem, deleteCartItem } = useContext(CartContext);
   const [orderQuantity, setOrderQuantity] = useState<number>(
     cartItem.preOrderQuantity,
   );
@@ -24,6 +24,10 @@ const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
   const numberOfRentalDays = (rentalOption: string): string => {
     const rentalIndex = Object.values(RentalDaysEnum).indexOf(rentalOption);
     return Object.keys(RentalDaysEnum)[rentalIndex];
+  };
+
+  const deleteItem = (cartItem: ProductForOrder) => {
+    deleteCartItem(cartItem);
   };
 
   return (
@@ -45,6 +49,7 @@ const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
             strokeWidth={1.5}
             stroke="currentColor"
             className="w-6 h-6 cursor-pointer"
+            onClick={() => deleteItem(cartItem)}
           >
             <path
               strokeLinecap="round"

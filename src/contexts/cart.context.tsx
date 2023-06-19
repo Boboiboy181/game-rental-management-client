@@ -5,6 +5,7 @@ type CartContextType = {
   cartItems: ProductForOrder[];
   addItemToCart: (product: ProductForOrder, numberOfRentalDays: string) => void;
   updateCartItem: (product: ProductForOrder, newQuantity: number) => void;
+  deleteCartItem: (product: ProductForOrder) => void;
 };
 
 type CartProviderProps = {
@@ -58,7 +59,7 @@ const updateCartItemQuantity = (
   cartItems: ProductForOrder[],
   productToUpdate: ProductForOrder,
   newQuantity: number,
-) => {
+): ProductForOrder[] => {
   const existingCartItem = cartItems.find(
     (cartItem: Product) => cartItem._id === productToUpdate._id,
   );
@@ -74,10 +75,28 @@ const updateCartItemQuantity = (
   }
 };
 
+const deleteCartItemFromCart = (
+  cartItems: ProductForOrder[],
+  productToDelete: ProductForOrder,
+): ProductForOrder[] => {
+  const existingCartItem = cartItems.find(
+    (cartItem: Product) => cartItem._id === productToDelete._id,
+  );
+
+  if (existingCartItem) {
+    return cartItems.filter(
+      (cartItem: ProductForOrder) => cartItem._id !== productToDelete._id,
+    );
+  } else {
+    return cartItems;
+  }
+};
+
 export const CartContext = createContext<CartContextType>({
   cartItems: [],
   addItemToCart: () => {},
   updateCartItem: () => {},
+  deleteCartItem: () => {},
 });
 
 export const CartProvider = ({ children }: CartProviderProps) => {
@@ -95,8 +114,11 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       updateCartItemQuantity(cartItems, productToUpdate, newQuantity),
     );
   };
+  const deleteCartItem = (productToDelete: ProductForOrder) => {
+    setCartItems(deleteCartItemFromCart(cartItems, productToDelete));
+  };
 
-  const values = { cartItems, addItemToCart, updateCartItem };
+  const values = { cartItems, addItemToCart, updateCartItem, deleteCartItem };
 
   return <CartContext.Provider value={values}>{children}</CartContext.Provider>;
 };
