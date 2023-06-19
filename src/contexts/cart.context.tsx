@@ -3,7 +3,11 @@ import { Product } from '../types/product.type';
 
 type CartContextType = {
   cartItems: ProductForOrder[];
-  addItemToCart: (product: ProductForOrder, numberOfRentalDays: string) => void;
+  addItemToCart: (
+    product: ProductForOrder,
+    numberOfRentalDays: string,
+    priceByDays: number,
+  ) => void;
   updateCartItem: (product: ProductForOrder, newQuantity: number) => void;
   deleteCartItem: (product: ProductForOrder) => void;
 };
@@ -15,12 +19,14 @@ type CartProviderProps = {
 type ProductForOrder = Product & {
   preOrderQuantity: number;
   numberOfRentalDays: string;
+  priceByDays: number;
 };
 
 const addCartItem = (
   cartItems: ProductForOrder[],
   productToAdd: Product,
   numberOfRentalDays: string,
+  priceByDays: number,
 ): ProductForOrder[] => {
   const existingCartItem = cartItems.find(
     (cartItem: Product) => cartItem._id === productToAdd._id,
@@ -40,6 +46,7 @@ const addCartItem = (
           ...productToAdd,
           preOrderQuantity: 1,
           numberOfRentalDays: numberOfRentalDays,
+          priceByDays: priceByDays,
         },
       ];
     }
@@ -51,6 +58,7 @@ const addCartItem = (
       ...productToAdd,
       preOrderQuantity: 1,
       numberOfRentalDays: numberOfRentalDays,
+      priceByDays: priceByDays,
     },
   ];
 };
@@ -103,8 +111,14 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const [cartItems, setCartItems] = useState<ProductForOrder[]>(
     [] as ProductForOrder[],
   );
-  const addItemToCart = (productToAdd: Product, numberOfRentalDays: string) => {
-    setCartItems(addCartItem(cartItems, productToAdd, numberOfRentalDays));
+  const addItemToCart = (
+    productToAdd: Product,
+    numberOfRentalDays: string,
+    priceByDays: number,
+  ) => {
+    setCartItems(
+      addCartItem(cartItems, productToAdd, numberOfRentalDays, priceByDays),
+    );
   };
   const updateCartItem = (
     productToUpdate: ProductForOrder,

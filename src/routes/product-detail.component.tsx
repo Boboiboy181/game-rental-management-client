@@ -67,7 +67,7 @@ const ProductDetail = () => {
 
   const handleOnClick = () => {
     if (!isGameInCart(product)) {
-      addItemToCart(product, numberOfRentalDays);
+      addItemToCart(product, numberOfRentalDays, price);
     } else {
       console.log('Game is already in the cart');
     }

@@ -70,7 +70,7 @@ const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
           {numberOfRentalDays(cartItem.numberOfRentalDays)}
         </p>
         <div className="flex justify-between items-center mt-3">
-          <p>{cartItem.price}</p>
+          <p>{cartItem.priceByDays} VND</p>
           <select
             name=""
             id=""
