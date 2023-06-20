@@ -7,6 +7,11 @@ type ProductCardProps = {
 };
 
 const ProductCard = ({ product, onClickHandler }: ProductCardProps) => {
+  const formatter = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  });
+  const formattedPrice = formatter.format(product.price);
   return (
     <div
       key={product._id}
@@ -16,9 +21,9 @@ const ProductCard = ({ product, onClickHandler }: ProductCardProps) => {
       <div className="image-container w-[220px] h-[300px] overflow-hidden rounded-md m-auto">
         <img src={`${product.imageUrl}`} alt="" className="" />
       </div>
-      <div className="mt-3 mb-4">
+      <div className="mt-3 mb-4 text-center">
         <h3>{product.productName}</h3>
-        <p>{product.price}</p>
+        <p className="text-red-500">{formattedPrice}</p>
       </div>
     </div>
   );

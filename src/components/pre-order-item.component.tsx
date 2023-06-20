@@ -30,6 +30,11 @@ const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
     deleteCartItem(cartItem);
   };
 
+  const formatter = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  });
+
   return (
     <li className="flex border-b p-6 justify-between">
       <div className="image-container w-1/6 rounded-md h-1/6">
@@ -75,7 +80,7 @@ const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
           </span>
         </p>
         <div className="flex justify-between items-center mt-3">
-          <p>{cartItem.priceByDays} VND</p>
+          <p>Unit price: {formatter.format(cartItem.priceByDays)}</p>
           <select
             name=""
             id=""

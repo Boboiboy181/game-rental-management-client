@@ -70,14 +70,14 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (!isGameInCart(product)) {
       addItemToCart(product, numberOfRentalDays, price);
-      toast.success('Successfully add to cart 🥳', {
+      toast.success('Added to cart successfully. 🥳', {
         position: toast.POSITION.BOTTOM_RIGHT,
         autoClose: 5000,
         theme: 'colored',
         pauseOnHover: true,
       });
     } else {
-      toast.error('This game is already in your cart!', {
+      toast.error('Game already in cart !', {
         position: toast.POSITION.BOTTOM_RIGHT,
         autoClose: 5000,
         theme: 'colored',
