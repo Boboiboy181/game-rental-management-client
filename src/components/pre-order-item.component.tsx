@@ -58,14 +58,14 @@ const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
             />
           </svg>
         </div>
-        <p className="text-black/[.5] text-[14px]">Genre: {cartItem.genre}</p>
+        {/* <p className="text-black/[.5] text-[14px]">Genre: {cartItem.genre}</p>
         <p className="text-black/[.5] text-[14px]">
           Language: {cartItem.language}
-        </p>
-        <p className="text-red-500 text-[14px]">
+        </p> */}
+        <p className="text-black/[.5] font-medium text-[14px] mt-1">
           Order quantity: {cartItem.preOrderQuantity}
         </p>
-        <p className="text-red-500 text-[14px]">
+        <p className="text-black/[.5] font-medium text-[14px] mt-[2px]">
           Number of rental days:{' '}
           {numberOfRentalDays(cartItem.numberOfRentalDays)}
         </p>

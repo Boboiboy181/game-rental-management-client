@@ -1,15 +1,29 @@
-import { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import { SearchContext } from '../contexts/search.context';
 
 const Navigation = () => {
+  const { searchField, setSearchField } = useContext(SearchContext);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toLocaleLowerCase();
+    setSearchField(value);
+  };
+
   return (
     <Fragment>
-      <div className="h-20 w-full flex justify-between px-16 items-center border-solid border-gray-300 border-b text-center">
-        <input
-          className="rounded-md border-2  bg-white px-2 py-1 focus:outline-none focus:border-indigo-500"
-          type="search"
-          placeholder="Search game"
-        />
+      <div className="h-[5.5rem] w-full flex justify-between px-16 items-center border-solid border-gray-300 border-b text-center">
+        <div className="input-field">
+          <input
+            className="px-4"
+            type="search"
+            placeholder="Search game"
+            name="searchField"
+            value={searchField}
+            onChange={handleChange}
+          />
+          <label htmlFor="searchfield">Search game</label>
+        </div>
         <Link className="" to="/">
           <div className="flex justify-center items-center relative right-9">
             <img
@@ -31,7 +45,7 @@ const Navigation = () => {
           </ul>
         </nav> */}
         <Link className="" to="/checkout">
-          <button className="rounded-md bg-blue-600 text-white px-6 py-2 hover:bg-indigo-600 flex items-center justify-around w-full">
+          <button className="rounded-md bg-blue-600 text-white px-6 py-3 hover:bg-indigo-600 flex items-center justify-around w-full">
             Checkout
             <svg
               xmlns="http://www.w3.org/2000/svg"
