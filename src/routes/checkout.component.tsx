@@ -26,9 +26,17 @@ const Checkout = () => {
       </button>
     </div>
   ) : (
-    <div className="h-full flex justify-between pt-16 px-14 pb-24 flex-wrap md:flex-wrap">
-      <ContactInfo />
-      <OrderSummary />
+    <div className="px-14 pb-24">
+      <p
+        className="cursor-pointer pt-10 text-sm text-black/[.6] hover:text-blue-600 underline-hover italic"
+        onClick={handleBackToShop}
+      >
+        Back to shop
+      </p>
+      <div className="pt-5 h-full flex justify-between flex-wrap md:flex-wrap">
+        <ContactInfo />
+        <OrderSummary />
+      </div>
     </div>
   );
 };

@@ -55,3 +55,17 @@
         transform: translateY(10px) scale(1);
     }
 }
+
+// underline hover effect
+.underline-hover {
+    @apply relative inline-block;
+
+    &::after {
+        @apply absolute inset-x-0 bottom-0 h-0.5 bg-blue-500 transform scale-x-0 transition duration-500 ease-in-out;
+        content: '';
+    }
+
+    &:hover::after {
+        @apply scale-x-100;
+    }
+}

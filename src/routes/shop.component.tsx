@@ -37,7 +37,7 @@ const Shop = () => {
 
   return (
     <div>
-      <h1 className="text-5xl font-semibold font-cursive text-center mt-16 mb-10 tracking-wide">
+      <h1 className="text-5xl font-semibold font-cursive text-center mt-16 mb-10 tracking-wider">
         Our Store
       </h1>
       <ProductList products={filteredProducts} onClickHandler={handleClick} />
