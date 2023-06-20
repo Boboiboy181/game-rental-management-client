@@ -5,6 +5,8 @@ import { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../contexts/cart.context.tsx';
 import { ProductForOrder } from '../types/product-order.type.ts';
 import RentalDayListComponent from '../components/rental-day-list.component';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -65,11 +67,22 @@ const ProductDetail = () => {
     return game;
   };
 
-  const handleOnClick = () => {
+  const handleAddToCart = () => {
     if (!isGameInCart(product)) {
       addItemToCart(product, numberOfRentalDays, price);
+      toast.success('Successfully add to cart 🥳', {
+        position: toast.POSITION.BOTTOM_RIGHT,
+        autoClose: 5000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
     } else {
-      console.log('Game is already in the cart');
+      toast.error('This game is already in your cart!', {
+        position: toast.POSITION.BOTTOM_RIGHT,
+        autoClose: 5000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
     }
   };
 
@@ -106,10 +119,11 @@ const ProductDetail = () => {
             <button
               className="rounded-md bg-blue-600 text-white px-6 py-2 transition duration-500 hover:bg-indigo-600 w-full focus:-translate-y-[.1rem] focus:outline-none focus:shadow-xl"
               type="submit"
-              onClick={handleOnClick}
+              onClick={handleAddToCart}
             >
               Add to cart
             </button>
+            <ToastContainer />
           </div>
           <div className="text-center cursor-pointer bg-gradient-to-br from-yellow-200 to-yellow-300 mt-4 rounded-lg p-4">
             <p className="font-light">
