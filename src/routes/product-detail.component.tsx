@@ -104,7 +104,7 @@ const ProductDetail = () => {
           />
           <div className="flex justify-between items-center mt-5">
             <button
-              className="rounded-md bg-blue-600 text-white px-6 py-2 transition duration-500 hover:bg-indigo-600 w-full focus:-translate-y-[.1rem] focus:outline-none focus:shadow-md"
+              className="rounded-md bg-blue-600 text-white px-6 py-2 transition duration-500 hover:bg-indigo-600 w-full focus:-translate-y-[.1rem] focus:outline-none focus:shadow-xl"
               type="submit"
               onClick={handleOnClick}
             >

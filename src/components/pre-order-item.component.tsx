@@ -48,7 +48,7 @@ const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-6 h-6 cursor-pointer"
+            className="w-6 h-6 cursor-pointer hover:text-blue-600 transition-all duration-300"
             onClick={() => deleteItem(cartItem)}
           >
             <path
@@ -62,12 +62,17 @@ const PreOrderItem = ({ cartItem }: PreOrderItemProps) => {
         <p className="text-black/[.5] text-[14px]">
           Language: {cartItem.language}
         </p> */}
-        <p className="text-black/[.5] font-medium text-[14px] mt-1">
-          Order quantity: {cartItem.preOrderQuantity}
+        <p className="text-black/[.5] text-[14px] mt-1">
+          Order quantity:
+          <span className="ml-[2px] text-black">
+            {cartItem.preOrderQuantity}
+          </span>
         </p>
-        <p className="text-black/[.5] font-medium text-[14px] mt-[2px]">
-          Number of rental days:{' '}
-          {numberOfRentalDays(cartItem.numberOfRentalDays)}
+        <p className="text-black/[.5] text-[14px] mt-[2px]">
+          Number of rental days:
+          <span className="ml-[2px] text-black">
+            {numberOfRentalDays(cartItem.numberOfRentalDays)}
+          </span>
         </p>
         <div className="flex justify-between items-center mt-3">
           <p>{cartItem.priceByDays} VND</p>
