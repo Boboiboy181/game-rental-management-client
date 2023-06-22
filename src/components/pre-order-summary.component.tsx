@@ -17,7 +17,10 @@ const OrderSummary = () => {
         <div className="price p-6 border-b">
           {cartItems.map((cartItem) => {
             return (
-              <div className="flex items-center justify-between mb-2">
+              <div
+                key={cartItem._id}
+                className="flex items-center justify-between mb-2"
+              >
                 <p className="text-black/[.7] text-sm">
                   {cartItem.productName}
                 </p>

@@ -2,21 +2,25 @@ import { useContext, useState } from 'react';
 import axios from 'axios';
 import { PreOrder } from '../types/pre-order.type';
 import { CartContext } from '../contexts/cart.context';
+import { ToastContainer, toast } from 'react-toastify';
 
 type FormFields = {
+  email: string;
   customerName: string;
   phoneNumber: string;
 };
 
 const defaultFormFields: FormFields = {
+  email: '',
   customerName: '',
   phoneNumber: '',
 };
 
 const ContactInfo = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
+  const [status, setStatus] = useState<number>(0);
   const { cartItems } = useContext(CartContext);
-  const { customerName, phoneNumber } = formFields;
+  const { email, customerName, phoneNumber } = formFields;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormFields({ ...formFields, [e.target.name]: e.target.value });
@@ -36,8 +40,23 @@ const ContactInfo = () => {
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/pre-order',
         preOrder,
       );
+      console.log(response);
+
+      setStatus(response.status);
+
+      toast.success('Pre-order created successfully 🥳', {
+        position: toast.POSITION.BOTTOM_LEFT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
     } catch (error) {
-      console.log(error);
+      toast.error('Failed to create a pre-order 😞', {
+        position: toast.POSITION.BOTTOM_LEFT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
     }
   };
 
@@ -46,17 +65,31 @@ const ContactInfo = () => {
 
     const preOrder: PreOrder = {
       customerID: '',
+      email,
       phoneNumber,
       customerName,
       rentedGames: preOrderItems,
     };
     postPreOrder(preOrder);
+    setFormFields(defaultFormFields);
   };
 
   return (
     <div className="contact-information basis-[47.5%]">
       <h4 className="text-lg mb-4">Pre-order Information</h4>
       <form onSubmit={handleSubmit}>
+        <div className="mb-4 input-field">
+          <input
+            type="email"
+            className="w-full rounded-md"
+            name="email"
+            value={email}
+            placeholder="Email address"
+            onChange={handleChange}
+            required
+          />
+          <label htmlFor="fullname">Email address</label>
+        </div>
         <div className="mb-4 input-field">
           <input
             type="text"
@@ -71,7 +104,7 @@ const ContactInfo = () => {
         </div>
         <div className="mb-4 input-field">
           <input
-            type="text"
+            type="tel"
             className="w-full rounded-md"
             name="phoneNumber"
             value={phoneNumber}
@@ -87,6 +120,7 @@ const ContactInfo = () => {
         >
           Confirm order
         </button>
+        <ToastContainer />
       </form>
     </div>
   );

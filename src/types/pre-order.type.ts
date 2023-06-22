@@ -1,5 +1,6 @@
 export type PreOrder = {
   customerID: string;
+  email: string;
   phoneNumber: string;
   customerName: string;
   rentedGames: {
