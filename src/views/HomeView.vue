@@ -1,18 +1,20 @@
 <template>
-  <hello-world />
+  <Sidebar>
+  </Sidebar>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 
 // Components
-import HelloWorld from "../components/HelloWorld.vue";
+import Sidebar from "../components/Sidebar.vue";
+import HeadBar from "@/components/HeadBar.vue";
 
 export default defineComponent({
   name: "HomeView",
 
   components: {
-    HelloWorld,
+    Sidebar,
   },
 });
 </script>
