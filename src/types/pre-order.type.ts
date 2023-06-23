@@ -1,6 +1,6 @@
 type PreOrder = {
     _id: string;
-    customerName: string;
+    customer: string;
     returnDate: Date
     estimatedPrice: number;
   }

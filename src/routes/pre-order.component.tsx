@@ -49,7 +49,7 @@ const PreOrder = () => {
 
   const data = preorders.map((preorder) => ({
     key: preorder._id,
-    customerName: preorder.customerName,
+    customerName: preorder.customer,
     returnDate: preorder.returnDate,
     estimatedPrice: preorder.estimatedPrice,
   }));
