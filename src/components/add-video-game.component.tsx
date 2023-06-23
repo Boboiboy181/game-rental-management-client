@@ -2,6 +2,7 @@ import { Button, Form, Input, Select } from 'antd';
 import { useContext, useState } from 'react';
 import { OverlayContext } from '../context/overlay.context';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 const defaultFormFields = {
   productName: '',
@@ -37,18 +38,6 @@ const AddVideoGame = () => {
     setFormFields((prev) => ({ ...prev, [name]: value }));
   };
 
-  console.log(
-    productName,
-    price,
-    quantity,
-    manufacture,
-    genre,
-    releaseDate,
-    description,
-    language,
-    system,
-  );
-
   const selectHandler = (value: string, name: string) => {
     setFormFields((prev) => ({ ...prev, [name]: value }));
   };
@@ -66,15 +55,26 @@ const AddVideoGame = () => {
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
         data,
       );
-      console.log(response);
+      toast.success('Video game created successfully 🥳', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
     } catch (error) {
+      toast.error('Failed to create a video game 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
       console.log(error);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const videoGame = new FormData();
     videoGame.append('productName', productName);
     videoGame.append('price', price.toString());
@@ -87,7 +87,7 @@ const AddVideoGame = () => {
     videoGame.append('system', system);
     videoGame.append('file', image!);
 
-    postVideoGame(videoGame);
+    await postVideoGame(videoGame);
     setFormFields(defaultFormFields);
   };
 
@@ -232,6 +232,7 @@ const AddVideoGame = () => {
           </Button>
         </Form.Item>
       </Form>
+      <ToastContainer/>
     </div>
   );
 };

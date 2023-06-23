@@ -4,11 +4,12 @@ import { Fragment, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import AddVideoGame from '../components/add-video-game.component';
 import { OverlayContext } from '../context/overlay.context';
+import { ProductContext } from '../context/product.context';
 
 const { Text } = Typography;
 
 const Product = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const {products, setProducts} = useContext(ProductContext);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const { isOpen, setIsOpen } = useContext(OverlayContext);
 
@@ -21,7 +22,7 @@ const Product = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [products]);
 
   const columns = [
     {
