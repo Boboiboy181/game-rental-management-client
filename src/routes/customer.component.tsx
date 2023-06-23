@@ -22,7 +22,7 @@ const Customer = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       const { data }: { data: Customer[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
+        'https://game-rental-management-app-yh3ve.ondigitalocean.app/customer',
       );
       setCustomers(data);
     };
@@ -55,7 +55,7 @@ const Customer = () => {
 
   const data = customers.map((customer) => ({
     key: customer._id,
-    customerName: customer.productName,
+    customerName: customer.customerName,
     email: customer.email,
     phoneNumber: customer.phoneNumber,
     address: customer.address,
@@ -77,7 +77,7 @@ const Customer = () => {
           <input
             className="px-4"
             type="search"
-            placeholder="Search game"
+            placeholder="Search customer"
             name="searchField"
             value={searchField}
             onChange={handleChange}
@@ -93,6 +93,7 @@ const Customer = () => {
           }}
           columns={columns}
           dataSource={data}
+          pagination={{ pageSize:5 }}
         />
       </div>
       <Space direction="horizontal" className="relative top-[-9%]">
