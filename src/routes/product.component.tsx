@@ -5,19 +5,9 @@ import axios from 'axios';
 
 const { Text } = Typography;
 
-// // rowSelection object indicates the need for row selection
-// const rowSelection = {
-//   onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-//     console.log(
-//       `selectedRowKeys: ${selectedRowKeys}`,
-//       'selectedRows: ',
-//       selectedRows,
-//     );
-//   },
-// };
-
 const Product = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -46,7 +36,7 @@ const Product = () => {
     {
       title: 'Release Date',
       dataIndex: 'releaseDate',
-    }
+    },
   ];
 
   const data = products.map((product) => ({
@@ -62,6 +52,39 @@ const Product = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
     setSearchField(value);
+  };
+
+  const rowSelection = {
+    onChange: (selectedKeys: React.Key[]) => {
+      setSelectedRowKeys(selectedKeys);
+    },
+  };
+
+  const handleDeleteBtn = async () => {
+    try {
+      // Delete selected rows
+      await Promise.all(
+        selectedRowKeys.map(async (key) => {
+          await axios.delete(
+            `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${key}`,
+          );
+        }),
+      );
+
+      // Fetch updated products data
+      const { data }: { data: Product[] } = await axios.get(
+        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
+      );
+
+      // Update products state and selectedRowKeys state
+      setProducts(data);
+      setSelectedRowKeys([]);
+
+      // Refresh the page by updating the searchField state
+      setSearchField('');
+    } catch (error) {
+      console.log('Error deleting rows:', error);
+    }
   };
 
   return (
@@ -85,16 +108,18 @@ const Product = () => {
         <Table
           rowSelection={{
             type: 'checkbox',
+            ...rowSelection,
           }}
           columns={columns}
           dataSource={data}
+          pagination={{ pageSize: 5 }}
         />
       </div>
       <Space direction="horizontal" className="relative top-[-9%]">
         <Button type="primary" className="bg-blue-500">
           Thêm
         </Button>
-        <Button danger type="primary">
+        <Button danger type="primary" onClick={handleDeleteBtn}>
           Xóa
         </Button>
         <Button type="primary" className="bg-green-600">
