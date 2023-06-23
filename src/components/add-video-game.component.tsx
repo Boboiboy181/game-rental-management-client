@@ -20,6 +20,7 @@ const AddVideoGame = () => {
   const { setIsOpen } = useContext(OverlayContext);
   const [formFields, setFormFields] = useState(defaultFormFields);
   const [image, setImage] = useState<File | null>(null);
+  const [closeUpdate, setCloseUpdate] = useState<boolean>(false);
 
   const {
     productName,
@@ -62,7 +63,7 @@ const AddVideoGame = () => {
         pauseOnHover: true,
       });
     } catch (error) {
-      toast.error('Failed to create a video game 😞', {
+      toast.error('Failed to create a video 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',

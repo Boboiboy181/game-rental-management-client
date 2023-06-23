@@ -5,13 +5,15 @@ import axios from 'axios';
 import AddVideoGame from '../components/add-video-game.component';
 import { OverlayContext } from '../context/overlay.context';
 import { ProductContext } from '../context/product.context';
+import UpdateVideoGame from '../components/update-video-game.component';
 
 const { Text } = Typography;
 
 const Product = () => {
-  const {products, setProducts} = useContext(ProductContext);
+  const { products, setProducts } = useContext(ProductContext);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const { isOpen, setIsOpen } = useContext(OverlayContext);
+  const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -92,6 +94,10 @@ const Product = () => {
     setIsOpen(true);
   };
 
+  const handleUpdateBtn = () => {
+    setIsUpdateOpen(!isOpen);
+  };
+
   return (
     <Fragment>
       <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
@@ -128,12 +134,12 @@ const Product = () => {
           <Button danger type="primary" onClick={handleDeleteBtn}>
             Xóa
           </Button>
-          <Button type="primary" className="bg-green-600">
+          <Button type="primary" className="bg-green-600" onClick={handleUpdateBtn}>
             Sửa
           </Button>
         </Space>
       </div>
-      {isOpen && <AddVideoGame />}
+      {isOpen? <AddVideoGame /> : (!isUpdateOpen && <UpdateVideoGame/>)}
     </Fragment>
   );
 };
