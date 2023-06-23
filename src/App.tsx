@@ -3,6 +3,7 @@ import MainLayout from './routes/main-layout.component';
 import { ConfigProvider } from 'antd';
 import { useEffect } from 'react';
 import Home from './routes/home.component';
+import Customer from './routes/customer.component';
 
 const App = () => {
   useEffect(() => {
@@ -15,7 +16,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
-          <Route path="customers" element={<div>Customers</div>} />
+          <Route path="customers" element={<Customer />} />
           <Route path="video-games" element={<div>Video game</div>} />
           <Route path="pre-orders" element={<div>Pre-order</div>} />
           <Route path="rentals" element={<div>Rentals</div>} />
