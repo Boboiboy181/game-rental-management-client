@@ -1,5 +1,5 @@
 import { Button, Form, Input } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -21,6 +21,30 @@ const UpdateVideoGame = ({
   selectedUpdate: React.Key[];
 }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(
+          `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${selectedUpdate[0]}`
+        );
+        const { price, quantity } = response.data;
+
+        // Cập nhật giá trị mặc định cho formFields từ CSDL
+        setFormFields({
+          price,
+          quantity,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (selectedUpdate.length > 0) {
+      fetchProducts();
+    }
+  }, [selectedUpdate]);
+
 
   const { price, quantity } = formFields;
 
