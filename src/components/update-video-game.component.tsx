@@ -8,10 +8,17 @@ const defaultFormFields = {
   quantity: 0,
 };
 
+type UpdateDto = {
+  price: number;
+  quantity: number;
+};
+
 const UpdateVideoGame = ({
   setIsUpdateOpen,
+  selectedUpdate,
 }: {
   setIsUpdateOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedUpdate: React.Key[];
 }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
 
@@ -23,16 +30,20 @@ const UpdateVideoGame = ({
   };
 
   console.log(price, quantity);
-  
 
   const handleCloseBtn = () => setIsUpdateOpen(false);
 
-  const updateVideoGame = async (data: FormData) => {
+  const updateVideoGame = async (id: React.Key, updateDto: UpdateDto) => {
     try {
       const response = await axios.patch(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
-        data,
+        `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${id}`,
+        updateDto,
       );
+
+      console.log(response);
+
+      setIsUpdateOpen(false);
+
       toast.success('Video game updated successfully 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
@@ -53,11 +64,11 @@ const UpdateVideoGame = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const videoGame = new FormData();
-    videoGame.append('price', price.toString());
-    videoGame.append('quantity', quantity.toString());
+    const _id = selectedUpdate[0];
 
-    await updateVideoGame(videoGame);
+    const videoGame: UpdateDto = { price, quantity };
+
+    await updateVideoGame(_id, videoGame);
     setFormFields(defaultFormFields);
   };
 
