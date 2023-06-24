@@ -7,6 +7,8 @@ import Home from './routes/home.component';
 import PreOrder from './routes/pre-order.component';
 import Customer from './routes/customer.component';
 import Product from './routes/product.component';
+import Return from './routes/return.component';
+import Rental from './routes/rental.component';
 
 const App = () => {
   useEffect(() => {
@@ -22,8 +24,8 @@ const App = () => {
           <Route path="pre-orders" element={<PreOrder />} />
           <Route path="customers" element={<Customer />} />
           <Route path="video-games" element={<Product />} />
-          <Route path="rentals" element={<div>Rentals</div>} />
-          <Route path="returns" element={<div>Returns</div>} />
+          <Route path="rentals" element={<Rental />} />
+          <Route path="returns" element={<Return />} />
           <Route path="invoices" element={<div>Invoices</div>} />
         </Route>
       </Routes>
