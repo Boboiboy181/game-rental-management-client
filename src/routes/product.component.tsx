@@ -1,17 +1,15 @@
 import { Space, Typography, Divider, Button } from 'antd';
 import Table from 'antd/es/table';
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import AddVideoGame from '../components/add-video-game.component';
-import { OverlayContext } from '../context/overlay.context';
-import { ProductContext } from '../context/product.context';
 
 const { Text } = Typography;
 
 const Product = () => {
-  const {products, setProducts} = useContext(ProductContext);
+  const [products, setProducts] = useState<Product[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const { isOpen, setIsOpen } = useContext(OverlayContext);
+  const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -89,7 +87,7 @@ const Product = () => {
   };
 
   const handleAddBtn = () => {
-    setIsOpen(true);
+    setIsAddOpen(true);
   };
 
   return (
@@ -133,7 +131,7 @@ const Product = () => {
           </Button>
         </Space>
       </div>
-      {isOpen && <AddVideoGame />}
+      {isAddOpen && <AddVideoGame setIsAddOpen={setIsAddOpen} />}
     </Fragment>
   );
 };
