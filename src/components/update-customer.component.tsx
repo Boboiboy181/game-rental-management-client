@@ -1,5 +1,5 @@
 import { Button, Form, Input } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -23,6 +23,30 @@ const UpdateCustomer = ({
   selectedUpdate: React.Key[];
 }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
+
+  useEffect(() => {
+    const fetchCustomerData = async () => {
+      try {
+        const response = await axios.get(
+          `https://game-rental-management-app-yh3ve.ondigitalocean.app/customer/${selectedUpdate[0]}`
+        );
+        const { customerName, email, phoneNumber } = response.data;
+
+        // Cập nhật giá trị mặc định cho formFields từ CSDL
+        setFormFields({
+          customerName,
+          email,
+          phoneNumber,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (selectedUpdate.length > 0) {
+      fetchCustomerData();
+    }
+  }, [selectedUpdate]);
 
   const { customerName, email, phoneNumber } = formFields;
 
