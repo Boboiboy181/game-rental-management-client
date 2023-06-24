@@ -1,6 +1,5 @@
 import { Button, Form, Input } from 'antd';
-import { useContext, useState } from 'react';
-import { OverlayContext } from '../context/overlay.context';
+import { useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -9,21 +8,24 @@ const defaultFormFields = {
   quantity: 0,
 };
 
-const UpdateVideoGame = () => {
-  const { setIsOpen } = useContext(OverlayContext);
+const UpdateVideoGame = ({
+  setIsUpdateOpen,
+}: {
+  setIsUpdateOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
 
-  const {
-    price,
-    quantity,
-  } = formFields;
+  const { price, quantity } = formFields;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormFields((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleCloseBtn = () => setIsOpen(false);
+  console.log(price, quantity);
+  
+
+  const handleCloseBtn = () => setIsUpdateOpen(false);
 
   const updateVideoGame = async (data: FormData) => {
     try {
@@ -103,7 +105,7 @@ const UpdateVideoGame = () => {
           </Button>
         </Form.Item>
       </Form>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };

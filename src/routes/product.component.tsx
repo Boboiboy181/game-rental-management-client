@@ -1,18 +1,16 @@
 import { Space, Typography, Divider, Button } from 'antd';
 import Table from 'antd/es/table';
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import AddVideoGame from '../components/add-video-game.component';
-import { OverlayContext } from '../context/overlay.context';
-import { ProductContext } from '../context/product.context';
 import UpdateVideoGame from '../components/update-video-game.component';
 
 const { Text } = Typography;
 
 const Product = () => {
-  const { products, setProducts } = useContext(ProductContext);
+  const [products, setProducts] = useState<Product[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const { isOpen, setIsOpen } = useContext(OverlayContext);
+  const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -91,11 +89,11 @@ const Product = () => {
   };
 
   const handleAddBtn = () => {
-    setIsOpen(true);
+    setIsAddOpen(true);
   };
 
   const handleUpdateBtn = () => {
-    setIsUpdateOpen(!isOpen);
+    setIsUpdateOpen(true);
   };
 
   return (
@@ -134,12 +132,17 @@ const Product = () => {
           <Button danger type="primary" onClick={handleDeleteBtn}>
             Xóa
           </Button>
-          <Button type="primary" className="bg-green-600" onClick={handleUpdateBtn}>
+          <Button
+            type="primary"
+            className="bg-green-600"
+            onClick={handleUpdateBtn}
+          >
             Sửa
           </Button>
         </Space>
       </div>
-      {isOpen? <AddVideoGame /> : (!isUpdateOpen && <UpdateVideoGame/>)}
+      {isAddOpen && <AddVideoGame setIsAddOpen={setIsAddOpen} />}
+      {isUpdateOpen && <UpdateVideoGame setIsUpdateOpen={setIsUpdateOpen} />}
     </Fragment>
   );
 };

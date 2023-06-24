@@ -1,6 +1,5 @@
 import { Button, Form, Input, Select } from 'antd';
-import { useContext, useState } from 'react';
-import { OverlayContext } from '../context/overlay.context';
+import { useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -16,11 +15,14 @@ const defaultFormFields = {
   system: '',
 };
 
-const AddVideoGame = () => {
-  const { setIsOpen } = useContext(OverlayContext);
+const AddVideoGame = ({
+  setIsAddOpen,
+}: {
+  setIsAddOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  // const { setIsOpen } = useContext(OverlayContext);
   const [formFields, setFormFields] = useState(defaultFormFields);
   const [image, setImage] = useState<File | null>(null);
-  const [closeUpdate, setCloseUpdate] = useState<boolean>(false);
 
   const {
     productName,
@@ -43,7 +45,7 @@ const AddVideoGame = () => {
     setFormFields((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleCloseBtn = () => setIsOpen(false);
+  const handleCloseBtn = () => setIsAddOpen(false);
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0];
@@ -233,7 +235,7 @@ const AddVideoGame = () => {
           </Button>
         </Form.Item>
       </Form>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };
