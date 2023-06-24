@@ -1,1 +1,5 @@
-// code about rental goes here
+const Rental = () => {
+  // CODE GOES HERE
+}
+
+export default Rental;
