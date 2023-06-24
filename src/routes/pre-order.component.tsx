@@ -20,6 +20,7 @@ const { Text } = Typography;
 
 const PreOrder = () => {
   const [preorders, setPreorder] = useState<PreOrder[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -61,6 +62,38 @@ const PreOrder = () => {
     setSearchField(value);
   };
 
+  const rowSelection = {
+    onChange: (selectedKeys: React.Key[]) => {
+      setSelectedRowKeys(selectedKeys);
+    },
+  };
+
+  const handleDeleteBtn = async () => {
+    try {
+      // Delete selected rows
+      await Promise.all(
+        selectedRowKeys.map(async (key) => {
+          await axios.delete(
+            `https://game-rental-management-app-yh3ve.ondigitalocean.app/pre-order/${key}`,
+          );
+        }),
+      );
+
+      // Fetch updated products data
+      const { data }: { data: PreOrder[] } = await axios.get(
+        'https://game-rental-management-app-yh3ve.ondigitalocean.app/pre-order',
+      );
+      // Update customer state and selectedRowKeys state
+      setPreorder(data);
+      setSelectedRowKeys([]);
+
+      // Refresh the page by updating the searchField state
+      setSearchField('');
+    } catch (error) {
+      console.log('Error deleting rows:', error);
+    }
+  };
+
   return (
     <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
       <Space className="flex justify-between">
@@ -82,6 +115,7 @@ const PreOrder = () => {
         <Table
           rowSelection={{
             type: 'checkbox',
+            ...rowSelection,
           }}
           columns={columns}
           dataSource={data}
@@ -92,7 +126,7 @@ const PreOrder = () => {
         <Button type="primary" className="bg-blue-500">
           Thêm
         </Button>
-        <Button danger type="primary">
+        <Button danger type="primary" onClick={handleDeleteBtn}>
           Xóa
         </Button>
         <Button type="primary" className="bg-green-600">
