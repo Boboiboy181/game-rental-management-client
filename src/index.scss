@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;200;300;400;500;600;700&family=Pacifico&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-family: 'Be Vietnam Pro', sans-serif !important;
+}
+
+.input-field {
+    @apply relative;
+
+    & input {
+        @apply block w-full py-3 px-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm;
+    }
+
+    & label {
+        @apply absolute -top-2 left-4 px-1 bg-white text-gray-500 text-xs;
+        transition: all .3s;
+    }
+
+    & input:focus + label {
+        @apply text-blue-500 text-xs;
+    }
+
+    & input:not(:placeholder-shown) + label {
+        opacity: 1;
+        transform: translateY(0px) scale(0.95);
+    }
+
+    & input:placeholder-shown + label {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px) scale(1);
+    }
+}
