@@ -1,5 +1,7 @@
 const Rental = () => {
-  // CODE GOES HERE
+  return (
+    <div>Rental</div>
+  );
 }
 
 export default Rental;
