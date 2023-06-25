@@ -154,7 +154,7 @@ const ReturnTicket = () => {
           />
         </div>
         <Space direction="horizontal" className="relative top-[-9%]">
-          <Button danger type="primary" onClick={handleDeleteBtn}>
+          <Button danger type="primary" className="bg-blue-600" onClick={handleDeleteBtn}>
             Xóa
           </Button>
         </Space>
