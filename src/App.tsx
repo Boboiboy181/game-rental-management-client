@@ -7,6 +7,7 @@ import Home from './routes/home.component';
 import PreOrder from './routes/pre-order.component';
 import Customer from './routes/customer.component';
 import Product from './routes/product.component';
+import PreOrderDetail from './components/pre-order-detail.component';
 
 const App = () => {
   useEffect(() => {
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="pre-orders" element={<PreOrder />} />
+          <Route path="pre-orders/:preOrderID" element={<PreOrderDetail />} />
           <Route path="customers" element={<Customer />} />
           <Route path="video-games" element={<Product />} />
           <Route path="rentals" element={<div>Rentals</div>} />
