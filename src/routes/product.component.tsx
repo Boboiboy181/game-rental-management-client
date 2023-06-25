@@ -3,6 +3,8 @@ import Table from 'antd/es/table';
 import { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import AddVideoGame from '../components/add-video-game.component';
+import UpdateVideoGame from '../components/update-video-game.component';
+import { ToastContainer, toast } from 'react-toastify';
 
 const { Text } = Typography;
 
@@ -10,6 +12,7 @@ const Product = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
+  const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -90,9 +93,22 @@ const Product = () => {
     setIsAddOpen(true);
   };
 
+  const handleUpdateBtn = () => {
+    if (selectedRowKeys.length === 0 || selectedRowKeys.length > 1) {
+      toast.error('Please select only 1 video game to update 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+      return;
+    }
+    setIsUpdateOpen(true);
+  };
+
   return (
     <Fragment>
-      <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
+      <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
         <Space className="flex justify-between">
           <Text className="text-2xl font-semibold">Video Games</Text>
           <div className="input-field">
@@ -126,12 +142,23 @@ const Product = () => {
           <Button danger type="primary" onClick={handleDeleteBtn}>
             Xóa
           </Button>
-          <Button type="primary" className="bg-green-600">
+          <Button
+            type="primary"
+            className="bg-green-600"
+            onClick={handleUpdateBtn}
+          >
             Sửa
           </Button>
         </Space>
       </div>
       {isAddOpen && <AddVideoGame setIsAddOpen={setIsAddOpen} />}
+      {isUpdateOpen && (
+        <UpdateVideoGame
+          setIsUpdateOpen={setIsUpdateOpen}
+          selectedUpdate={selectedRowKeys}
+        />
+      )}
+      <ToastContainer />
     </Fragment>
   );
 };

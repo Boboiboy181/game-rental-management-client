@@ -65,7 +65,7 @@ const AddVideoGame = ({
         pauseOnHover: true,
       });
     } catch (error) {
-      toast.error('Failed to create a video game 😞', {
+      toast.error('Failed to create a video 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
