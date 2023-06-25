@@ -16,51 +16,51 @@ const { Text } = Typography;
 //   },
 // };
 
-const Customer = () => {
-  const [customers, setCustomers] = useState<Customer[]>([]);
+const Rental = () => {
+  const [rental, setRental] = useState<Rental[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   useEffect(() => {
-    const fetchCustomers = async () => {
-      const { data }: { data: Customer[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/customer',
+    const fetchRental = async () => {
+      const { data }: { data: Rental[] } = await axios.get(
+        'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental',
       );
-      setCustomers(data);
+      setRental(data);
     };
 
-    fetchCustomers();
+    fetchRental();
   }, []);
 
   const columns = [
     {
-      title: 'Customer Name',
-      dataIndex: 'customerName',
+      title: 'customer',
+      dataIndex: 'customer',
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
+      title: 'Deposit',
+      dataIndex: 'deposit',
     },
     {
-      title: 'Phone Number',
-      dataIndex: 'phoneNumber',
+      title: 'ReturnValue',
+      dataIndex: 'returnvalue',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
+      title: 'ReturnState',
+      dataIndex: 'returnstate',
     },
     {
-      title: 'point',
-      dataIndex: 'point',
+      title: 'EstimatePrice',
+      dataIndex: 'estimateprice',
     }
   ];
 
-  const data = customers.map((customer) => ({
-    key: customer._id,
-    customerName: customer.customerName,
-    email: customer.email,
-    phoneNumber: customer.phoneNumber,
-    address: customer.address,
-    point: customer.point,
+  const data = rental.map((rental) => ({
+    key: rental._id,
+    customer: rental.customer,
+    deposit: rental.deposit,
+    returnvalue: rental.returnValue,
+    returnstate: rental.returnState,
+    estimateprice: rental.estimatePrice,
   }));
 
   const [searchField, setSearchField] = useState('');
@@ -82,17 +82,17 @@ const Customer = () => {
       await Promise.all(
         selectedRowKeys.map(async (key) => {
           await axios.delete(
-            `https://game-rental-management-app-yh3ve.ondigitalocean.app/customer/${key}`,
+            `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental/${key}`,
           );
         }),
       );
 
       // Fetch updated products data
-      const { data }: { data: Customer[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/customer',
+      const { data }: { data: Rental[] } = await axios.get(
+        'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental',
       );
       // Update customer state and selectedRowKeys state
-      setCustomers(data);
+      setRental(data);
       setSelectedRowKeys([]);
 
       // Refresh the page by updating the searchField state
@@ -105,17 +105,17 @@ const Customer = () => {
   return (
     <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
       <Space className="flex justify-between">
-        <Text className="text-2xl font-semibold">Customer</Text>
+        <Text className="text-2xl font-semibold">Rental</Text>
         <div className="input-field">
           <input
             className="px-4"
             type="search"
-            placeholder="Search customer"
+            placeholder="Search rentalform"
             name="searchField"
             value={searchField}
             onChange={handleChange}
           />
-          <label htmlFor="searchfield">Search customer</label>
+          <label htmlFor="searchfield">Search rental form</label>
         </div>
       </Space>
       <div>
@@ -145,4 +145,4 @@ const Customer = () => {
   );
 };
 
-export default Customer;
+export default Rental;
