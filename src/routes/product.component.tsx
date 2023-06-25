@@ -23,7 +23,7 @@ const Product = () => {
     };
 
     fetchProducts();
-  }, [products]);
+  }, []);
 
   const columns = [
     {

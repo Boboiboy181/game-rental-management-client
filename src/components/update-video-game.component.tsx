@@ -51,10 +51,14 @@ const UpdateVideoGame = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormFields((prev) => ({ ...prev, [name]: value }));
+    console.log(price, quantity);
   };
 
-  console.log(price, quantity);
+  console.log('Component re-rendered');
 
+
+  console.log(1);
+  
   const handleCloseBtn = () => setIsUpdateOpen(false);
 
   const updateVideoGame = async (id: React.Key, updateDto: UpdateDto) => {
