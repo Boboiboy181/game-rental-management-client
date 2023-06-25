@@ -4,15 +4,19 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PreOrder } from '../types/pre-order.type';
+import { formatDate } from '../utils/format-date.function';
+import { formatPrice } from '../utils/format-price.function';
 const { Text } = Typography;
 
 type DataType = {
   key: React.Key;
   customerName: string;
-  estimatedPrice: number;
+  estimatedPrice: string;
+  createdAt: string;
 };
 
-const PreOrder = () => {
+const PreOrderPage = () => {
   const [preorders, setPreorder] = useState<PreOrder[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const navigate = useNavigate();
@@ -38,6 +42,10 @@ const PreOrder = () => {
       dataIndex: 'estimatedPrice',
     },
     {
+      title: 'Created At',
+      dataIndex: 'createdAt',
+    },
+    {
       title: 'Action',
       width: 100,
       align: 'center',
@@ -56,7 +64,8 @@ const PreOrder = () => {
   const data = preorders.map((preorder) => ({
     key: preorder._id,
     customerName: preorder.customer.customerName,
-    estimatedPrice: preorder.estimatedPrice,
+    estimatedPrice: formatPrice.format(preorder.estimatedPrice),
+    createdAt: formatDate(preorder.createdAt.toString()),
   }));
 
   const [searchField, setSearchField] = useState('');
@@ -99,7 +108,7 @@ const PreOrder = () => {
   };
 
   const handleDetailBtn = (key: React.Key) => {
-    navigate(`/pre-orders/${key}`);
+    navigate(`/pre-order/${key}`);
   };
 
   return (
@@ -139,4 +148,4 @@ const PreOrder = () => {
   );
 };
 
-export default PreOrder;
+export default PreOrderPage;

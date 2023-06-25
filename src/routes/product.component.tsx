@@ -5,10 +5,11 @@ import axios from 'axios';
 import AddVideoGame from '../components/add-video-game.component';
 import { OverlayContext } from '../context/overlay.context';
 import { ProductContext } from '../context/product.context';
+import { Product } from '../types/product.type';
 
 const { Text } = Typography;
 
-const Product = () => {
+const ProductPage = () => {
   const {products, setProducts} = useContext(ProductContext);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const { isOpen, setIsOpen } = useContext(OverlayContext);
@@ -138,4 +139,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default ProductPage;
