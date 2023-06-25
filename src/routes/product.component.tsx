@@ -10,9 +10,16 @@ const { Text } = Typography;
 
 const Product = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
+  const [searchField, setSearchField] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toLocaleLowerCase();
+    setSearchField(value);
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -44,20 +51,20 @@ const Product = () => {
     },
   ];
 
-  const data = products.map((product) => ({
+  useEffect(() => {
+    const newFilteredProducts = products.filter((product) => {
+      return product.productName.toLowerCase().includes(searchField);
+    });
+    setFilteredProducts(newFilteredProducts);
+  }, [products, searchField]);
+
+  const data = filteredProducts.map((product) => ({
     key: product._id,
     productName: product.productName,
     price: product.price,
     quantity: product.quantity,
     releaseDate: product.releaseDate,
   }));
-
-  const [searchField, setSearchField] = useState('');
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toLocaleLowerCase();
-    setSearchField(value);
-  };
 
   const rowSelection = {
     onChange: (selectedKeys: React.Key[]) => {
@@ -108,7 +115,7 @@ const Product = () => {
 
   return (
     <Fragment>
-      <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
+      <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
         <Space className="flex justify-between">
           <Text className="text-2xl font-semibold">Video Games</Text>
           <div className="input-field">
