@@ -1,74 +1,96 @@
-import { Space, Typography, Divider, Button } from 'antd';
-import Table from 'antd/es/table';
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { Space, Typography, Divider, Button, Table } from 'antd';
+import { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
-import AddVideoGame from '../components/add-video-game.component';
-import { OverlayContext } from '../context/overlay.context';
-import { ProductContext } from '../context/product.context';
+import { Return } from '../types/return.type';
+import { useNavigate } from 'react-router-dom';
+import { ColumnsType } from 'antd/es/table';
 const { Text } = Typography;
 
-const Return = () => {
-  const { products, setProducts } = useContext(ProductContext);
+type DataType = {
+  key: React.Key;
+  customer: string;
+  paymentState: string;
+  estimatedPrice: number;
+  createdAt: string;
+};
+
+const ReturnTicket = () => {
+  const [returnTickets, setReturnTickets] = useState<Return[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const { isOpen, setIsOpen } = useContext(OverlayContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const { data }: { data: Product[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
-      );
-      setProducts(data);
+    const fetchReturnTicket = async () => {
+      try {
+        const { data }: { data: Return[] } = await axios.get(
+          'https://game-rental-management-app-yh3ve.ondigitalocean.app/return'
+        );
+        setReturnTickets(data);
+      } catch (error) {
+        console.log('Error fetching return tickets:', error);
+      }
     };
 
-    fetchProducts();
-  }, [products]);
+    fetchReturnTicket();
+  }, []);
 
-  const columns = [
+  const formatCreatedAt = (date: Date) => {
+    const formattedDate = date.toISOString().slice(0, 10);
+    return formattedDate;
+  };
+
+  const columns: ColumnsType<DataType> = [
     {
-      title: 'Product Name',
-      dataIndex: 'productName',
+      title: 'Khách hàng',
+      dataIndex: 'customer',
+      key: 'customer',
     },
     {
-      title: 'Price',
-      dataIndex: 'price',
+      title: 'Tổng tiền thuê',
+      dataIndex: 'estimatedPrice',
       align: 'center',
+      key: 'estimatedPrice',
     },
     {
-      title: 'Quantity',
-      dataIndex: 'quantity',
+      title: 'Ngày tạo',
+      dataIndex: 'createdAt',
       align: 'center',
+      key: 'createdAt',
     },
     {
-      title: 'Total Price',
-      dataIndex: 'totalPrice',
+      title: 'Trạng thái',
+      dataIndex: 'paymentState',
       align: 'center',
-render: (_, record) => record.price * record.quantity,
+      key: 'paymentState',
     },
     {
       title: 'Thao tác',
       width: 100,
-      align: 'center' as any,
+      align: 'center',
       render: (_, record) => (
-        <Button type="primary" className='bg-red-600' onClick={() => handleAction(record)}>
-          Xóa
+        <Button type="primary" className="bg-blue-600" onClick={() => handleDetailBtn(record.key)}>
+          Chi tiết
         </Button>
       ),
     },
   ];
 
-  const data = products.map((product) => ({
-    key: product._id,
-    productName: product.productName,
-    price: product.price,
-    quantity: product.quantity,
-    releaseDate: product.releaseDate,
+  const data: DataType[] = returnTickets.map((returnTicket) => ({
+    key: returnTicket._id,
+    customer: returnTicket.customer,
+    paymentState: returnTicket.paymentState,
+    estimatedPrice: returnTicket.estimatedPrice,
+    createdAt: formatCreatedAt(new Date(returnTicket.createdAt)), // Convert createdAt to a Date object before formatting
   }));
 
+  const handleDetailBtn = (key: React.Key) => {
+    navigate(`/return/${key}`);
+  };
+
   const [searchField, setSearchField] = useState('');
-  const [currentPage, setCurrentPage] = useState('search');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toLocaleLowerCase();
+    const value = e.target.value.toLowerCase();
     setSearchField(value);
   };
 
@@ -84,30 +106,22 @@ render: (_, record) => record.price * record.quantity,
       await Promise.all(
         selectedRowKeys.map(async (key) => {
           await axios.delete(
-            `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${key}`,
+            `https://game-rental-management-app-yh3ve.ondigitalocean.app/return/${key}`
           );
-        }),
+        })
       );
 
-      // Fetch updated products data
-      const { data }: { data: Product[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
+      // Fetch updated return tickets data
+      const { data }: { data: Return[] } = await axios.get(
+        'https://game-rental-management-app-yh3ve.ondigitalocean.app/return'
       );
 
-      // Update products state and selectedRowKeys state
-      setProducts(data);
+      // Update return tickets state and selectedRowKeys state
+      setReturnTickets(data);
       setSelectedRowKeys([]);
     } catch (error) {
       console.log('Error deleting rows:', error);
     }
-  };
-
-  const handleAddBtn = () => {
-    setIsOpen(true);
-  };
-
-  const handlePageChange = (page: string) => {
-    setCurrentPage(page);
   };
 
   return (
@@ -116,43 +130,37 @@ render: (_, record) => record.price * record.quantity,
         <Space className="flex justify-between">
           <Text className="text-2xl font-semibold">Phiếu trả</Text>
           <div className="input-field">
-            <div style={{ marginBottom: '8px' }}>Khách hàng</div>
             <input
               className="px-4"
               type="search"
-              placeholder="Search customer"
+              placeholder="Tên khách hàng"
               name="searchField"
               value={searchField}
               onChange={handleChange}
             />
-            <label htmlFor="searchfield">Search customer</label>
+            <label htmlFor="searchField">Tên khách hàng</label>
           </div>
         </Space>
         <div>
           <Divider />
-          {currentPage === 'search' && (
-            <Table
-              rowSelection={{
-                type: 'checkbox',
-                ...rowSelection,
-              }}
-              columns={columns}
-              dataSource={data}
-              pagination={{ pageSize: 5 }}
-            />
-          )}
-          {currentPage === 'create' && <div>Create Page Content</div>}
+          <Table
+            rowSelection={{
+              type: 'checkbox',
+              ...rowSelection,
+            }}
+            columns={columns}
+            dataSource={data}
+            pagination={{ pageSize: 5 }}
+          />
         </div>
-        <div className="flex justify-between items-center mt-4">
-          <Text className="text-lg font-semibold">Số ngày trễ hạn:</Text>
-          <Button type="primary" className="bg-green-600">
-            Xác nhận phiếu trả
+        <Space direction="horizontal" className="relative top-[-9%]">
+          <Button danger type="primary" onClick={handleDeleteBtn}>
+            Xóa
           </Button>
-        </div>
+        </Space>
       </div>
-      {isOpen && <AddVideoGame />}
     </Fragment>
   );
 };
 
-export default Return;
+export default ReturnTicket;
