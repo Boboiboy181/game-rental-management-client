@@ -21,12 +21,12 @@ const App = () => {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
-          <Route path="pre-orders" element={<PreOrder />} />
-          <Route path="customers" element={<Customer />} />
-          <Route path="video-games" element={<Product />} />
-          <Route path="rentals" element={<Rental />} />
-          <Route path="returns" element={<Return />} />
-          <Route path="invoices" element={<div>Invoices</div>} />
+          <Route path="pre-order" element={<PreOrder />} />
+          <Route path="customer" element={<Customer />} />
+          <Route path="video-game" element={<Product />} />
+          <Route path="rental" element={<Rental />} />
+          <Route path="return" element={<Return />} />
+          <Route path="invoice" element={<div>Invoices</div>} />
         </Route>
       </Routes>
     </ConfigProvider>
