@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import axios from 'axios';
 import { PreOrder } from '../types/pre-order.type';
 import { CartContext } from '../contexts/cart.context';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 type FormFields = {
   email: string;

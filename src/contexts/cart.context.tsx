@@ -2,6 +2,8 @@ import { ReactNode, createContext, useState } from 'react';
 import { Product } from '../types/product.type';
 
 type CartContextType = {
+  isCartOpen: boolean;
+  setIsCartOpen: (isCartOpen: boolean) => void;
   cartItems: ProductForOrder[];
   addItemToCart: (
     product: ProductForOrder,
@@ -101,6 +103,8 @@ const deleteCartItemFromCart = (
 };
 
 export const CartContext = createContext<CartContextType>({
+  isCartOpen: false,
+  setIsCartOpen: () => {},
   cartItems: [],
   addItemToCart: () => {},
   updateCartItem: () => {},
@@ -111,6 +115,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const [cartItems, setCartItems] = useState<ProductForOrder[]>(
     [] as ProductForOrder[],
   );
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const addItemToCart = (
     productToAdd: Product,
     numberOfRentalDays: string,
@@ -132,7 +137,14 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     setCartItems(deleteCartItemFromCart(cartItems, productToDelete));
   };
 
-  const values = { cartItems, addItemToCart, updateCartItem, deleteCartItem };
+  const values = {
+    isCartOpen,
+    setIsCartOpen,
+    cartItems,
+    addItemToCart,
+    updateCartItem,
+    deleteCartItem,
+  };
 
   return <CartContext.Provider value={values}>{children}</CartContext.Provider>;
 };
