@@ -8,6 +8,8 @@ import PreOrderDetail from './components/pre-order-detail.component';
 import ProductComponent from './routes/product.component';
 import CustomerPage from './routes/customer.component';
 import PreOrderPage from './routes/pre-order.component';
+import Return from './routes/return.component';
+import Rental from './routes/rental.component';
 
 const App = () => {
   useEffect(() => {
@@ -24,10 +26,12 @@ const App = () => {
           <Route path="video-game" element={<ProductComponent />} />
           <Route path="pre-order" element={<PreOrderPage />} />
           <Route path="pre-order/:preOrderID" element={<PreOrderDetail />} />
-          <Route path="rental" element={<div>Rentals</div>} />
-          <Route path="rental/create/:preOrderID?" element={<p>Tao phieu thue</p>}/>
-          <Route path="return" element={<div>Returns</div>} />
-          <Route path="invoice" element={<div>Invoices</div>} />
+          <Route path="customers" element={<Customer />} />
+          <Route path="video-games" element={<Product />} />
+          <Route path="rentals" element={<Rental />} />
+          <Route path="rentals/create/:preOrderID?" element={<p>Tao phieu thue</p>}/>
+          <Route path="returns" element={<Return />} />
+          <Route path="invoices" element={<div>Invoices</div>} />
         </Route>
       </Routes>
     </ConfigProvider>
