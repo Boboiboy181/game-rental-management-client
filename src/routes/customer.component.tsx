@@ -1,5 +1,7 @@
 import { Space, Typography, Divider, Button } from 'antd';
 import Table from 'antd/es/table';
+import { ToastContainer, toast } from 'react-toastify';
+import UpdateCustomer from '../components/update-customer.component';
 import { Fragment, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import AddCustomer from '../components/add-customer.component';
@@ -23,6 +25,8 @@ const CustomerPage = () => {
   const {customers, setCustomers} = useContext(CustomerContext);
   
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
+  const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const { isOpen, setIsOpen } = useContext(OverlayContext);
 
   useEffect(() => {
@@ -108,12 +112,27 @@ const CustomerPage = () => {
   };
 
   const handleAddBtn = () => {
+    setIsAddOpen(true);
+  };
+
+  const handleUpdateBtn = () => {
+    if (selectedRowKeys.length === 0 || selectedRowKeys.length > 1) {
+      toast.error('Please select only 1 customer to update 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+      return;
+    }
+    setIsUpdateOpen(true);
     setIsOpen(true);
+
   };
 
   return (
     <Fragment>
-      <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
+      <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
         <Space className="flex justify-between">
           <Text className="text-2xl font-semibold">Customer</Text>
           <div className="input-field">
@@ -147,11 +166,25 @@ const CustomerPage = () => {
           <Button danger type="primary" onClick={handleDeleteBtn}>
             Xóa
           </Button>
-          <Button type="primary" className="bg-green-600">
+
+          <Button 
+          type="primary" 
+          className="bg-green-600"
+          onClick={handleUpdateBtn}
+          >
+
             Sửa
           </Button>
         </Space>
       </div>
+
+      {isUpdateOpen && (
+        <UpdateCustomer
+          setIsUpdateOpen={setIsUpdateOpen}
+          selectedUpdate={selectedRowKeys}
+        />
+      )}
+      <ToastContainer />
       {isOpen && <AddCustomer />}
     </Fragment>
   );
