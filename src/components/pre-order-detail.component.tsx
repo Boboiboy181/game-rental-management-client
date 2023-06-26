@@ -40,7 +40,7 @@ const PreOrderDetail = () => {
 
   if (loading) {
     return (
-      <Spin className="text-lg relative top-[50%]" size="large" tip="Loading">
+      <Spin className="text-lg mt-[30%]" size="large" tip="Loading">
         <div className="content"></div>
       </Spin>
     ); // Render a loading state while fetching the data
@@ -98,8 +98,12 @@ const PreOrderDetail = () => {
     returnDate: formatDate(rentedGame.returnDate.toString()),
   }));
 
+  const handleCreateBtn = () => {
+    navigate(`/rental/create/${preOrderID}`);
+  }
+
   return (
-    <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
+    <div className="w-[85%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex flex-col items-start">
         <Text className="text-2xl font-semibold">Phiếu đặt trước</Text>
         <p className="text-xs text-black/40">
@@ -133,7 +137,7 @@ const PreOrderDetail = () => {
           >
             Đóng
           </Button>
-          <Button className="bg-green-600" type="primary">
+          <Button className="bg-green-600" type="primary" onClick={handleCreateBtn}>
             Tạo phiếu thuê
           </Button>
         </Space>

@@ -25,6 +25,7 @@ const App = () => {
           <Route path="pre-order" element={<PreOrderPage />} />
           <Route path="pre-order/:preOrderID" element={<PreOrderDetail />} />
           <Route path="rental" element={<div>Rentals</div>} />
+          <Route path="rental/create/:preOrderID?" element={<p>Tao phieu thue</p>}/>
           <Route path="return" element={<div>Returns</div>} />
           <Route path="invoice" element={<div>Invoices</div>} />
         </Route>
