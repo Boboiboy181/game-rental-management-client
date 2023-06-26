@@ -3,12 +3,13 @@ import Table from 'antd/es/table';
 import { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import AddVideoGame from '../components/add-video-game.component';
+import { Product } from '../types/product.type';
 import UpdateVideoGame from '../components/update-video-game.component';
 import { ToastContainer, toast } from 'react-toastify';
 
 const { Text } = Typography;
 
-const Product = () => {
+const ProductPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -170,4 +171,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default ProductPage;

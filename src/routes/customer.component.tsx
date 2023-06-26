@@ -2,6 +2,7 @@ import { Space, Typography, Divider, Button } from 'antd';
 import Table from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Customer } from '../types/customer.type';
 
 const { Text } = Typography;
 
@@ -16,7 +17,7 @@ const { Text } = Typography;
 //   },
 // };
 
-const Customer = () => {
+const CustomerPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
@@ -145,4 +146,4 @@ const Customer = () => {
   );
 };
 
-export default Customer;
+export default CustomerPage;
