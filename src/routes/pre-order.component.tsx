@@ -13,8 +13,11 @@ type DataType = {
 };
 
 const PreOrder = () => {
-  const [preorders, setPreorder] = useState<PreOrder[]>([]);
+  const [preOrders, setPreorder] = useState<PreOrder[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [filteredPreorders, setFilteredPreorders] =
+    useState<PreOrder[]>(preOrders);
+  const [searchField, setSearchField] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +30,18 @@ const PreOrder = () => {
 
     fetchCustomers();
   }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toLocaleLowerCase();
+    setSearchField(value);
+  };
+
+  useEffect(() => {
+    const newFilterPreOrders = preOrders.filter((preOrder) =>
+      preOrder.customer.customerName.toLowerCase().includes(searchField),
+    );
+    setFilteredPreorders(newFilterPreOrders);
+  }, [searchField, preOrders]);
 
   const columns: ColumnsType<DataType> = [
     {
@@ -53,18 +68,11 @@ const PreOrder = () => {
     },
   ];
 
-  const data = preorders.map((preorder) => ({
-    key: preorder._id,
-    customerName: preorder.customer.customerName,
-    estimatedPrice: preorder.estimatedPrice,
+  const data = filteredPreorders.map((preOrder) => ({
+    key: preOrder._id,
+    customerName: preOrder.customer.customerName,
+    estimatedPrice: preOrder.estimatedPrice,
   }));
-
-  const [searchField, setSearchField] = useState('');
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toLocaleLowerCase();
-    setSearchField(value);
-  };
 
   const rowSelection = {
     onChange: (selectedKeys: React.Key[]) => {
