@@ -1,4 +1,4 @@
-type Customer = {
+export type Customer = {
   _id: string;
   customerName: string;
   email: string;
