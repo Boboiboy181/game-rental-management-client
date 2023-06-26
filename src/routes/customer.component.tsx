@@ -1,10 +1,13 @@
 import { Space, Typography, Divider, Button } from 'antd';
 import Table from 'antd/es/table';
-import { Fragment, useEffect, useState } from 'react';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import UpdateCustomer from '../components/update-customer.component';
-
+import { Fragment, useContext, useEffect, useState } from 'react';
+import axios from 'axios';
+import AddCustomer from '../components/add-customer.component';
+import { Customer } from '../types/customer.type';
+import { OverlayContext } from '../context/overlay.context';
+import { CustomerContext } from '../context/customer.context';
 const { Text } = Typography;
 
 // // rowSelection object indicates the need for row selection
@@ -18,11 +21,13 @@ const { Text } = Typography;
 //   },
 // };
 
-const Customer = () => {
-  const [customers, setCustomers] = useState<Customer[]>([]);
+const CustomerPage = () => {
+  const {customers, setCustomers} = useContext(CustomerContext);
+  
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
+  const { isOpen, setIsOpen } = useContext(OverlayContext);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -121,6 +126,8 @@ const Customer = () => {
       return;
     }
     setIsUpdateOpen(true);
+    setIsOpen(true);
+
   };
 
   return (
@@ -153,21 +160,24 @@ const Customer = () => {
           />
         </div>
         <Space direction="horizontal" className="relative top-[-9%]">
-          <Button type="primary" className="bg-blue-500">
+          <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
             Thêm
           </Button>
           <Button danger type="primary" onClick={handleDeleteBtn}>
             Xóa
           </Button>
+
           <Button 
           type="primary" 
           className="bg-green-600"
           onClick={handleUpdateBtn}
           >
+
             Sửa
           </Button>
         </Space>
       </div>
+
       {isUpdateOpen && (
         <UpdateCustomer
           setIsUpdateOpen={setIsUpdateOpen}
@@ -175,8 +185,9 @@ const Customer = () => {
         />
       )}
       <ToastContainer />
+      {isOpen && <AddCustomer />}
     </Fragment>
   );
 };
 
-export default Customer;
+export default CustomerPage;
