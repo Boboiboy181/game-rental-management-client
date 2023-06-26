@@ -19,7 +19,7 @@ const MainLayout: React.FC = () => {
       key: '1',
       icon: <UserOutlined />,
       label: 'Khách hàng',
-      path: '/customer',
+      path: '/customers',
     },
     {
       key: '2',
@@ -37,19 +37,19 @@ const MainLayout: React.FC = () => {
         </svg>
       ),
       label: 'Video game',
-      path: '/video-game',
+      path: '/video-games',
     },
     {
       key: '3',
       icon: <ContainerOutlined />,
       label: 'Phiếu đặt trước',
-      path: '/pre-order',
+      path: '/pre-orders',
     },
     {
       key: '4',
       icon: <ContainerOutlined />,
       label: 'Phiếu thuê',
-      path: '/rental',
+      path: '/rentals',
     },
     {
       key: '5',
@@ -69,7 +69,7 @@ const MainLayout: React.FC = () => {
         </svg>
       ),
       label: 'Phiếu trả',
-      path: '/return',
+      path: '/returns',
     },
     {
       key: '6',
@@ -87,7 +87,7 @@ const MainLayout: React.FC = () => {
         </svg>
       ),
       label: 'Hóa đơn',
-      path: '/invoice',
+      path: '/invoices',
     },
   ];
 

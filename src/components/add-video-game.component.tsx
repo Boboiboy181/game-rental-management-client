@@ -54,7 +54,7 @@ const AddVideoGame = ({
 
   const postVideoGame = async (data: FormData) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
         data,
       );

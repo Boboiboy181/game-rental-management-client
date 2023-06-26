@@ -16,7 +16,7 @@ const { Text } = Typography;
 //   },
 // };
 
-const Rental = () => {
+const RentalPage = () => {
   const [rental, setRental] = useState<Rental[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
@@ -145,4 +145,4 @@ const Rental = () => {
   );
 };
 
-export default Rental;
+export default RentalPage;

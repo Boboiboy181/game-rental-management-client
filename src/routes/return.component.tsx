@@ -14,7 +14,7 @@ type DataType = {
   createdAt: string;
 };
 
-const ReturnTicket = () => {
+const ReturnPage = () => {
   const [returnTickets, setReturnTickets] = useState<Return[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const navigate = useNavigate();
@@ -163,4 +163,4 @@ const ReturnTicket = () => {
   );
 };
 
-export default ReturnTicket;
+export default ReturnPage;

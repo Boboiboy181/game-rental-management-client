@@ -2,6 +2,7 @@ import { Button, Form, Input } from 'antd';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { Product } from '../types/product.type';
 
 const defaultFormFields = {
   price: 0,
@@ -15,9 +16,11 @@ type UpdateDto = {
 
 const UpdateVideoGame = ({
   setIsUpdateOpen,
+  setProducts,
   selectedUpdate,
 }: {
   setIsUpdateOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   selectedUpdate: React.Key[];
 }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
@@ -26,7 +29,7 @@ const UpdateVideoGame = ({
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${selectedUpdate[0]}`
+          `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${selectedUpdate[0]}`,
         );
         const { price, quantity } = response.data;
 
@@ -45,30 +48,22 @@ const UpdateVideoGame = ({
     }
   }, [selectedUpdate]);
 
-
   const { price, quantity } = formFields;
+  console.log(formFields);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormFields((prev) => ({ ...prev, [name]: value }));
-    console.log(price, quantity);
   };
 
-  console.log('Component re-rendered');
-
-
-  console.log(1);
-  
   const handleCloseBtn = () => setIsUpdateOpen(false);
 
   const updateVideoGame = async (id: React.Key, updateDto: UpdateDto) => {
     try {
-      const response = await axios.patch(
+      await axios.patch(
         `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${id}`,
         updateDto,
       );
-
-      console.log(response);
 
       setIsUpdateOpen(false);
 
