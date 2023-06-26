@@ -16,7 +16,7 @@ type DataType = {
   createdAt: string;
 };
 
-const PreOrder = () => {
+const PreOrderPage = () => {
   const [preOrders, setPreorder] = useState<PreOrder[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [filteredPreorders, setFilteredPreorders] =
@@ -79,7 +79,8 @@ const PreOrder = () => {
   const data = filteredPreorders.map((preOrder) => ({
     key: preOrder._id,
     customerName: preOrder.customer.customerName,
-    estimatedPrice: preOrder.estimatedPrice,
+    estimatedPrice: formatPrice.format(preOrder.estimatedPrice),
+    createdAt: formatDate(preOrder.createdAt.toString()),
   }));
 
   const rowSelection = {
