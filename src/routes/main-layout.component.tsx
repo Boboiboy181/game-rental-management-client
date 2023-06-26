@@ -37,7 +37,7 @@ const MainLayout: React.FC = () => {
         </svg>
       ),
       label: 'Video game',
-      path: '/video-games',
+      path: '/video-game',
     },
     {
       key: '3',
@@ -88,6 +88,12 @@ const MainLayout: React.FC = () => {
       ),
       label: 'Hóa đơn',
       path: '/invoice',
+    },
+    {
+      key: '7',
+      icon: <ContainerOutlined />,
+      label: 'Gói thuê',
+      path: '/rental-package',
     },
   ];
 

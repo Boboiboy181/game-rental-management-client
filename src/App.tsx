@@ -9,6 +9,7 @@ import Customer from './routes/customer.component';
 import Product from './routes/product.component';
 import Return from './routes/return.component';
 import Rental from './routes/rental.component';
+import RentalPackage from './routes/rental-package.component';
 
 const App = () => {
   useEffect(() => {
@@ -18,18 +19,20 @@ const App = () => {
 
   return (
     <ConfigProvider>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home />} />
-          <Route path="pre-order" element={<PreOrder />} />
-          <Route path="customer" element={<Customer />} />
-          <Route path="video-game" element={<Product />} />
-          <Route path="rental" element={<Rental />} />
-          <Route path="return" element={<Return />} />
-          <Route path="invoice" element={<div>Invoices</div>} />
-        </Route>
-      </Routes>
-    </ConfigProvider>
+    <Routes>
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<Home />} />
+        <Route path="pre-order" element={<PreOrder />} />
+        <Route path="customer" element={<Customer />} />
+        <Route path="video-game" element={<Product />} />
+        <Route path="rental" element={<Rental />} />
+        <Route path="return" element={<Return />} />
+        <Route path="invoice" element={<div>Invoices</div>} />
+        <Route path="rental-package" element={<RentalPackage />} />
+      </Route>
+    </Routes>
+  </ConfigProvider>
+  
   );
 };
 
