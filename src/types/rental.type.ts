@@ -4,5 +4,5 @@ type Rental = {
     deposit: number;
     returnValue: number;
     returnState: string;
-    estimatePrice: number;
+    estimatedPrice: number;
   }

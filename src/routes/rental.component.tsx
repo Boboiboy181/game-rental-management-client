@@ -49,8 +49,8 @@ const Rental = () => {
       dataIndex: 'returnstate',
     },
     {
-      title: 'EstimatePrice',
-      dataIndex: 'estimateprice',
+      title: 'EstimatedPrice',
+      dataIndex: 'estimatedprice',
     }
   ];
 
@@ -60,7 +60,7 @@ const Rental = () => {
     deposit: rental.deposit,
     returnvalue: rental.returnValue,
     returnstate: rental.returnState,
-    estimateprice: rental.estimatePrice,
+    estimatedprice: rental.estimatedPrice,
   }));
 
   const [searchField, setSearchField] = useState('');
