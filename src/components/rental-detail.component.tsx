@@ -27,15 +27,15 @@ const RentalDetail = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPreOrder = async () => {
+    const fetchRental = async () => {
       const { data }: { data: Rental } = await axios.get(
-        `http://localhost:3000/rental/${rentalID}`,
+        `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental/${rentalID}`,
       );
       setRental(data);
       setLoading(false);
     };
 
-    fetchPreOrder();
+    fetchRental();
   }, [setRental]);
 
   if (loading) {
