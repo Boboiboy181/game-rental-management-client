@@ -58,8 +58,6 @@ const AddRentalComponent = () => {
     });
   }, [selectQuantity]);
 
-  console.log(selectQuantity);
-
   const columns: ColumnsType<DataType> = [
     {
       title: 'Tên game',
@@ -175,7 +173,7 @@ const AddRentalComponent = () => {
         rental,
       );
       console.log(respone);
-      
+
       toast.success('Rental ticket created successfully 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
@@ -205,7 +203,7 @@ const AddRentalComponent = () => {
     };
 
     const rentalID = await postRental(rental);
-    navigate(`/rentals/${rentalID}`);
+    if (rentalID) navigate(`/rentals/${rentalID}`);
   };
 
   return (

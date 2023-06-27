@@ -11,6 +11,7 @@ type CartContextType = {
   ) => void;
   updateCartItem: (product: ProductForCart, newQuantity: number) => void;
   deleteCartItem: (product: ProductForCart) => void;
+  resetCart: () => void;
 };
 
 type CartProviderProps = {
@@ -100,6 +101,7 @@ export const CartContext = createContext<CartContextType>({
   addItemToCart: () => {},
   updateCartItem: () => {},
   deleteCartItem: () => {},
+  resetCart: () => {},
 });
 
 export const CartProvider = ({ children }: CartProviderProps) => {
@@ -126,12 +128,16 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const deleteCartItem = (productToDelete: ProductForCart) => {
     setCartItems(deleteCartItemFromCart(cartItems, productToDelete));
   };
+  const resetCart= () => {
+    setCartItems([] as ProductForCart[]);
+  };
 
   const values = {
     cartItems,
     addItemToCart,
     updateCartItem,
     deleteCartItem,
+    resetCart
   };
 
   return <CartContext.Provider value={values}>{children}</CartContext.Provider>;
