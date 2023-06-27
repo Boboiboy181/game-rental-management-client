@@ -1,66 +1,79 @@
 import { Space, Typography, Divider, Button } from 'antd';
-import Table from 'antd/es/table';
+import Table, { ColumnsType } from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Rental } from '../types/rental.type';
+import { formatPrice } from '../utils/format-price.function';
+import { useNavigate } from 'react-router-dom';
 
 const { Text } = Typography;
 
-// // rowSelection object indicates the need for row selection
-// const rowSelection = {
-//   onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-//     console.log(
-//       `selectedRowKeys: ${selectedRowKeys}`,
-//       'selectedRows: ',
-//       selectedRows,
-//     );
-//   },
-// };
+type DataType = {
+  key: React.Key;
+  customerName: string;
+  deposit: number;
+  returnState: string;
+  estimatedPrice: string;
+};
 
 const RentalPage = () => {
-  const [rental, setRental] = useState<Rental[]>([]);
+  const [rentals, setRentals] = useState<Rental[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRental = async () => {
       const { data }: { data: Rental[] } = await axios.get(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental',
       );
-      setRental(data);
+      setRentals(data);
     };
 
     fetchRental();
   }, []);
 
-  const columns = [
+  const columns: ColumnsType<DataType> = [
     {
-      title: 'customer',
-      dataIndex: 'customer',
+      title: 'Khách hàng',
+      dataIndex: 'customerName',
     },
     {
-      title: 'Deposit',
+      title: 'Tiền đặt cọc',
       dataIndex: 'deposit',
+      align: 'center',
     },
     {
-      title: 'ReturnValue',
-      dataIndex: 'returnvalue',
+      title: 'Trạng thái trả',
+      dataIndex: 'returnState',
+      align: 'center',
     },
     {
-      title: 'ReturnState',
-      dataIndex: 'returnstate',
+      title: 'Giá trị ước tính',
+      dataIndex: 'estimatedPrice',
+      align: 'center',
     },
     {
-      title: 'EstimatePrice',
-      dataIndex: 'estimateprice',
-    }
+      title: 'Thao tác',
+      width: 100,
+      align: 'center',
+      render: (_, record) => (
+        <Button
+          type="primary"
+          className="bg-blue-600"
+          onClick={() => handleDetailBtn(record.key)}
+        >
+          Chi tiết
+        </Button>
+      ),
+    },
   ];
 
-  const data = rental.map((rental) => ({
+  const data = rentals.map((rental) => ({
     key: rental._id,
-    customer: rental.customer,
+    customerName: rental.customer.customerName,
     deposit: rental.deposit,
-    returnvalue: rental.returnValue,
-    returnstate: rental.returnState,
-    estimateprice: rental.estimatePrice,
+    returnState: rental.returnState,
+    estimatedPrice: formatPrice.format(rental.estimatedPrice),
   }));
 
   const [searchField, setSearchField] = useState('');
@@ -92,7 +105,7 @@ const RentalPage = () => {
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental',
       );
       // Update customer state and selectedRowKeys state
-      setRental(data);
+      setRentals(data);
       setSelectedRowKeys([]);
 
       // Refresh the page by updating the searchField state
@@ -102,8 +115,12 @@ const RentalPage = () => {
     }
   };
 
+  const handleDetailBtn = (key: React.Key) => {
+    navigate(`/rentals/${key}`);
+  };
+
   return (
-    <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
+    <div className="w-[90%] h-[80%]s bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex justify-between">
         <Text className="text-2xl font-semibold">Rental</Text>
         <div className="input-field">
@@ -127,7 +144,7 @@ const RentalPage = () => {
           }}
           columns={columns}
           dataSource={data}
-          pagination={{ pageSize:5 }}
+          pagination={{ pageSize: 5 }}
         />
       </div>
       <Space direction="horizontal" className="relative top-[-9%]">

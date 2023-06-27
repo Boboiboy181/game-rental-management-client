@@ -10,6 +10,7 @@ import PreOrderPage from './routes/pre-order.component';
 import ProductPage from './routes/product.component';
 import RentalPage from './routes/rental.component';
 import ReturnPage from './routes/return.component';
+import RentalDetail from './components/rental-detail.component';
 
 const App = () => {
   useEffect(() => {
@@ -27,7 +28,11 @@ const App = () => {
           <Route path="pre-orders" element={<PreOrderPage />} />
           <Route path="pre-orders/:preOrderID" element={<PreOrderDetail />} />
           <Route path="rentals" element={<RentalPage />} />
-          <Route path="rentals/create/:preOrderID?" element={<p>Tao phieu thue</p>}/>
+          <Route path="rentals/:rentalID" element={<RentalDetail />} />
+          <Route
+            path="rentals/create/:preOrderID?"
+            element={<p>Tao phieu thue</p>}
+          />
           <Route path="returns" element={<ReturnPage />} />
           <Route path="invoices" element={<div>Invoices</div>} />
         </Route>
