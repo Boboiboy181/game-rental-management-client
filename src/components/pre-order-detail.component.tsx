@@ -22,7 +22,7 @@ type DataType = {
 const PreOrderDetail = () => {
   const { preOrderID } = useParams();
   const navigate = useNavigate();
-  const handleCloseDetailBtn = () => navigate('/pre-order');
+  const handleCloseDetailBtn = () => navigate('/pre-orders');
   const [preOrder, setPreOrder] = useState<PreOrder>({} as PreOrder);
   const [loading, setLoading] = useState(true);
 
@@ -103,7 +103,7 @@ const PreOrderDetail = () => {
   }
 
   return (
-    <div className="w-[85%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
+    <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex flex-col items-start">
         <Text className="text-2xl font-semibold">Phiếu đặt trước</Text>
         <p className="text-xs text-black/40">

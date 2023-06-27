@@ -34,6 +34,10 @@ const App = () => {
             element={<p>Tao phieu thue</p>}
           />
           <Route path="returns" element={<ReturnPage />} />
+          <Route
+            path="returns/create/:rentalID?"
+            element={<p>Tao phieu thue</p>}
+          />
           <Route path="invoices" element={<div>Invoices</div>} />
         </Route>
       </Routes>
