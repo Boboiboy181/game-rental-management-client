@@ -55,8 +55,6 @@ const UpdateCustomer = ({
     setFormFields((prev) => ({ ...prev, [name]: value }));
   };
 
-  console.log(customerName, email,phoneNumber );
-
   const handleCloseBtn = () => setIsUpdateOpen(false);
 
   const UpdateCustomer = async (id: React.Key, updateDto: UpdateDto) => {
@@ -105,7 +103,8 @@ const UpdateCustomer = ({
         className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 pb-0 left-[25%] top-[25%]"
         onSubmitCapture={handleSubmit}
       >
-        <Form.Item label="Tên khách hàng">
+        <h1 className="text-2xl font-semibold mb-4">Cập nhật thông tin khách hàng</h1>
+        <Form.Item label="Họ và tên">
           <Input
             required
             type="string"

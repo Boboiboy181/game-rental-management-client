@@ -2,32 +2,18 @@ import { Space, Typography, Divider, Button } from 'antd';
 import Table from 'antd/es/table';
 import { ToastContainer, toast } from 'react-toastify';
 import UpdateCustomer from '../components/update-customer.component';
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import AddCustomer from '../components/add-customer.component';
 import { Customer } from '../types/customer.type';
-import { OverlayContext } from '../context/overlay.context';
-import { CustomerContext } from '../context/customer.context';
 
 const { Text } = Typography;
-
-// // rowSelection object indicates the need for row selection
-// const rowSelection = {
-//   onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-//     console.log(
-//       `selectedRowKeys: ${selectedRowKeys}`,
-//       'selectedRows: ',
-//       selectedRows,
-//     );
-//   },
-// };
 
 const CustomerPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
-  const { isOpen, setIsOpen } = useContext(OverlayContext);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -58,9 +44,9 @@ const CustomerPage = () => {
       dataIndex: 'address',
     },
     {
-      title: 'point',
+      title: 'Point',
       dataIndex: 'point',
-    }
+    },
   ];
 
   const data = customers.map((customer) => ({
@@ -126,13 +112,11 @@ const CustomerPage = () => {
       return;
     }
     setIsUpdateOpen(true);
-    setIsOpen(true);
-
   };
 
   return (
     <Fragment>
-      <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
+      <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
         <Space className="flex justify-between">
           <Text className="text-2xl font-semibold">Customer</Text>
           <div className="input-field">
@@ -156,7 +140,7 @@ const CustomerPage = () => {
             }}
             columns={columns}
             dataSource={data}
-            pagination={{ pageSize:5 }}
+            pagination={{ pageSize: 5 }}
           />
         </div>
         <Space direction="horizontal" className="relative top-[-9%]">
@@ -167,12 +151,11 @@ const CustomerPage = () => {
             Xóa
           </Button>
 
-          <Button 
-          type="primary" 
-          className="bg-green-600"
-          onClick={handleUpdateBtn}
+          <Button
+            type="primary"
+            className="bg-green-600"
+            onClick={handleUpdateBtn}
           >
-
             Sửa
           </Button>
         </Space>
@@ -184,8 +167,8 @@ const CustomerPage = () => {
           selectedUpdate={selectedRowKeys}
         />
       )}
+      {isAddOpen && <AddCustomer setIsAddOpen={setIsAddOpen} />}
       <ToastContainer />
-      {isOpen && <AddCustomer />}
     </Fragment>
   );
 };

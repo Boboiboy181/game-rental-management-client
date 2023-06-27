@@ -1,6 +1,5 @@
 import { Button, Form, Input } from 'antd';
-import { useContext, useState } from 'react';
-import { OverlayContext } from '../context/overlay.context';
+import { useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -8,30 +7,26 @@ const defaultFormFields = {
   customerName: '',
   email: '',
   phoneNumber: '',
-  point: 0,
+  address: '',
 };
 
-const AddCustomer = () => {
-  const { setIsOpen } = useContext(OverlayContext);
+const AddCustomer = ({
+  setIsAddOpen,
+}: {
+  setIsAddOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
 
-  const {
-    customerName,
-    email,
-    phoneNumber,
-    point,
-  } = formFields;
+  const { customerName, email, phoneNumber, address } = formFields;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormFields((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleCloseBtn = () => setIsAddOpen(false);
 
-  const handleCloseBtn = () => setIsOpen(false);
-
-
-  const postCustomer  = async (data: FormData) => {
+  const postCustomer = async (data: FormData) => {
     try {
       const response = await axios.post(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/customer',
@@ -61,7 +56,7 @@ const AddCustomer = () => {
     customer.append('customerName', customerName);
     customer.append('email', email);
     customer.append('phoneNumber', phoneNumber);
-    customer.append('point', point.toString());
+    customer.append('address', address);
     await postCustomer(customer);
     setFormFields(defaultFormFields);
   };
@@ -70,10 +65,11 @@ const AddCustomer = () => {
     <div className="fixed bg-black/[.5] w-full h-full">
       <Form
         layout="horizontal"
-        className="absolute w-[25rem] bg-white flex flex-col rounded-lg mt-6 h-[85%] p-6 left-[25%]"
+        className="absolute w-[25rem] bg-white flex flex-col rounded-lg mt-6 p-6 pb-0 left-[25%] top-[25%]"
         onSubmitCapture={handleSubmit}
       >
-        <Form.Item label="Tên khách hàng">
+        <h1 className="text-2xl text-center font-semibold mb-4">Thêm khách hàng</h1>
+        <Form.Item label="Họ và tên">
           <Input
             required
             type="text"
@@ -103,17 +99,17 @@ const AddCustomer = () => {
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item label="Điểm tích lũy">
+        <Form.Item label="Địa chỉ">
           <Input
             required
             type="text"
-            placeholder="Nhập điểm"
-            name="point"
-            value={point}
+            placeholder="Nhập địa chỉ"
+            name="address"
+            value={address}
             onChange={handleChange}
           />
         </Form.Item>
-    
+
         <Form.Item className="flex items-center justify-between">
           <Button
             type="primary"
@@ -131,7 +127,7 @@ const AddCustomer = () => {
           </Button>
         </Form.Item>
       </Form>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };
