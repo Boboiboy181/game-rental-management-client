@@ -83,7 +83,7 @@ const deleteCartItemFromCart = (
   productToDelete: ProductForCart,
 ): ProductForCart[] => {
   const existingCartItem = cartItems.find(
-    (cartItem: Product) => cartItem._id === productToDelete._id,
+    (cartItem: ProductForCart) => cartItem._id === productToDelete._id,
   );
 
   if (existingCartItem) {

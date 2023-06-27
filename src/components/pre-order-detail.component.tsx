@@ -6,7 +6,7 @@ import { formatDate } from '../utils/format-date.function';
 import { PreOrder } from '../types/pre-order.type';
 import Table, { ColumnsType } from 'antd/es/table';
 import { formatPrice } from '../utils/format-price.function';
-import { caculatePrice } from '../utils/caculate-price.function';
+import { calculatePrice } from '../utils/caculate-price.function';
 
 const { Text } = Typography;
 
@@ -71,7 +71,7 @@ const PreOrderDetail = () => {
       render: (_, record) => (
         <p className="font-semibold">
           {formatPrice.format(
-            caculatePrice(record.price, record.numberOfRentalDays),
+            calculatePrice(record.price, record.numberOfRentalDays),
           )}
         </p>
       ),
@@ -82,7 +82,7 @@ const PreOrderDetail = () => {
       render: (_, record) => (
         <p className="font-semibold text-red-600">
           {formatPrice.format(
-            record.preOrderQuantity * caculatePrice(record.price, record.numberOfRentalDays)
+            record.preOrderQuantity * calculatePrice(record.price, record.numberOfRentalDays)
           )}
         </p>
       ),

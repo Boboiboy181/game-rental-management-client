@@ -1,21 +1,64 @@
-import { Space, Typography, Divider, Button } from 'antd';
-import Table from 'antd/es/table';
-import { Fragment, useEffect, useState } from 'react';
+import { Space, Typography, Divider, Button, Dropdown, Select } from 'antd';
+import Table, { ColumnsType } from 'antd/es/table';
+import { Fragment, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import AddVideoGame from '../components/add-video-game.component';
 import { Product } from '../types/product.type';
-import UpdateVideoGame from '../components/update-video-game.component';
+import { CartContext } from '../context/cart.context';
+import { calculatePrice } from '../utils/caculate-price.function';
+import { ProductForCart } from '../types/product-cart.type';
+import { RentalDaysEnum } from '../enums/rental-days.enum';
 import { ToastContainer, toast } from 'react-toastify';
 
 const { Text } = Typography;
 
-const AddProductToCart = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+type DataType = {
+  key: string;
+  productName: string;
+  price: number;
+  quantity: number;
+  numberOfRentalDays: string;
+};
+
+const items = [
+  {
+    value: 'ONE_DAY',
+    label: '1',
+  },
+  {
+    value: 'THREE_DAYS',
+    label: '3',
+  },
+  {
+    value: 'SEVEN_DAYS',
+    label: '7',
+  },
+  {
+    value: 'FOURTEEN_DAYS',
+    label: '14',
+  },
+  {
+    value: 'THIRTY_DAYS',
+    label: '30',
+  },
+  {
+    value: 'SIXTY_DAYS',
+    label: '60',
+  },
+];
+
+const AddProductToCart = ({
+  setIsAddProductOpen,
+}: {
+  setIsAddProductOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const [products, setProducts] = useState<ProductForCart[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
-  const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const [searchField, setSearchField] = useState('');
+  const [selectedRentalDays, setSelectedRentalDays] = useState<{
+    [key: string]: string;
+  }>({});
+
+  const { cartItems, addItemToCart } = useContext(CartContext);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
@@ -24,7 +67,7 @@ const AddProductToCart = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const { data }: { data: Product[] } = await axios.get(
+      const { data }: { data: ProductForCart[] } = await axios.get(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
       );
       setProducts(data);
@@ -33,24 +76,60 @@ const AddProductToCart = () => {
     fetchProducts();
   }, []);
 
-  const columns = [
+  const columns: ColumnsType<DataType> = [
     {
-      title: 'Product Name',
+      title: 'Tên game',
       dataIndex: 'productName',
     },
     {
-      title: 'Price',
+      title: 'Giá',
       dataIndex: 'price',
+      align: 'center',
     },
     {
-      title: 'Quantity',
+      title: 'Số lượng',
       dataIndex: 'quantity',
+      align: 'center',
     },
     {
-      title: 'Release Date',
-      dataIndex: 'releaseDate',
+      title: 'Số ngày thuê',
+      dataIndex: 'numberOfRentalDays',
+      align: 'center',
+      render: (_, record) => (
+        <Select
+          defaultValue={record.numberOfRentalDays}
+          onChange={(value) => handleRentalDaysChange(record.key, value)}
+        >
+          {items.map((item) => (
+            <Select.Option key={item.value} value={item.value}>
+              {item.label}
+            </Select.Option>
+          ))}
+        </Select>
+      ),
+    },
+    {
+      title: 'Thao tác',
+      align: 'right',
+      render: (_, record) => (
+        <Button
+          className="bg-blue-600 text-white"
+          type="primary"
+          onClick={() => handleAddProductBtn(record.key)}
+        >
+          Thêm
+        </Button>
+      ),
     },
   ];
+
+  const data = filteredProducts.map((product) => ({
+    key: product._id,
+    productName: product.productName,
+    price: product.price,
+    quantity: product.quantity,
+    numberOfRentalDays: selectedRentalDays[product._id] || 'ONE_DAY',
+  }));
 
   useEffect(() => {
     const newFilteredProducts = products.filter((product) => {
@@ -59,67 +138,57 @@ const AddProductToCart = () => {
     setFilteredProducts(newFilteredProducts);
   }, [products, searchField]);
 
-  const data = filteredProducts.map((product) => ({
-    key: product._id,
-    productName: product.productName,
-    price: product.price,
-    quantity: product.quantity,
-    releaseDate: product.releaseDate,
-  }));
-
-  const rowSelection = {
-    onChange: (selectedKeys: React.Key[]) => {
-      setSelectedRowKeys(selectedKeys);
-    },
+  const handleCloseBtn = () => {
+    setIsAddProductOpen(false);
   };
 
-  const handleDeleteBtn = async () => {
-    try {
-      // Delete selected rows
-      await Promise.all(
-        selectedRowKeys.map(async (key) => {
-          await axios.delete(
-            `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${key}`,
-          );
-        }),
-      );
+  const handleRentalDaysChange = (key: string, value: string) => {
+    setSelectedRentalDays((prevDays) => ({
+      ...prevDays,
+      [key]: value,
+    }));
+  };
 
-      // Fetch updated products data
-      const { data }: { data: Product[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
-      );
+  const handleAddProductBtn = (productID: string) => {
+    const product: ProductForCart | undefined = products.find(
+      (product) => product._id === productID,
+    );
+    if (product) {
+      const rentalDays = selectedRentalDays[productID]
+        ? selectedRentalDays[productID]
+        : 'ONE_DAY';
+      const numberOfRentalDays: RentalDaysEnum =
+        RentalDaysEnum[rentalDays as keyof typeof RentalDaysEnum];
 
-      // Update products state and selectedRowKeys state
-      setProducts(data);
-      setSelectedRowKeys([]);
-    } catch (error) {
-      console.log('Error deleting rows:', error);
+      const priceByDays = calculatePrice(product.price, numberOfRentalDays);
+
+      // check if product is already in cart
+      const productInCart = cartItems.find((item) => item._id === productID);
+      if (productInCart) {
+        toast.error('Game already in cart !', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 5000,
+          theme: 'colored',
+          pauseOnHover: true,
+        });
+      } else {
+        addItemToCart(product, rentalDays, priceByDays);
+        toast.success('Added to cart successfully. 🥳', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 5000,
+          theme: 'colored',
+          pauseOnHover: true,
+        });
+      }
     }
-  };
-
-  const handleAddBtn = () => {
-    setIsAddOpen(true);
-  };
-
-  const handleUpdateBtn = () => {
-    if (selectedRowKeys.length === 0 || selectedRowKeys.length > 1) {
-      toast.error('Please select only 1 video game to update 😞', {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 8000,
-        theme: 'colored',
-        pauseOnHover: true,
-      });
-      return;
-    }
-    setIsUpdateOpen(true);
   };
 
   return (
     <Fragment>
-      <div className="fixed bg-black/[.5] w-full h-full">
-        <div className="w-[90%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
+      <div className="fixed bg-black/[.5] w-screen h-screen">
+        <div className="w-[60%] bg-white rounded-md relative p-5 shadow-2xl top-[20%] left-[7%]">
           <Space className="flex justify-between">
-            <Text className="text-2xl font-semibold">Video Games</Text>
+            <Text className="text-3xl font-semibold">Thêm game</Text>
             <div className="input-field">
               <input
                 className="px-4"
@@ -132,47 +201,24 @@ const AddProductToCart = () => {
               <label htmlFor="searchfield">Search game</label>
             </div>
           </Space>
-          <div>
+          <div className="relative">
             <Divider />
             <Table
-              rowSelection={{
-                type: 'checkbox',
-                ...rowSelection,
-              }}
               columns={columns}
               dataSource={data}
-              pagination={{ pageSize: 5 }}
+              pagination={{ pageSize: 3 }}
             />
+            <Button
+              type="primary"
+              danger
+              className=" absolute top-[85%]"
+              onClick={handleCloseBtn}
+            >
+              Đóng
+            </Button>
           </div>
-          <Space direction="horizontal" className="relative top-[-9%]">
-            <Button
-              type="primary"
-              className="bg-blue-500"
-              onClick={handleAddBtn}
-            >
-              Thêm
-            </Button>
-            <Button danger type="primary" onClick={handleDeleteBtn}>
-              Xóa
-            </Button>
-            <Button
-              type="primary"
-              className="bg-green-600"
-              onClick={handleUpdateBtn}
-            >
-              Sửa
-            </Button>
-          </Space>
         </div>
       </div>
-      {isAddOpen && <AddVideoGame setIsAddOpen={setIsAddOpen} />}
-      {isUpdateOpen && (
-        <UpdateVideoGame
-          setIsUpdateOpen={setIsUpdateOpen}
-          selectedUpdate={selectedRowKeys}
-          setProducts={setProducts}
-        />
-      )}
       <ToastContainer />
     </Fragment>
   );
