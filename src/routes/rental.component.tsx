@@ -119,6 +119,10 @@ const RentalPage = () => {
     navigate(`/rentals/${key}`);
   };
 
+  const handleAddBtn = () => {
+    navigate('/rentals/create');
+  }
+
   return (
     <div className="w-[90%] h-[80%]s bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex justify-between">
@@ -148,7 +152,7 @@ const RentalPage = () => {
         />
       </div>
       <Space direction="horizontal" className="relative top-[-9%]">
-        <Button type="primary" className="bg-blue-500">
+        <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
           Thêm
         </Button>
         <Button danger type="primary" onClick={handleDeleteBtn}>

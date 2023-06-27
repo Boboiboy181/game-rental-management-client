@@ -22,7 +22,7 @@ type DataType = {
 const PreOrderDetail = () => {
   const { preOrderID } = useParams();
   const navigate = useNavigate();
-  const handleCloseDetailBtn = () => navigate('/pre-order');
+  const handleCloseDetailBtn = () => navigate('/pre-orders');
   const [preOrder, setPreOrder] = useState<PreOrder>({} as PreOrder);
   const [loading, setLoading] = useState(true);
 
@@ -99,7 +99,7 @@ const PreOrderDetail = () => {
   }));
 
   const handleCreateBtn = () => {
-    navigate(`/rental/create/${preOrderID}`);
+    navigate(`/rentals/create/${preOrderID}`);
   }
 
   return (

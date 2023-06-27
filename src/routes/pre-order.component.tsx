@@ -116,7 +116,7 @@ const PreOrderPage = () => {
   };
 
   const handleDetailBtn = (key: React.Key) => {
-    navigate(`/pre-order/${key}`);
+    navigate(`/pre-orders/${key}`);
   };
 
   return (
