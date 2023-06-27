@@ -4,8 +4,12 @@ import MainLayout from './routes/main-layout.component';
 import { ConfigProvider } from 'antd';
 import { useEffect } from 'react';
 import Home from './routes/home.component';
+import PreOrderDetail from './components/pre-order-detail.component';
 import CustomerPage from './routes/customer.component';
-import Product from './routes/product.component';
+import PreOrderPage from './routes/pre-order.component';
+import ProductPage from './routes/product.component';
+import RentalPage from './routes/rental.component';
+import ReturnPage from './routes/return.component';
 
 const App = () => {
   useEffect(() => {
@@ -19,10 +23,12 @@ const App = () => {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="customers" element={<CustomerPage />} />
-          <Route path="video-games" element={<Product />} />
-          <Route path="pre-orders" element={<div>Pre-order</div>} />
-          <Route path="rentals" element={<div>Rentals</div>} />
-          <Route path="returns" element={<div>Returns</div>} />
+          <Route path="video-games" element={<ProductPage />} />
+          <Route path="pre-orders" element={<PreOrderPage />} />
+          <Route path="pre-orders/:preOrderID" element={<PreOrderDetail />} />
+          <Route path="rentals" element={<RentalPage />} />
+          <Route path="rentals/create/:preOrderID?" element={<p>Tao phieu thue</p>}/>
+          <Route path="returns" element={<ReturnPage />} />
           <Route path="invoices" element={<div>Invoices</div>} />
         </Route>
       </Routes>

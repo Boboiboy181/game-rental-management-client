@@ -8,6 +8,7 @@ import AddCustomer from '../components/add-customer.component';
 import { Customer } from '../types/customer.type';
 import { OverlayContext } from '../context/overlay.context';
 import { CustomerContext } from '../context/customer.context';
+
 const { Text } = Typography;
 
 // // rowSelection object indicates the need for row selection
@@ -22,8 +23,7 @@ const { Text } = Typography;
 // };
 
 const CustomerPage = () => {
-  const {customers, setCustomers} = useContext(CustomerContext);
-  
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
