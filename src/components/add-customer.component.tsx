@@ -17,7 +17,12 @@ const AddCustomer = ({
 }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
 
-  const { customerName, email, phoneNumber, address } = formFields;
+  const { 
+    customerName, 
+    email, 
+    phoneNumber, 
+    address,
+  } = formFields;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -51,7 +56,6 @@ const AddCustomer = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const customer = new FormData();
     customer.append('customerName', customerName);
     customer.append('email', email);
@@ -89,12 +93,12 @@ const AddCustomer = ({
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item label="SĐT">
+        <Form.Item label="Số điện thoại">
           <Input
             required
             type="text"
-            placeholder="Nhập số điện thoại"
-            name="text"
+            placeholder="SĐT"
+            name="phoneNumber"
             value={phoneNumber}
             onChange={handleChange}
           />

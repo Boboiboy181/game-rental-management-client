@@ -1,10 +1,10 @@
 import { Space, Typography, Divider, Button } from 'antd';
 import Table from 'antd/es/table';
 import { ToastContainer, toast } from 'react-toastify';
-import UpdateCustomer from '../components/update-customer.component';
 import { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import AddCustomer from '../components/add-customer.component';
+import UpdateCustomer from '../components/update-customer.component';
 import { Customer } from '../types/customer.type';
 
 const { Text } = Typography;
@@ -14,6 +14,8 @@ const CustomerPage = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
+  const [searchField, setSearchField] = useState('');
+  const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>(customers);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -43,22 +45,23 @@ const CustomerPage = () => {
       title: 'Address',
       dataIndex: 'address',
     },
-    {
-      title: 'Point',
-      dataIndex: 'point',
-    },
   ];
 
-  const data = customers.map((customer) => ({
+  useEffect(() => {
+    const newFilteredCustomers = customers.filter((customer) => {
+      return customer.customerName.toLowerCase().includes(searchField);
+    });
+    setFilteredCustomers(newFilteredCustomers);
+  }, [customers, searchField]);
+
+  const data = filteredCustomers.map((customer) => ({
     key: customer._id,
     customerName: customer.customerName,
     email: customer.email,
-    phoneNumber: customer.phoneNumber,
     address: customer.address,
-    point: customer.point,
+    phoneNumber: customer.phoneNumber,
   }));
 
-  const [searchField, setSearchField] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
@@ -168,6 +171,12 @@ const CustomerPage = () => {
         />
       )}
       {isAddOpen && <AddCustomer setIsAddOpen={setIsAddOpen} />}
+      {isUpdateOpen && (
+        <UpdateCustomer
+          setIsUpdateOpen={setIsUpdateOpen}
+          selectedUpdate={selectedRowKeys}
+        />
+      )}
       <ToastContainer />
     </Fragment>
   );

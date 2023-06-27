@@ -164,7 +164,6 @@ const ProductPage = () => {
         <UpdateVideoGame
           setIsUpdateOpen={setIsUpdateOpen}
           selectedUpdate={selectedRowKeys}
-          setProducts={setProducts}
         />
       )}
       <ToastContainer />

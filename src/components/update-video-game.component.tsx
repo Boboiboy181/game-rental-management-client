@@ -2,7 +2,7 @@ import { Button, Form, Input } from 'antd';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import { Product } from '../types/product.type';
+
 
 const defaultFormFields = {
   price: 0,
@@ -16,11 +16,9 @@ type UpdateDto = {
 
 const UpdateVideoGame = ({
   setIsUpdateOpen,
-  setProducts,
   selectedUpdate,
 }: {
   setIsUpdateOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   selectedUpdate: React.Key[];
 }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
