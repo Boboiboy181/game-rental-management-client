@@ -1,8 +1,10 @@
-type Rental = {
+import { Customer } from './customer.type';
+
+export type Rental = {
     _id: string;
-    customer: string;
+    customer: Customer;
     deposit: number;
     returnValue: number;
     returnState: string;
-    estimatePrice: number;
+    estimatedPrice: number;
   }
