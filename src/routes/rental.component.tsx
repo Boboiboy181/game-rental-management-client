@@ -2,8 +2,20 @@ import { Space, Typography, Divider, Button } from 'antd';
 import Table from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Rental } from '../types/rental.type';
 const { Text } = Typography;
+
+type DataType = {
+  key: React.Key;
+  _id: string;
+  customer: string;
+  deposit: number;
+  returnValue: number;
+  returnState: string;
+  estimatedPrice: number;
+};
 
 // // rowSelection object indicates the need for row selection
 // const rowSelection = {
@@ -19,6 +31,10 @@ const { Text } = Typography;
 const Rental = () => {
   const [rental, setRental] = useState<Rental[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [filteredRental, setFilteredRental] =
+    useState<Rental[]>(Rental);
+  const [searchField, setSearchField] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRental = async () => {
@@ -31,7 +47,19 @@ const Rental = () => {
     fetchRental();
   }, []);
 
-  const columns = [
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toLocaleLowerCase();
+    setSearchField(value);
+  };
+
+  useEffect(() => {
+    const newFilterRental = Rental.filter((Rental) =>
+      Rental.customer.customerName.toLowerCase().includes(searchField),
+    );
+    setFilteredRental(newFilterRental);
+  }, [searchField, Rental]);
+
+  const columns: ColumnsType<DataType> = [
     {
       title: 'customer',
       dataIndex: 'customer',

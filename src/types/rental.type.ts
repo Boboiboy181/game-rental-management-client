@@ -1,4 +1,7 @@
-type Rental = {
+import { Customer } from './customer.type';
+import { Product } from "./product.type";
+
+export type Rental = {
     _id: string;
     customer: string;
     deposit: number;
