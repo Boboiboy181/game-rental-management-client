@@ -3,7 +3,6 @@ import Table, { ColumnsType } from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Rental } from '../types/rental.type';
 const { Text } = Typography;
 
@@ -29,12 +28,10 @@ type DataType = {
 // };
 
 const Rental = () => {
-  const [Rental, setRental] = useState<Rental[]>([]);
+  const [rentals, setRental] = useState<Rental[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [filteredRental, setFilteredRental] =
-    useState<Rental[]>(Rental);
+  const [filteredRental, setFilteredRental] = useState<Rental[]>(rentals);
   const [searchField, setSearchField] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRental = async () => {
@@ -53,10 +50,10 @@ const Rental = () => {
   };
 
   useEffect(() => {
-    const newFilterRental = Rental.filter((Rental) =>
-      Rental.customer.customerName.toLowerCase().includes(searchField),
+    const newFilteredRental = Rental.filter((rental) =>
+     Rental.customer.customerName.toLowerCase().includes(searchField),
     );
-    setFilteredRental(newFilterRental);
+    setFilteredRental(newFilteredRental);
   }, [searchField, Rental]);
 
   const columns: ColumnsType<DataType> = [
@@ -79,20 +76,6 @@ const Rental = () => {
     {
       title: 'EstimatedPrice',
       dataIndex: 'estimatedprice',
-    },
-    {
-      title: 'Action',
-      width: 100,
-      align: 'center',
-      render: (_, record) => (
-        <Button
-          type="primary"
-          className="bg-blue-600"
-          onClick={() => handleDetailBtn(record.key)}
-        >
-          Chi tiết
-        </Button>
-      ),
     },
   ];
 
@@ -135,10 +118,6 @@ const Rental = () => {
     } catch (error) {
       console.log('Error deleting rows:', error);
     }
-  };
-
-  const handleDetailBtn = (key: React.Key) => {
-    navigate(`/rental/${key}`);
   };
 
   return (
