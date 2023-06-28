@@ -50,11 +50,11 @@ const Rental = () => {
   };
 
   useEffect(() => {
-    const newFilteredRental = Rental.filter((rental) =>
-     Rental.customer.customerName.toLowerCase().includes(searchField),
-    );
+    const newFilteredRental = Rental.filter((rental) => {
+     return rental.Rental.toLowerCase().includes(searchField);
+    });
     setFilteredRental(newFilteredRental);
-  }, [searchField, Rental]);
+  }, [Rental, searchField]);
 
   const columns: ColumnsType<DataType> = [
     {
