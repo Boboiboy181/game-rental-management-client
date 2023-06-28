@@ -1,4 +1,4 @@
-import { Space, Typography, Divider, Button } from 'antd';
+import { Space, Typography, Divider, Button, Tag } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -46,6 +46,12 @@ const RentalPage = () => {
       title: 'Trạng thái trả',
       dataIndex: 'returnState',
       align: 'center',
+      render: (_, { returnState }) => {
+        let color = 'green';
+        if (returnState === 'NOT_RETURNED') color = 'red';
+        if (returnState === 'NOT_ENOUGH') color = 'orange';
+        return <Tag key={returnState} color={color} className="ml-2">{returnState}</Tag>;
+      },
     },
     {
       title: 'Giá trị ước tính',
@@ -126,17 +132,17 @@ const RentalPage = () => {
   return (
     <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex justify-between">
-        <Text className="text-2xl font-semibold">Rental</Text>
+        <Text className="text-2xl font-semibold">Phiếu thuê</Text>
         <div className="input-field">
           <input
             className="px-4"
             type="search"
-            placeholder="Search rentalform"
+            placeholder="Tên khách hàng"
             name="searchField"
             value={searchField}
             onChange={handleChange}
           />
-          <label htmlFor="searchfield">Search rental form</label>
+          <label htmlFor="searchfield">Tên khách hàng</label>
         </div>
       </Space>
       <div>

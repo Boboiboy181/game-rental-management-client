@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { formatDate } from '../utils/format-date.function';
-import { PreOrder } from '../types/pre-order.type';
 import Table, { ColumnsType } from 'antd/es/table';
 import { formatPrice } from '../utils/format-price.function';
 import { calculatePrice } from '../utils/caculate-price.function';
+import { Rental } from '../types/rental.type';
 
 const { Text } = Typography;
 
@@ -20,23 +20,23 @@ type DataType = {
 };
 
 const RentalDetail = () => {
-  const { preOrderID } = useParams();
+  const { rentalID } = useParams();
   const navigate = useNavigate();
-  const handleCloseDetailBtn = () => navigate('/pre-order');
-  const [preOrder, setPreOrder] = useState<PreOrder>({} as PreOrder);
+  const handleCloseDetailBtn = () => navigate('/rentals');
+  const [rental, setRental] = useState<Rental>({} as Rental);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPreOrder = async () => {
-      const { data }: { data: PreOrder } = await axios.get(
-        `https://game-rental-management-app-yh3ve.ondigitalocean.app/pre-order/${preOrderID}`,
+    const fetchRental = async () => {
+      const { data }: { data: Rental } = await axios.get(
+        `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental/${rentalID}`,
       );
-      setPreOrder(data);
+      setRental(data);
       setLoading(false);
     };
 
-    fetchPreOrder();
-  }, [setPreOrder]);
+    fetchRental();
+  }, [setRental]);
 
   if (loading) {
     return (
@@ -58,12 +58,12 @@ const RentalDetail = () => {
     {
       title: 'Số lượng',
       dataIndex: 'preOrderQuantity',
-      align: 'center'
+      align: 'center',
     },
     {
       title: 'Số ngày thuê',
       dataIndex: 'numberOfRentalDays',
-      align: 'center'
+      align: 'center',
     },
     {
       title: 'Đơn giá',
@@ -71,7 +71,8 @@ const RentalDetail = () => {
       render: (_, record) => (
         <p className="font-semibold">
           {formatPrice.format(
-            calculatePrice(record.price, record.numberOfRentalDays),
+            record.preOrderQuantity *
+              calculatePrice(record.price, record.numberOfRentalDays),
           )}
         </p>
       ),
@@ -82,14 +83,15 @@ const RentalDetail = () => {
       render: (_, record) => (
         <p className="font-semibold text-red-600">
           {formatPrice.format(
-            record.preOrderQuantity * calculatePrice(record.price, record.numberOfRentalDays)
+            record.preOrderQuantity *
+              calculatePrice(record.price, record.numberOfRentalDays),
           )}
         </p>
       ),
     },
   ];
 
-  const data = preOrder.rentedGames.map((rentedGame, index) => ({
+  const data = rental.rentedGames.map((rentedGame, index) => ({
     key: index,
     productName: rentedGame.game.productName,
     price: rentedGame.game.price,
@@ -99,27 +101,35 @@ const RentalDetail = () => {
   }));
 
   const handleCreateBtn = () => {
-    navigate(`/rental/create/${preOrderID}`);
-  }
+    navigate(`/rentals/create/${rentalID}`);
+  };
 
   return (
-    <div className="w-[85%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
+    <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex flex-col items-start">
-        <Text className="text-2xl font-semibold">Phiếu đặt trước</Text>
+        <Text className="text-3xl font-semibold">Phiếu thuê</Text>
         <p className="text-xs text-black/40">
-          Ngày lập phiếu {formatDate(preOrder.createdAt.toString())}
+          Ngày lập phiếu {formatDate(rental.createdAt.toString())}
         </p>
       </Space>
-      <Space className="mt-6">
-        <div className="flex flex-col mr-10 border-black/20 border-b pb-1">
-          <p className="text-xs text-black/40">Số điện thoại</p>
-          <p className="mt-2">{preOrder.customer.phoneNumber}</p>
-        </div>
-        <div className="flex flex-col border-black/20 border-b pb-1">
-          <p className="text-xs text-black/40">Tên khách hàng</p>
-          <p className="mt-2">{preOrder.customer.customerName}</p>
-        </div>
-      </Space>
+      <div className="flex items-end justify-between">
+        <Space className="mt-6">
+          <div className="flex flex-col mr-10 border-black/20 border-b pb-1">
+            <p className="text-xs text-black/40">Số điện thoại</p>
+            <p className="mt-2">{rental.customer.phoneNumber}</p>
+          </div>
+          <div className="flex flex-col border-black/20 border-b pb-1">
+            <p className="text-xs text-black/40">Tên khách hàng</p>
+            <p className="mt-2">{rental.customer.customerName}</p>
+          </div>
+        </Space>
+        <p className="text-lg">
+          Tiền đặt cọc{' '}
+          <span className="font-semibold text-red-600">
+            {formatPrice.format(rental.deposit)}
+          </span>
+        </p>
+      </div>
       <div>
         <Divider />
         <Table
@@ -137,14 +147,18 @@ const RentalDetail = () => {
           >
             Đóng
           </Button>
-          <Button className="bg-green-600" type="primary" onClick={handleCreateBtn}>
-            Tạo phiếu thuê
+          <Button
+            className="bg-green-600"
+            type="primary"
+            onClick={handleCreateBtn}
+          >
+            Tạo phiếu trả
           </Button>
         </Space>
         <p className="text-xl">
           Tổng tiền:{' '}
           <span className="font-semibold text-red-600">
-            {formatPrice.format(preOrder.estimatedPrice)}
+            {formatPrice.format(rental.estimatedPrice)}
           </span>
         </p>
       </div>

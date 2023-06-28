@@ -122,7 +122,7 @@ const PreOrderPage = () => {
   return (
     <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex justify-between">
-        <Text className="text-2xl font-semibold">Pre-Order</Text>
+        <Text className="text-3xl font-semibold">Pre-Order</Text>
         <div className="input-field">
           <input
             className="px-4"

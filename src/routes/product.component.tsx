@@ -6,6 +6,7 @@ import AddVideoGame from '../components/add-video-game.component';
 import { Product } from '../types/product.type';
 import UpdateVideoGame from '../components/update-video-game.component';
 import { ToastContainer, toast } from 'react-toastify';
+import { formatPrice } from '../utils/format-price.function';
 
 const { Text } = Typography;
 
@@ -62,7 +63,7 @@ const ProductPage = () => {
   const data = filteredProducts.map((product) => ({
     key: product._id,
     productName: product.productName,
-    price: product.price,
+    price: formatPrice.format(product.price),
     quantity: product.quantity,
     releaseDate: product.releaseDate,
   }));
