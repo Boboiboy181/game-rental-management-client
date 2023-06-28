@@ -26,7 +26,7 @@ type DataType = {
 const defaultFormFields = {
   phoneNumber: '',
   customerName: '',
-  deposit: 1,
+  deposit: 0,
 };
 
 const AddRentalComponent = () => {
@@ -36,8 +36,11 @@ const AddRentalComponent = () => {
     [key: string]: number;
   }>({});
   const { phoneNumber, customerName, deposit } = formFields;
-  const { cartItems, updateCartItem, deleteCartItem } = useContext(CartContext);
+  const { cartItems, updateCartItem, deleteCartItem, resetCart } =
+    useContext(CartContext);
   const navigate = useNavigate();
+
+  console.log(phoneNumber, customerName, deposit);
 
   useEffect(() => {
     // Convert selectQuantity into an array of { productId, quantity } pairs
@@ -188,6 +191,7 @@ const AddRentalComponent = () => {
         theme: 'colored',
         pauseOnHover: true,
       });
+      console.log(error);
     }
   };
 
@@ -203,7 +207,10 @@ const AddRentalComponent = () => {
     };
 
     const rentalID = await postRental(rental);
-    if (rentalID) navigate(`/rentals/${rentalID}`);
+    if (rentalID) {
+      resetCart();
+      navigate(`/rentals/${rentalID}`);
+    }
   };
 
   return (
@@ -251,8 +258,6 @@ const AddRentalComponent = () => {
                   allowClear
                   required
                   bordered={false}
-                  defaultValue={0}
-                  min={1}
                   type="number"
                   name="deposit"
                   value={deposit}

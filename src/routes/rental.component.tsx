@@ -124,7 +124,7 @@ const RentalPage = () => {
   }
 
   return (
-    <div className="w-[90%] h-[80%]s bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
+    <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex justify-between">
         <Text className="text-2xl font-semibold">Rental</Text>
         <div className="input-field">
@@ -157,9 +157,6 @@ const RentalPage = () => {
         </Button>
         <Button danger type="primary" onClick={handleDeleteBtn}>
           Xóa
-        </Button>
-        <Button type="primary" className="bg-green-600">
-          Sửa
         </Button>
       </Space>
     </div>
