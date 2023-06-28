@@ -11,6 +11,7 @@ import ProductPage from './routes/product.component';
 import RentalPage from './routes/rental.component';
 import ReturnPage from './routes/return.component';
 import RentalDetail from './components/rental-detail.component';
+import AddRentalComponent from './components/add-rental.component';
 
 const App = () => {
   useEffect(() => {
@@ -31,7 +32,7 @@ const App = () => {
           <Route path="rentals/:rentalID" element={<RentalDetail />} />
           <Route
             path="rentals/create/:preOrderID?"
-            element={<p>Tao phieu thue</p>}
+            element={<AddRentalComponent />}
           />
           <Route path="returns" element={<ReturnPage />} />
           <Route

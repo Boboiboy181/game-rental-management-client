@@ -1,4 +1,4 @@
-export const caculatePrice = (price: number, numberOfRentalDays: number) => {
+export const calculatePrice = (price: number, numberOfRentalDays: number) => {
   if (numberOfRentalDays === 1) {
     return price;
   }

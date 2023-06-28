@@ -5,7 +5,7 @@ import axios from 'axios';
 import { formatDate } from '../utils/format-date.function';
 import Table, { ColumnsType } from 'antd/es/table';
 import { formatPrice } from '../utils/format-price.function';
-import { caculatePrice } from '../utils/caculate-price.function';
+import { calculatePrice } from '../utils/caculate-price.function';
 import { Rental } from '../types/rental.type';
 
 const { Text } = Typography;
@@ -72,7 +72,7 @@ const RentalDetail = () => {
         <p className="font-semibold">
           {formatPrice.format(
             record.preOrderQuantity *
-              caculatePrice(record.price, record.numberOfRentalDays),
+              calculatePrice(record.price, record.numberOfRentalDays),
           )}
         </p>
       ),
@@ -84,7 +84,7 @@ const RentalDetail = () => {
         <p className="font-semibold text-red-600">
           {formatPrice.format(
             record.preOrderQuantity *
-              caculatePrice(record.price, record.numberOfRentalDays),
+              calculatePrice(record.price, record.numberOfRentalDays),
           )}
         </p>
       ),
