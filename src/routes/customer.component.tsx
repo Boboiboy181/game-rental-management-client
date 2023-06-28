@@ -14,6 +14,8 @@ const CustomerPage = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
+  const [searchField, setSearchField] = useState('');
+  const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>(customers);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -49,16 +51,21 @@ const CustomerPage = () => {
     },
   ];
 
-  const data = customers.map((customer) => ({
+  useEffect(() => {
+    const newFilteredCustomers = customers.filter((customer) => {
+      return customer.customerName.toLowerCase().includes(searchField);
+    });
+    setFilteredCustomers(newFilteredCustomers);
+  }, [customers, searchField]);
+
+  const data = filteredCustomers.map((customer) => ({
     key: customer._id,
     customerName: customer.customerName,
     email: customer.email,
-    phoneNumber: customer.phoneNumber,
     address: customer.address,
-    point: customer.point,
+    phoneNumber: customer.phoneNumber,
   }));
 
-  const [searchField, setSearchField] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();

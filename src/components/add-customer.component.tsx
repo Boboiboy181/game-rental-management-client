@@ -26,9 +26,9 @@ const AddCustomer = ({
 
   const handleCloseBtn = () => setIsAddOpen(false);
 
-  const postCustomer = async (data: FormData) => {
+  const postCustomer = async (data: any) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/customer',
         data,
       );
@@ -49,16 +49,21 @@ const AddCustomer = ({
     }
   };
 
+  console.log(customerName, email, phoneNumber, address);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const customer = new FormData();
-    customer.append('customerName', customerName);
-    customer.append('email', email);
-    customer.append('phoneNumber', phoneNumber);
-    customer.append('address', address);
+    const customer = {
+      customerName,
+      email,
+      phoneNumber,
+      address,
+    };
+
     await postCustomer(customer);
     setFormFields(defaultFormFields);
+    setIsAddOpen(false);
   };
 
   return (
@@ -68,7 +73,9 @@ const AddCustomer = ({
         className="absolute w-[25rem] bg-white flex flex-col rounded-lg mt-6 p-6 pb-0 left-[25%] top-[25%]"
         onSubmitCapture={handleSubmit}
       >
-        <h1 className="text-2xl text-center font-semibold mb-4">Thêm khách hàng</h1>
+        <h1 className="text-2xl text-center font-semibold mb-4">
+          Thêm khách hàng
+        </h1>
         <Form.Item label="Họ và tên">
           <Input
             required
@@ -94,7 +101,7 @@ const AddCustomer = ({
             required
             type="text"
             placeholder="Nhập số điện thoại"
-            name="text"
+            name="phoneNumber"
             value={phoneNumber}
             onChange={handleChange}
           />
