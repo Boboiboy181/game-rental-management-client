@@ -154,8 +154,7 @@ const ProductPage = () => {
           <Button
             type="primary"
             className="bg-green-600"
-            onClick={handleUpdateBtn}
-          >
+            onClick={handleUpdateBtn}>
             Sửa
           </Button>
         </Space>

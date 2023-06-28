@@ -164,6 +164,9 @@ const RentalPage = () => {
         <Button danger type="primary" onClick={handleDeleteBtn}>
           Xóa
         </Button>
+        <Button type="primary" className="bg-green-600">
+          Sửa
+        </Button>
       </Space>
     </div>
   );
