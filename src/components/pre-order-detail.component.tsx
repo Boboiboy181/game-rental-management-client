@@ -1,7 +1,6 @@
 import { Button, Divider, Space, Spin, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import { formatDate } from '../utils/format-date.function';
 import { PreOrder } from '../types/pre-order.type';
 import Table, { ColumnsType } from 'antd/es/table';
@@ -99,14 +98,14 @@ const PreOrderDetail = () => {
     returnDate: formatDate(rentedGame.returnDate.toString()),
   }));
 
-  const handleCreateBtn = async (key: string | undefined) => {
-    if (!key) return;
+  const handleCreateBtn = async (preOrderID: string | undefined) => {
+    if (!preOrderID) return;
 
     try {
-      const rentalTicket = await createRental(key);
+      const rentalTicket = await createRental({ preOrderID });
       const { _id } = rentalTicket;
       navigate(`/rentals/${_id}`);
-      await deletePreOrder(key);
+      await deletePreOrder(preOrderID);
     } catch (error) {
       console.log('Error creating rental:', error);
     }

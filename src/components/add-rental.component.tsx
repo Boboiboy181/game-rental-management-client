@@ -1,4 +1,4 @@
-import { Button, Input, Space, Typography } from 'antd';
+import { AutoComplete, Button, Input, Space, Typography } from 'antd';
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatDate } from '../utils/format-date.function';
@@ -8,8 +8,9 @@ import { CartContext } from '../context/cart.context';
 import { ProductForCart } from '../types/product-cart.type';
 import { formatPrice } from '../utils/format-price.function';
 import { RentalDaysEnum } from '../enums/rental-days.enum';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { getCustomers } from '../api/customer.service';
+import { createRental } from '../api/rental.service';
 
 const { Text } = Typography;
 
@@ -22,7 +23,14 @@ type DataType = {
   numberOfRentalDays: number;
 };
 
+type SuggestionCustomers = {
+  _id: string;
+  phoneNumber: string;
+  customerName: string;
+};
+
 const defaultFormFields = {
+  customerID: '',
   phoneNumber: '',
   customerName: '',
   deposit: 0,
@@ -31,10 +39,13 @@ const defaultFormFields = {
 const AddRentalComponent = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
+  const [suggestionCustomers, setSuggestionCustomers] = useState<
+    SuggestionCustomers[]
+  >([]);
   const [selectQuantity, setSelectQuantity] = useState<{
     [key: string]: number;
   }>({});
-  const { phoneNumber, customerName, deposit } = formFields;
+  const { customerID, phoneNumber, customerName, deposit } = formFields;
   const { cartItems, updateCartItem, deleteCartItem, resetCart } =
     useContext(CartContext);
   const navigate = useNavigate();
@@ -166,21 +177,16 @@ const AddRentalComponent = () => {
     numberOfRentalDays: item.numberOfRentalDays,
   }));
 
-  const postRental = async (rental: any) => {
+  const postRental = async (rental: CreateRental) => {
     try {
-      const respone = await axios.post(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental',
-        rental,
-      );
-      console.log(respone);
-
+      const respone = await createRental(rental);
       toast.success('Rental ticket created successfully 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
         pauseOnHover: true,
       });
-      return respone.data._id;
+      return respone._id;
     } catch (error) {
       toast.error('Failed to create a rental ticket 😞', {
         position: toast.POSITION.TOP_RIGHT,
@@ -195,8 +201,8 @@ const AddRentalComponent = () => {
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const rental = {
-      customerID: '',
+    const rental: CreateRental = {
+      customerID,
       phoneNumber,
       customerName,
       rentedGames: rentalItems,
@@ -208,6 +214,37 @@ const AddRentalComponent = () => {
       resetCart();
       navigate(`/rentals/${rentalID}`);
     }
+  };
+
+  const handleSearchPhoneNumber = async () => {
+    const customerList = await getCustomers();
+
+    const suggestList: SuggestionCustomers[] = customerList.map((customer) => ({
+      _id: customer._id,
+      phoneNumber: customer.phoneNumber,
+      customerName: customer.customerName,
+    }));
+
+    const filteredCustomers = suggestList.filter((suggestion) =>
+      suggestion.phoneNumber.toLowerCase().includes(phoneNumber),
+    );
+
+    setSuggestionCustomers(filteredCustomers);
+  };
+
+  const handleSelectPhoneNumber = (value: string) => {
+    // console.log(suggestionCustomers);
+
+    const selectedCustomer = suggestionCustomers.find(
+      (customer) => customer.phoneNumber === value,
+    );
+
+    setFormFields({
+      ...formFields,
+      customerID: selectedCustomer?._id || '',
+      phoneNumber: value,
+      customerName: selectedCustomer?.customerName || '',
+    });
   };
 
   return (
@@ -224,16 +261,27 @@ const AddRentalComponent = () => {
             <Space className="mt-8">
               <div className="flex flex-col border-b-black/20 border-b w-[180px] mr-5">
                 <p className="text-xs text-black/40">Số điện thoại</p>
-                <Input
-                  className="p-0 py-1"
-                  allowClear
-                  required
-                  bordered={false}
-                  type="text"
-                  name="phoneNumber"
+                <AutoComplete
                   value={phoneNumber}
-                  onChange={handleChange}
-                />
+                  options={suggestionCustomers.map((item) => ({
+                    value: item.phoneNumber,
+                    text: item.phoneNumber,
+                  }))}
+                  onSearch={handleSearchPhoneNumber}
+                  onSelect={(value) => handleSelectPhoneNumber(value)}
+                  listHeight={150}
+                >
+                  <Input
+                    className="p-0 py-1"
+                    allowClear
+                    required
+                    bordered={false}
+                    type="text"
+                    name="phoneNumber"
+                    value={phoneNumber}
+                    onChange={handleChange}
+                  />
+                </AutoComplete>
               </div>
               <div className="flex flex-col border-b-black/20 border-b w-[180px] mr-5">
                 <p className="text-xs text-black/40">Tên khách hàng</p>

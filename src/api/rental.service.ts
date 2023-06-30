@@ -10,9 +10,11 @@ export const delelteRental = async (id: string): Promise<void> => {
   await api.delete(`rental/${id}`);
 };
 
-export const createRental = async (key: string): Promise<Rental> => {
+export const createRental = async (
+  createRental: CreateRental,
+): Promise<Rental> => {
   const { data }: { data: Rental } = await api.post('rental', {
-    preOrderID: key,
+    ...createRental,
   });
   return data;
 };
