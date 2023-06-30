@@ -7,6 +7,8 @@ import { PreOrder } from '../types/pre-order.type';
 import Table, { ColumnsType } from 'antd/es/table';
 import { formatPrice } from '../utils/format-price.function';
 import { calculatePrice } from '../utils/caculate-price.function';
+import { createRental } from '../api/rental.service';
+import { deletePreOrder, getPreOrder } from '../api/pre-order.service';
 
 const { Text } = Typography;
 
@@ -28,10 +30,8 @@ const PreOrderDetail = () => {
 
   useEffect(() => {
     const fetchPreOrder = async () => {
-      const { data }: { data: PreOrder } = await axios.get(
-        `https://game-rental-management-app-yh3ve.ondigitalocean.app/pre-order/${preOrderID}`,
-      );
-      setPreOrder(data);
+      const preOrderData = await getPreOrder(preOrderID);
+      setPreOrder(preOrderData);
       setLoading(false);
     };
 
@@ -58,12 +58,12 @@ const PreOrderDetail = () => {
     {
       title: 'Số lượng',
       dataIndex: 'preOrderQuantity',
-      align: 'center'
+      align: 'center',
     },
     {
       title: 'Số ngày thuê',
       dataIndex: 'numberOfRentalDays',
-      align: 'center'
+      align: 'center',
     },
     {
       title: 'Đơn giá',
@@ -82,7 +82,8 @@ const PreOrderDetail = () => {
       render: (_, record) => (
         <p className="font-semibold text-red-600">
           {formatPrice.format(
-            record.preOrderQuantity * calculatePrice(record.price, record.numberOfRentalDays)
+            record.preOrderQuantity *
+              calculatePrice(record.price, record.numberOfRentalDays),
           )}
         </p>
       ),
@@ -98,9 +99,18 @@ const PreOrderDetail = () => {
     returnDate: formatDate(rentedGame.returnDate.toString()),
   }));
 
-  const handleCreateBtn = () => {
-    navigate(`/rentals/create/${preOrderID}`);
-  }
+  const handleCreateBtn = async (key: string | undefined) => {
+    if (!key) return;
+
+    try {
+      const rentalTicket = await createRental(key);
+      const { _id } = rentalTicket;
+      navigate(`/rentals/${_id}`);
+      await deletePreOrder(key);
+    } catch (error) {
+      console.log('Error creating rental:', error);
+    }
+  };
 
   return (
     <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
@@ -137,7 +147,11 @@ const PreOrderDetail = () => {
           >
             Đóng
           </Button>
-          <Button className="bg-green-600" type="primary" onClick={handleCreateBtn}>
+          <Button
+            className="bg-green-600"
+            type="primary"
+            onClick={() => handleCreateBtn(preOrderID)}
+          >
             Tạo phiếu thuê
           </Button>
         </Space>

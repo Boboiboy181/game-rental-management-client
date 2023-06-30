@@ -7,7 +7,6 @@ import AddProductToCart from './add-product-to-cart.component';
 import { CartContext } from '../context/cart.context';
 import { ProductForCart } from '../types/product-cart.type';
 import { formatPrice } from '../utils/format-price.function';
-import { calculatePrice } from '../utils/caculate-price.function';
 import { RentalDaysEnum } from '../enums/rental-days.enum';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -39,8 +38,6 @@ const AddRentalComponent = () => {
   const { cartItems, updateCartItem, deleteCartItem, resetCart } =
     useContext(CartContext);
   const navigate = useNavigate();
-
-  console.log(phoneNumber, customerName, deposit);
 
   useEffect(() => {
     // Convert selectQuantity into an array of { productId, quantity } pairs

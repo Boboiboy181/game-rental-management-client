@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { PreOrder } from '../types/pre-order.type';
 import { formatDate } from '../utils/format-date.function';
 import { formatPrice } from '../utils/format-price.function';
-import { deletePreOrder, getPreOrder } from '../api/pre-order.service';
-import ShowData from '../components/table.component';
+import { deletePreOrder, getPreOrders } from '../api/pre-order.service';
+import ShowData from '../components/page.component';
 
 type DataType = {
   key: string;
@@ -26,7 +26,7 @@ const PreOrderPage = () => {
 
   useEffect(() => {
     const fetchCustomers = async () => {
-      const preOrderData: PreOrder[] = await getPreOrder();
+      const preOrderData: PreOrder[] = await getPreOrders();
       setPreorder(preOrderData);
     };
 
@@ -97,7 +97,7 @@ const PreOrderPage = () => {
       );
 
       // Fetch updated products data
-      const preOrderData: PreOrder[] = await getPreOrder();
+      const preOrderData: PreOrder[] = await getPreOrders();
       setPreorder(preOrderData);
       setSelectedRowKeys([]);
 
@@ -108,7 +108,7 @@ const PreOrderPage = () => {
     }
   };
 
-  const handleDetailBtn = (key: string) => {
+  const handleDetailBtn = async (key: string) => {
     navigate(`/pre-orders/${key}`);
   };
 

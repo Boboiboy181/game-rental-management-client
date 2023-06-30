@@ -13,6 +13,7 @@ export type Rental = {
       game: {
         _id: string;
         productName: string;
+        price: number;
       };
       preOrderQuantity: number;
       numberOfRentalDays: number;
