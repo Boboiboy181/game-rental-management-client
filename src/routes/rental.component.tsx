@@ -1,15 +1,14 @@
-import { Space, Typography, Divider, Button, Tag } from 'antd';
-import Table, { ColumnsType } from 'antd/es/table';
+import { Space, Button, Tag } from 'antd';
+import { ColumnsType } from 'antd/es/table';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Rental } from '../types/rental.type';
 import { formatPrice } from '../utils/format-price.function';
 import { useNavigate } from 'react-router-dom';
-
-const { Text } = Typography;
+import { delelteRental, getRentals } from '../api/rental.service';
+import ShowData from '../components/table.component';
 
 type DataType = {
-  key: React.Key;
+  key: string;
   customerName: string;
   deposit: number;
   returnState: string;
@@ -18,15 +17,13 @@ type DataType = {
 
 const RentalPage = () => {
   const [rentals, setRentals] = useState<Rental[]>([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRental = async () => {
-      const { data }: { data: Rental[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental',
-      );
-      setRentals(data);
+      const rentalData: Rental[] = await getRentals();
+      setRentals(rentalData);
     };
 
     fetchRental();
@@ -50,7 +47,11 @@ const RentalPage = () => {
         let color = 'green';
         if (returnState === 'NOT_RETURNED') color = 'red';
         if (returnState === 'NOT_ENOUGH') color = 'orange';
-        return <Tag key={returnState} color={color} className="ml-2">{returnState}</Tag>;
+        return (
+          <Tag key={returnState} color={color} className="ml-2">
+            {returnState}
+          </Tag>
+        );
       },
     },
     {
@@ -90,7 +91,7 @@ const RentalPage = () => {
   };
 
   const rowSelection = {
-    onChange: (selectedKeys: React.Key[]) => {
+    onChange: (selectedKeys: string[]) => {
       setSelectedRowKeys(selectedKeys);
     },
   };
@@ -100,18 +101,14 @@ const RentalPage = () => {
       // Delete selected rows
       await Promise.all(
         selectedRowKeys.map(async (key) => {
-          await axios.delete(
-            `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental/${key}`,
-          );
+          await delelteRental(key);
         }),
       );
 
       // Fetch updated products data
-      const { data }: { data: Rental[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental',
-      );
+      const rentalData: Rental[] = await getRentals();
       // Update customer state and selectedRowKeys state
-      setRentals(data);
+      setRentals(rentalData);
       setSelectedRowKeys([]);
 
       // Refresh the page by updating the searchField state
@@ -121,42 +118,29 @@ const RentalPage = () => {
     }
   };
 
-  const handleDetailBtn = (key: React.Key) => {
+  const handleDetailBtn = (key: string) => {
     navigate(`/rentals/${key}`);
   };
 
   const handleAddBtn = () => {
     navigate('/rentals/create');
-  }
+  };
 
   return (
-    <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
-      <Space className="flex justify-between">
-        <Text className="text-2xl font-semibold">Phiếu thuê</Text>
-        <div className="input-field">
-          <input
-            className="px-4"
-            type="search"
-            placeholder="Tên khách hàng"
-            name="searchField"
-            value={searchField}
-            onChange={handleChange}
-          />
-          <label htmlFor="searchfield">Tên khách hàng</label>
-        </div>
-      </Space>
-      <div>
-        <Divider />
-        <Table
-          rowSelection={{
-            type: 'checkbox',
-            ...rowSelection,
-          }}
-          columns={columns}
-          dataSource={data}
-          pagination={{ pageSize: 5 }}
-        />
-      </div>
+    <div
+      className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] 
+    translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl"
+    >
+      <ShowData
+        pageName="Phiếu thuê"
+        placeHolder="Tên khách hàng"
+        inputName="searchField"
+        inputValue={searchField}
+        handleChange={handleChange}
+        columns={columns}
+        data={data}
+        rowSelection={rowSelection}
+      />
       <Space direction="horizontal" className="relative top-[-9%]">
         <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
           Thêm
