@@ -14,7 +14,7 @@ type UpdateDto = {
   quantity: number;
 };
 
-const UpdateVideoGame = ({
+const UpdateProduct = ({
   setIsUpdateOpen,
   setProducts,
   selectedUpdate,
@@ -144,4 +144,4 @@ const UpdateVideoGame = ({
   );
 };
 
-export default UpdateVideoGame;
+export default UpdateProduct;

@@ -3,7 +3,7 @@ import { Fragment, useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatDate } from '../utils/format-date.function';
 import Table, { ColumnsType } from 'antd/es/table';
-import AddProductToCart from './add-video-game-to-cart.component';
+import AddProductToCart from './add-product-to-cart.component';
 import { CartContext } from '../context/cart.context';
 import { ProductForCart } from '../types/product-cart.type';
 import { formatPrice } from '../utils/format-price.function';
@@ -284,12 +284,11 @@ const AddRentalComponent = () => {
                 Đóng
               </Button>
               <Button
-                className="bg-green-600"
+                className="bg-green-600 hover:!bg-green-500"
                 type="primary"
                 htmlType="submit"
-                // onClick={handleCreateBtn}
               >
-                Tạo phiếu trả
+                Tạo phiếu thuê
               </Button>
             </Space>
             <p className="text-xl">
