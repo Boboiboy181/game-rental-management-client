@@ -15,7 +15,7 @@ const Authentication = () => {
       >
         Back to shop
       </p>
-      <div className="absolute top-[50%] transform translate-y-[-50%] flex items-start justify-center w-full">
+      <div className="absolute top-[40%] transform translate-y-[-40%] flex items-center justify-center w-full h-screen">
         <SignInForm />
         <SignUpForm />
       </div>
