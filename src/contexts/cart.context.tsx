@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from 'react';
+import { createContext, ReactNode, useState } from 'react';
 import { Product } from '../types/product.type';
 
 type CartContextType = {
