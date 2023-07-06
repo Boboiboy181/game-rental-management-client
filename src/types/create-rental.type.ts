@@ -1,4 +1,4 @@
-type CreateRental = {
+export type CreateRental = {
   preOrderID?: string;
   customerID?: string;
   phoneNumber?: string;

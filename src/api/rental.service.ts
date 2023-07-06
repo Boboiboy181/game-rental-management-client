@@ -1,4 +1,6 @@
+import { CreateRental } from '../types/create-rental.type';
 import { Rental } from '../types/rental.type';
+import { UpdateRental } from '../types/update-rental.type';
 import api from './axios.config';
 
 export const getRentals = async (): Promise<Rental[]> => {
@@ -15,6 +17,16 @@ export const createRental = async (
 ): Promise<Rental> => {
   const { data }: { data: Rental } = await api.post('rental', {
     ...createRental,
+  });
+  return data;
+};
+
+export const updateRental = async (
+  id: string | undefined,
+  updateRental: UpdateRental,
+): Promise<Rental> => {
+  const { data }: { data: Rental } = await api.patch(`rental/${id}`, {
+    ...updateRental,
   });
   return data;
 };

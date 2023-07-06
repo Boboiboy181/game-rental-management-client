@@ -1,6 +1,6 @@
 import { AutoComplete, Button, Input, Space, Typography } from 'antd';
 import { Fragment, useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../utils/format-date.function';
 import Table, { ColumnsType } from 'antd/es/table';
 import AddProductToCart from './add-product-to-cart.component';
@@ -11,6 +11,7 @@ import { RentalDaysEnum } from '../enums/rental-days.enum';
 import { ToastContainer, toast } from 'react-toastify';
 import { getCustomers } from '../api/customer.service';
 import { createRental } from '../api/rental.service';
+import { CreateRental } from '../types/create-rental.type';
 
 const { Text } = Typography;
 
@@ -36,7 +37,7 @@ const defaultFormFields = {
   deposit: 0,
 };
 
-const AddRentalComponent = () => {
+const AddRental = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
   const [suggestionCustomers, setSuggestionCustomers] = useState<
@@ -357,4 +358,4 @@ const AddRentalComponent = () => {
   );
 };
 
-export default AddRentalComponent;
+export default AddRental;
