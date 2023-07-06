@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000/';
+const BASE_URL = 'https://game-rental-management-app-yh3ve.ondigitalocean.app/';
 
 const api = axios.create({
   withCredentials: true,

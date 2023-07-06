@@ -5,7 +5,7 @@ import { Rental } from '../types/rental.type';
 import { formatPrice } from '../utils/format-price.function';
 import { useNavigate } from 'react-router-dom';
 import { delelteRental, getRentals } from '../api/rental.service';
-import ShowData from '../components/table.component';
+import ShowData from '../components/page.component';
 
 type DataType = {
   key: string;

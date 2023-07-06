@@ -1,13 +1,14 @@
 import { Space, Typography, Divider, Button, Select } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
 import { Fragment, useContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import { Product } from '../types/product.type';
 import { CartContext } from '../context/cart.context';
 import { calculatePrice } from '../utils/caculate-price.function';
 import { ProductForCart } from '../types/product-cart.type';
 import { RentalDaysEnum } from '../enums/rental-days.enum';
 import { ToastContainer, toast } from 'react-toastify';
+import { formatPrice } from '../utils/format-price.function';
+import { getProducts } from '../api/product.service';
 
 const { Text } = Typography;
 
@@ -67,10 +68,8 @@ const AddProductToCart = ({
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const { data }: { data: ProductForCart[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
-      );
-      setProducts(data);
+      const productsData: ProductForCart[] = await getProducts();
+      setProducts(productsData);
     };
 
     fetchProducts();
@@ -83,8 +82,23 @@ const AddProductToCart = ({
     },
     {
       title: 'Giá',
-      dataIndex: 'price',
+      // dataIndex: 'price',
       align: 'center',
+      render: (_, record) => {
+        const rentalDays = selectedRentalDays[record.key]
+          ? selectedRentalDays[record.key]
+          : 'ONE_DAY';
+        const numberOfRentalDays: RentalDaysEnum =
+          RentalDaysEnum[rentalDays as keyof typeof RentalDaysEnum];
+
+        return (
+          <Text>
+            {formatPrice.format(
+              calculatePrice(record.price, numberOfRentalDays),
+            )}
+          </Text>
+        );
+      },
     },
     {
       title: 'Số lượng',
