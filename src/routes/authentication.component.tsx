@@ -8,14 +8,14 @@ const Authentication = () => {
   const handleBackToShop = () => navigate('/');
 
   return (
-    <div className="">
+    <div className="relative bg-gradient-to-r from-blue-300 to-fuchsia-100 h-screen overflow-hidden">
       <p
-        className="cursor-pointer text-sm text-black/[.6] hover:text-blue-600 underline-hover italic z-10 top-[50px] left-[50px]"
+        className="cursor-pointer text-base text-black font-medium underline-hover italic z-10 top-[50px] left-[50px]"
         onClick={handleBackToShop}
       >
         Back to shop
       </p>
-      <div className="absolute top-[40%] transform translate-y-[-40%] flex items-center justify-center w-full h-screen">
+      <div className="absolute flex items-start justify-center w-screen h-[350px] top-[50%] translate-y-[-50%]">
         <SignInForm />
         <SignUpForm />
       </div>

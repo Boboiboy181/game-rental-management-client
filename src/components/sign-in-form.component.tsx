@@ -13,7 +13,6 @@ const SignInForm = () => {
   const [fomrFields, setFormFields] = useState(defaultFormFields);
   const { user, setUser } = useContext(UserContext);
   const { username, password } = fomrFields;
-
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,13 +29,15 @@ const SignInForm = () => {
         fomrFields,
       );
       setUser(response.data);
-      setTimeout(() => {
-        navigate('/');
-      }, 5000);
+      navigate('/');
     } catch (error) {
       console.log(error);
     }
   };
+
+  console.log(username, password);
+
+  console.log(user);
 
   return (
     <div className="mr-5">
