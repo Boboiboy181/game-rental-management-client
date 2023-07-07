@@ -102,10 +102,10 @@ const RentalDetail = () => {
 
   const handleUpdateDetailBtn = () => {
     navigate(`/rentals/update/${rentalID}`);
-  }
+  };
 
   const handleCreateReturnBtn = () => {
-    navigate(`/rentals/create/${rentalID}`);
+    navigate(`/returns/create/${rentalID}`);
   };
 
   return (
@@ -155,6 +155,10 @@ const RentalDetail = () => {
             className="bg-orange-600 hover:!bg-orange-500 shadow-xl"
             type="primary"
             onClick={handleUpdateDetailBtn}
+            disabled={
+              rental.returnState === 'RETURNED' ||
+              rental.returnState === 'NOT_ENOUGH'
+            }
           >
             Sửa
           </Button>
@@ -162,6 +166,7 @@ const RentalDetail = () => {
             className="bg-green-600 hover:!bg-green-500 shadow-xl"
             type="primary"
             onClick={handleCreateReturnBtn}
+            disabled={rental.returnState === 'RETURNED'}
           >
             Tạo phiếu trả
           </Button>

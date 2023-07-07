@@ -78,7 +78,7 @@ const RentalPage = () => {
   const data = rentals.map((rental) => ({
     key: rental._id,
     customerName: rental.customer.customerName,
-    deposit: rental.deposit,
+    deposit: formatPrice.format(rental.deposit),
     returnState: rental.returnState,
     estimatedPrice: formatPrice.format(rental.estimatedPrice),
   }));
