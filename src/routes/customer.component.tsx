@@ -1,24 +1,19 @@
 import { Space, Typography, Divider, Button } from 'antd';
 import Table from 'antd/es/table';
-import { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import UpdateCustomer from '../components/update-customer.component';
+import { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
+import AddCustomer from '../components/add-customer.component';
+import { Customer } from '../types/customer.type';
 
 const { Text } = Typography;
 
-// // rowSelection object indicates the need for row selection
-// const rowSelection = {
-//   onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-//     console.log(
-//       `selectedRowKeys: ${selectedRowKeys}`,
-//       'selectedRows: ',
-//       selectedRows,
-//     );
-//   },
-// };
-
-const Customer = () => {
+const CustomerPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
+  const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -49,9 +44,9 @@ const Customer = () => {
       dataIndex: 'address',
     },
     {
-      title: 'point',
+      title: 'Point',
       dataIndex: 'point',
-    }
+    },
   ];
 
   const data = customers.map((customer) => ({
@@ -102,47 +97,79 @@ const Customer = () => {
     }
   };
 
+  const handleAddBtn = () => {
+    setIsAddOpen(true);
+  };
+
+  const handleUpdateBtn = () => {
+    if (selectedRowKeys.length === 0 || selectedRowKeys.length > 1) {
+      toast.error('Please select only 1 customer to update 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+      return;
+    }
+    setIsUpdateOpen(true);
+  };
+
   return (
-    <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
-      <Space className="flex justify-between">
-        <Text className="text-2xl font-semibold">Customer</Text>
-        <div className="input-field">
-          <input
-            className="px-4"
-            type="search"
-            placeholder="Search customer"
-            name="searchField"
-            value={searchField}
-            onChange={handleChange}
+    <Fragment>
+      <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
+        <Space className="flex justify-between">
+          <Text className="text-2xl font-semibold">Customer</Text>
+          <div className="input-field">
+            <input
+              className="px-4"
+              type="search"
+              placeholder="Search customer"
+              name="searchField"
+              value={searchField}
+              onChange={handleChange}
+            />
+            <label htmlFor="searchfield">Search customer</label>
+          </div>
+        </Space>
+        <div>
+          <Divider />
+          <Table
+            rowSelection={{
+              type: 'checkbox',
+              ...rowSelection,
+            }}
+            columns={columns}
+            dataSource={data}
+            pagination={{ pageSize: 5 }}
           />
-          <label htmlFor="searchfield">Search customer</label>
         </div>
-      </Space>
-      <div>
-        <Divider />
-        <Table
-          rowSelection={{
-            type: 'checkbox',
-            ...rowSelection,
-          }}
-          columns={columns}
-          dataSource={data}
-          pagination={{ pageSize:5 }}
-        />
+        <Space direction="horizontal">
+          <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
+            Thêm
+          </Button>
+          <Button danger type="primary" onClick={handleDeleteBtn}>
+            Xóa
+          </Button>
+
+          <Button
+            type="primary"
+            className="bg-green-600 hover:!bg-green-500"
+            onClick={handleUpdateBtn}
+          >
+            Sửa
+          </Button>
+        </Space>
       </div>
-      <Space direction="horizontal" className="relative top-[-9%]">
-        <Button type="primary" className="bg-blue-500">
-          Thêm
-        </Button>
-        <Button danger type="primary" onClick={handleDeleteBtn}>
-          Xóa
-        </Button>
-        <Button type="primary" className="bg-green-600">
-          Sửa
-        </Button>
-      </Space>
-    </div>
+      {isUpdateOpen && (
+        <UpdateCustomer
+          setIsUpdateOpen={setIsUpdateOpen}
+          selectedUpdate={selectedRowKeys}
+        />
+      )}
+      {isAddOpen && <AddCustomer setIsAddOpen={setIsAddOpen} />}
+      <ToastContainer />
+    </Fragment>
   );
 };
 
-export default Customer;
+export default CustomerPage;

@@ -1,17 +1,27 @@
 import { Space, Typography, Divider, Button } from 'antd';
 import Table from 'antd/es/table';
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
-import AddVideoGame from '../components/add-video-game.component';
-import { OverlayContext } from '../context/overlay.context';
-import { ProductContext } from '../context/product.context';
+import { Product } from '../types/product.type';
+import { ToastContainer, toast } from 'react-toastify';
+import { formatPrice } from '../utils/format-price.function';
+import AddProduct from '../components/add-product.component';
+import UpdateProduct from '../components/update-video-game.component';
 
 const { Text } = Typography;
 
-const Product = () => {
-  const {products, setProducts} = useContext(ProductContext);
+const ProductPage = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const { isOpen, setIsOpen } = useContext(OverlayContext);
+  const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
+  const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
+  const [searchField, setSearchField] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toLocaleLowerCase();
+    setSearchField(value);
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -22,7 +32,7 @@ const Product = () => {
     };
 
     fetchProducts();
-  }, [products]);
+  }, []);
 
   const columns = [
     {
@@ -43,20 +53,20 @@ const Product = () => {
     },
   ];
 
-  const data = products.map((product) => ({
+  useEffect(() => {
+    const newFilteredProducts = products.filter((product) => {
+      return product.productName.toLowerCase().includes(searchField);
+    });
+    setFilteredProducts(newFilteredProducts);
+  }, [products, searchField]);
+
+  const data = filteredProducts.map((product) => ({
     key: product._id,
     productName: product.productName,
-    price: product.price,
+    price: formatPrice.format(product.price),
     quantity: product.quantity,
     releaseDate: product.releaseDate,
   }));
-
-  const [searchField, setSearchField] = useState('');
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toLocaleLowerCase();
-    setSearchField(value);
-  };
 
   const rowSelection = {
     onChange: (selectedKeys: React.Key[]) => {
@@ -89,12 +99,25 @@ const Product = () => {
   };
 
   const handleAddBtn = () => {
-    setIsOpen(true);
+    setIsAddOpen(true);
+  };
+
+  const handleUpdateBtn = () => {
+    if (selectedRowKeys.length === 0 || selectedRowKeys.length > 1) {
+      toast.error('Please select only 1 video game to update 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+      return;
+    }
+    setIsUpdateOpen(true);
   };
 
   return (
     <Fragment>
-      <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
+      <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
         <Space className="flex justify-between">
           <Text className="text-2xl font-semibold">Video Games</Text>
           <div className="input-field">
@@ -109,7 +132,7 @@ const Product = () => {
             <label htmlFor="searchfield">Search game</label>
           </div>
         </Space>
-        <div>
+        <div className="relative">
           <Divider />
           <Table
             rowSelection={{
@@ -120,22 +143,38 @@ const Product = () => {
             dataSource={data}
             pagination={{ pageSize: 5 }}
           />
+          <Space direction="horizontal" className="">
+            <Button
+              type="primary"
+              className="bg-blue-500"
+              onClick={handleAddBtn}
+            >
+              Thêm
+            </Button>
+            <Button danger type="primary" onClick={handleDeleteBtn}>
+              Xóa
+            </Button>
+            <Button
+              type="primary"
+              className="bg-green-600 hover:!bg-green-500"
+              onClick={handleUpdateBtn}
+            >
+              Sửa
+            </Button>
+          </Space>
         </div>
-        <Space direction="horizontal" className="relative top-[-9%]">
-          <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
-            Thêm
-          </Button>
-          <Button danger type="primary" onClick={handleDeleteBtn}>
-            Xóa
-          </Button>
-          <Button type="primary" className="bg-green-600">
-            Sửa
-          </Button>
-        </Space>
       </div>
-      {isOpen && <AddVideoGame />}
+      {isAddOpen && <AddProduct setIsAddOpen={setIsAddOpen} />}
+      {isUpdateOpen && (
+        <UpdateProduct
+          setIsUpdateOpen={setIsUpdateOpen}
+          selectedUpdate={selectedRowKeys}
+          setProducts={setProducts}
+        />
+      )}
+      <ToastContainer />
     </Fragment>
   );
 };
 
-export default Product;
+export default ProductPage;
