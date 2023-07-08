@@ -97,7 +97,7 @@ const ReturnPage = () => {
   }));
 
   const handleDetailBtn = (key: React.Key) => {
-    navigate(`/return/${key}`);
+    navigate(`/returns/${key}`);
   };
 
   const [searchField, setSearchField] = useState('');

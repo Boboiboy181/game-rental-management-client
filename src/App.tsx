@@ -13,6 +13,7 @@ import ReturnPage from './routes/return.component';
 import RentalDetail from './components/rental-detail.component';
 import AddRental from './components/add-rental.component';
 import UpdateRental from './components/update-rental.component';
+import ReturnDetail from './components/return-detail.component';
 
 const App = () => {
   useEffect(() => {
@@ -37,10 +38,12 @@ const App = () => {
           />
           <Route path="rentals/update/:rentalID" element={<UpdateRental />} />
           <Route path="returns" element={<ReturnPage />} />
+          <Route path="returns/:returnID" element={<ReturnDetail />} />
           <Route
             path="returns/create/:rentalID?"
-            element={<p>Tao phieu thue</p>}
+            element={<p>Tao hoa don</p>}
           />
+          <Route path="returns/update/:returnID" element={<p>Update Phieu tra</p>} />
           <Route path="invoices" element={<div>Invoices</div>} />
         </Route>
       </Routes>
