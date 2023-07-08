@@ -37,7 +37,7 @@ const ShowData = (props: ShowDataProps) => {
             value={inputValue}
             onChange={handleChange}
           />
-          <label htmlFor={`${inputName}`}>Search pre-order</label>
+          <label htmlFor={`${inputName}`}>{placeHolder}</label>
         </div>
       </Space>
       <div>
