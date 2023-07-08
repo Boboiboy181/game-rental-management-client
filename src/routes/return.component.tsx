@@ -90,7 +90,7 @@ const ReturnPage = () => {
 
   const data: DataType[] = returnTickets.map((returnTicket) => ({
     key: returnTicket._id,
-    customer: returnTicket.customer,
+    customer: returnTicket.customer.customerName,
     paymentState: returnTicket.paymentState,
     estimatedPrice: formatPrice.format(returnTicket.estimatedPrice),
     createdAt: formatCreatedAt(new Date(returnTicket.createdAt)), // Convert createdAt to a Date object before formatting
