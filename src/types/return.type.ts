@@ -1,11 +1,19 @@
 export type Return = {
   _id: string;
-  customer: string;
+  customer: {
+    _id:string;
+    customerName:string;
+    phoneNumber:string;
+  };
   deposit: number;  
   paymentState: string;
   rentedGames: [
     {
-      game: string;
+      game:{
+        _id: string;
+        productName:string;
+        price:number;
+      };
       preOrderQuantity: number;
       numberOfRentalDays: number;
       returnDate: Date;
