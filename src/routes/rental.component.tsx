@@ -1,93 +1,81 @@
-import { Space, Typography, Divider, Button, Tag } from 'antd';
+import { Space, Typography, Divider, Button } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import React from 'react';
 import { Rental } from '../types/rental.type';
-import { formatPrice } from '../utils/format-price.function';
-import { useNavigate } from 'react-router-dom';
-
 const { Text } = Typography;
 
 type DataType = {
   key: React.Key;
+  _id: string;
   customerName: string;
   deposit: number;
+  returnValue: number;
   returnState: string;
-  estimatedPrice: string;
+  estimatedPrice: number;
 };
 
 const RentalPage = () => {
-  const [rentals, setRentals] = useState<Rental[]>([]);
+  const [rentals, setRental] = useState<Rental[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const navigate = useNavigate();
+  const [filteredRental, setFilteredRental] = useState<Rental[]>(rentals);
+  const [searchField, setSearchField] = useState('');
 
   useEffect(() => {
     const fetchRental = async () => {
       const { data }: { data: Rental[] } = await axios.get(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental',
       );
-      setRentals(data);
+      setRental(data);
     };
 
     fetchRental();
   }, []);
 
-  const columns: ColumnsType<DataType> = [
-    {
-      title: 'Khách hàng',
-      dataIndex: 'customerName',
-    },
-    {
-      title: 'Tiền đặt cọc',
-      dataIndex: 'deposit',
-      align: 'center',
-    },
-    {
-      title: 'Trạng thái trả',
-      dataIndex: 'returnState',
-      align: 'center',
-      render: (_, { returnState }) => {
-        let color = 'green';
-        if (returnState === 'NOT_RETURNED') color = 'red';
-        if (returnState === 'NOT_ENOUGH') color = 'orange';
-        return <Tag key={returnState} color={color} className="ml-2">{returnState}</Tag>;
-      },
-    },
-    {
-      title: 'Giá trị ước tính',
-      dataIndex: 'estimatedPrice',
-      align: 'center',
-    },
-    {
-      title: 'Thao tác',
-      width: 100,
-      align: 'center',
-      render: (_, record) => (
-        <Button
-          type="primary"
-          className="bg-blue-600"
-          onClick={() => handleDetailBtn(record.key)}
-        >
-          Chi tiết
-        </Button>
-      ),
-    },
-  ];
-
-  const data = rentals.map((rental) => ({
-    key: rental._id,
-    customerName: rental.customer.customerName,
-    deposit: rental.deposit,
-    returnState: rental.returnState,
-    estimatedPrice: formatPrice.format(rental.estimatedPrice),
-  }));
-
-  const [searchField, setSearchField] = useState('');
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
     setSearchField(value);
   };
+
+  useEffect(() => {
+    const newFilteredRental = rentals.filter((rental) => {
+     return rental.customer.customerName.toLowerCase().includes(searchField);
+    });
+    setFilteredRental(newFilteredRental);
+  }, [searchField, filteredRental]);
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: 'customer',
+      dataIndex: 'customerName',
+    },
+    {
+      title: 'Deposit',
+      dataIndex: 'deposit',
+    },
+    {
+      title: 'ReturnValue',
+      dataIndex: 'returnvalue',
+    },
+    {
+      title: 'ReturnState',
+      dataIndex: 'returnstate',
+    },
+    {
+      title: 'EstimatedPrice',
+      dataIndex: 'estimatedprice',
+    },
+  ];
+
+  const data = filteredRental.map((rental) => ({
+    key: rental._id,
+    customerName: rental.customer.customerName,
+    deposit: rental.deposit,
+    returnvalue: rental.returnValue,
+    returnstate: rental.returnState,
+    estimatedprice: rental.estimatedPrice,
+  }));
 
   const rowSelection = {
     onChange: (selectedKeys: React.Key[]) => {
@@ -111,7 +99,7 @@ const RentalPage = () => {
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental',
       );
       // Update customer state and selectedRowKeys state
-      setRentals(data);
+      setRental(data);
       setSelectedRowKeys([]);
 
       // Refresh the page by updating the searchField state
@@ -121,28 +109,20 @@ const RentalPage = () => {
     }
   };
 
-  const handleDetailBtn = (key: React.Key) => {
-    navigate(`/rentals/${key}`);
-  };
-
-  const handleAddBtn = () => {
-    navigate('/rentals/create');
-  }
-
   return (
-    <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
+    <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
       <Space className="flex justify-between">
-        <Text className="text-2xl font-semibold">Phiếu thuê</Text>
+        <Text className="text-2xl font-semibold">Rental</Text>
         <div className="input-field">
           <input
             className="px-4"
             type="search"
-            placeholder="Tên khách hàng"
+            placeholder="Search rentalform"
             name="searchField"
             value={searchField}
             onChange={handleChange}
           />
-          <label htmlFor="searchfield">Tên khách hàng</label>
+          <label htmlFor="searchfield">Search rental form</label>
         </div>
       </Space>
       <div>
@@ -154,11 +134,11 @@ const RentalPage = () => {
           }}
           columns={columns}
           dataSource={data}
-          pagination={{ pageSize: 5 }}
+          pagination={{ pageSize:5 }}
         />
       </div>
       <Space direction="horizontal" className="relative top-[-9%]">
-        <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
+        <Button type="primary" className="bg-blue-500">
           Thêm
         </Button>
         <Button danger type="primary" onClick={handleDeleteBtn}>
