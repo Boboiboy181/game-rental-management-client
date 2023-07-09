@@ -18,6 +18,8 @@ type DataType = {
 const ReturnPage = () => {
   const [returnTickets, setReturnTickets] = useState<Return[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [filteredReturns, setFilteredReturns] = useState<Return[]>(returnTickets);
+  const [searchField, setSearchField] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -88,7 +90,14 @@ const ReturnPage = () => {
     },
   ];
 
-  const data: DataType[] = returnTickets.map((returnTicket) => ({
+  useEffect(() => {
+    const newFilteredReturns = returnTickets.filter((returnTicket) => {
+      return returnTicket.customer.customerName.toLowerCase().includes(searchField);
+    });
+    setFilteredReturns(newFilteredReturns);
+  }, [returnTickets, searchField]);
+
+  const data: DataType[] = filteredReturns.map((returnTicket) => ({
     key: returnTicket._id,
     customer: returnTicket.customer.customerName,
     paymentState: returnTicket.paymentState,
@@ -97,10 +106,8 @@ const ReturnPage = () => {
   }));
 
   const handleDetailBtn = (key: React.Key) => {
-    navigate(`/return/${key}`);
+    navigate(`/returns/${key}`);
   };
-
-  const [searchField, setSearchField] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
