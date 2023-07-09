@@ -1,4 +1,4 @@
-import { Space, Button, Tag } from 'antd';
+import { Button, Space, Tag } from 'antd';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Return } from '../types/return.type';
 import { useNavigate } from 'react-router-dom';
@@ -97,7 +97,7 @@ const ReturnPage = () => {
   }));
 
   const handleDetailBtn = (key: React.Key) => {
-    navigate(`/return/${key}`);
+    navigate(`/returns/${key}`);
   };
 
   const [searchField, setSearchField] = useState('');

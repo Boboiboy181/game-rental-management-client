@@ -30,3 +30,10 @@ export const updateRental = async (
   });
   return data;
 };
+
+export const getRentalById = async (
+  id: string | undefined,
+): Promise<Rental> => {
+  const { data }: { data: Rental } = await api.get(`rental/${id}`);
+  return data;
+};
