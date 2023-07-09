@@ -18,6 +18,8 @@ type DataType = {
 const RentalPage = () => {
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [filteredRentals, setFilteredRentals] = useState<Rental[]>(rentals);
+  const [searchField, setSearchField] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -75,7 +77,14 @@ const RentalPage = () => {
     },
   ];
 
-  const data = rentals.map((rental) => ({
+  useEffect(() => {
+    const newFilteredRentals = rentals.filter((rental) => {
+      return rental.customer.customerName.toLowerCase().includes(searchField);
+    });
+    setFilteredRentals(newFilteredRentals);
+  }, [rentals, searchField]);
+
+  const data = filteredRentals.map((rental) => ({
     key: rental._id,
     customerName: rental.customer.customerName,
     deposit: formatPrice.format(rental.deposit),
@@ -83,7 +92,6 @@ const RentalPage = () => {
     estimatedPrice: formatPrice.format(rental.estimatedPrice),
   }));
 
-  const [searchField, setSearchField] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
