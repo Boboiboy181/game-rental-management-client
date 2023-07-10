@@ -5,7 +5,6 @@ import axios from 'axios';
 import { formatPrice } from '../utils/format-price.function';
 import { RentalPackage } from '../types/rental-package.type';
 import AddRentalPackage from '../components/add-rentalpackage.component';
-import { ToastContainer, toast } from 'react-toastify';
 
 const { Text } = Typography;
 
