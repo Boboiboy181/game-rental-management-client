@@ -6,7 +6,7 @@ import { RentalPackage } from '../types/rental-package.type';
 
 const { Text } = Typography;
 
-const RentalPackage = () => {
+const RentalPackagePage = () => {
   const [rentalpackage, setRentalPackage] = useState<RentalPackage[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
@@ -129,4 +129,4 @@ const RentalPackage = () => {
   );
 };
 
-export default RentalPackage;
+export default RentalPackagePage;
