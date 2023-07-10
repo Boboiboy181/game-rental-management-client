@@ -15,7 +15,7 @@ const defaultFormFields = {
   system: '',
 };
 
-const AddVideoGame = ({
+const AddProduct = ({
   setIsAddOpen,
 }: {
   setIsAddOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -240,4 +240,4 @@ const AddVideoGame = ({
   );
 };
 
-export default AddVideoGame;
+export default AddProduct;

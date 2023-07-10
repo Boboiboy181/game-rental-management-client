@@ -143,7 +143,7 @@ const CustomerPage = () => {
             pagination={{ pageSize: 5 }}
           />
         </div>
-        <Space direction="horizontal" className="relative top-[-9%]">
+        <Space direction="horizontal">
           <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
             Thêm
           </Button>
@@ -153,14 +153,13 @@ const CustomerPage = () => {
 
           <Button
             type="primary"
-            className="bg-green-600"
+            className="bg-green-600 hover:!bg-green-500"
             onClick={handleUpdateBtn}
           >
             Sửa
           </Button>
         </Space>
       </div>
-
       {isUpdateOpen && (
         <UpdateCustomer
           setIsUpdateOpen={setIsUpdateOpen}

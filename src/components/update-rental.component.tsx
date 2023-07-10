@@ -1,5 +1,5 @@
-import { Button, Divider, Space, Spin, Typography } from 'antd';
-import { useEffect, useState } from 'react';
+import { Button, Divider, Input, Space, Spin, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { formatDate } from '../utils/format-date.function';
@@ -7,6 +7,7 @@ import Table, { ColumnsType } from 'antd/es/table';
 import { formatPrice } from '../utils/format-price.function';
 import { calculatePrice } from '../utils/caculate-price.function';
 import { Rental } from '../types/rental.type';
+import { updateRental } from '../api/rental.service';
 
 const { Text } = Typography;
 
@@ -19,12 +20,13 @@ type DataType = {
   returnDate: string;
 };
 
-const RentalDetail = () => {
+const UpdateRental = () => {
   const { rentalID } = useParams();
   const navigate = useNavigate();
-  const handleCloseDetailBtn = () => navigate('/rentals');
+  const handleCloseDetailBtn = () => navigate(`/rentals/${rentalID}`);
   const [rental, setRental] = useState<Rental>({} as Rental);
   const [loading, setLoading] = useState(true);
+  const [deposit, setDeposit] = useState<number>(0);
 
   useEffect(() => {
     const fetchRental = async () => {
@@ -32,6 +34,7 @@ const RentalDetail = () => {
         `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental/${rentalID}`,
       );
       setRental(data);
+      setDeposit(data.deposit);
       setLoading(false);
     };
 
@@ -100,12 +103,21 @@ const RentalDetail = () => {
     returnDate: formatDate(rentedGame.returnDate.toString()),
   }));
 
-  const handleUpdateDetailBtn = () => {
-    navigate(`/rentals/update/${rentalID}`);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setDeposit(Number(value));
   };
 
-  const handleCreateReturnBtn = () => {
-    navigate(`/returns/create/${rentalID}`);
+  console.log(deposit);
+
+  const handleSaveReturnBtn = async () => {
+    try {
+      const respone = await updateRental(rentalID, { deposit: deposit });
+      console.log(respone);
+    } catch (error) {
+      console.log(error);
+    }
+    navigate(`/rentals/${rentalID}`);
   };
 
   return (
@@ -127,12 +139,19 @@ const RentalDetail = () => {
             <p className="mt-2">{rental.customer.customerName}</p>
           </div>
         </Space>
-        <p className="text-lg">
-          Tiền đặt cọc{' '}
-          <span className="font-semibold text-red-600">
-            {formatPrice.format(rental.deposit)}
-          </span>
-        </p>
+        <div className="flex flex-col border-b-black/20 border-b w-[180px]">
+          <p className="text-xs text-black/40">Tiền đặt cọc</p>
+          <Input
+            className="p-0 py-1"
+            allowClear
+            required
+            bordered={false}
+            type="number"
+            name="deposit"
+            value={deposit}
+            onChange={handleChange}
+          />
+        </div>
       </div>
       <div>
         <Divider />
@@ -152,23 +171,11 @@ const RentalDetail = () => {
             Đóng
           </Button>
           <Button
-            className="bg-orange-600 hover:!bg-orange-500 shadow-xl"
-            type="primary"
-            onClick={handleUpdateDetailBtn}
-            disabled={
-              rental.returnState === 'RETURNED' ||
-              rental.returnState === 'NOT_ENOUGH'
-            }
-          >
-            Sửa
-          </Button>
-          <Button
             className="bg-green-600 hover:!bg-green-500 shadow-xl"
             type="primary"
-            onClick={handleCreateReturnBtn}
-            disabled={rental.returnState === 'RETURNED'}
+            onClick={handleSaveReturnBtn}
           >
-            Tạo phiếu trả
+            Lưu
           </Button>
         </Space>
         <p className="text-xl">
@@ -182,4 +189,4 @@ const RentalDetail = () => {
   );
 };
 
-export default RentalDetail;
+export default UpdateRental;

@@ -2,11 +2,11 @@ import { Space, Typography, Divider, Button } from 'antd';
 import Table from 'antd/es/table';
 import { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
-import AddVideoGame from '../components/add-video-game.component';
 import { Product } from '../types/product.type';
-import UpdateVideoGame from '../components/update-video-game.component';
 import { ToastContainer, toast } from 'react-toastify';
 import { formatPrice } from '../utils/format-price.function';
+import AddProduct from '../components/add-product.component';
+import UpdateProduct from '../components/update-video-game.component';
 
 const { Text } = Typography;
 
@@ -132,7 +132,7 @@ const ProductPage = () => {
             <label htmlFor="searchfield">Search game</label>
           </div>
         </Space>
-        <div>
+        <div className="relative">
           <Divider />
           <Table
             rowSelection={{
@@ -143,25 +143,30 @@ const ProductPage = () => {
             dataSource={data}
             pagination={{ pageSize: 5 }}
           />
+          <Space direction="horizontal" className="">
+            <Button
+              type="primary"
+              className="bg-blue-500"
+              onClick={handleAddBtn}
+            >
+              Thêm
+            </Button>
+            <Button danger type="primary" onClick={handleDeleteBtn}>
+              Xóa
+            </Button>
+            <Button
+              type="primary"
+              className="bg-green-600 hover:!bg-green-500"
+              onClick={handleUpdateBtn}
+            >
+              Sửa
+            </Button>
+          </Space>
         </div>
-        <Space direction="horizontal" className="relative top-[-9%]">
-          <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
-            Thêm
-          </Button>
-          <Button danger type="primary" onClick={handleDeleteBtn}>
-            Xóa
-          </Button>
-          <Button
-            type="primary"
-            className="bg-green-600"
-            onClick={handleUpdateBtn}>
-            Sửa
-          </Button>
-        </Space>
       </div>
-      {isAddOpen && <AddVideoGame setIsAddOpen={setIsAddOpen} />}
+      {isAddOpen && <AddProduct setIsAddOpen={setIsAddOpen} />}
       {isUpdateOpen && (
-        <UpdateVideoGame
+        <UpdateProduct
           setIsUpdateOpen={setIsUpdateOpen}
           selectedUpdate={selectedRowKeys}
           setProducts={setProducts}
