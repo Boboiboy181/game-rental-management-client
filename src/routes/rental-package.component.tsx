@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { formatPrice } from '../utils/format-price.function';
 import { RentalPackage } from '../types/rental-package.type';
+import AddRentalPackage from '../components/add-rentalpackage.component';
+import { ToastContainer, toast } from 'react-toastify';
 
 const { Text } = Typography;
 
@@ -12,6 +14,7 @@ const RentalPackagePage = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [filteredRentalPackage, setFilteredRentalPackage] = useState<RentalPackage[]>(rentalpackage);
   const [searchField, setSearchField] = useState('');
+  const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const newFilteredRentalPackage = rentalpackage.filter((rentalpackage) => {
@@ -94,46 +97,53 @@ const RentalPackagePage = () => {
     }
   };
 
+  const handleAddBtn = () => {
+    setIsAddOpen(true);
+  };
+
   return (
-    <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
-      <Space className="flex justify-between">
-        <Text className="text-2xl font-semibold">GÓI THUÊ</Text>
-        <div className="input-field">
-          <input
-            className="px-4"
-            type="search"
-            placeholder="Tìm kiếm gói thuê"
-            name="searchField"
-            value={searchField}
-            onChange={handleChange}
+    <Fragment>
+      <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
+        <Space className="flex justify-between">
+          <Text className="text-2xl font-semibold">GÓI THUÊ</Text>
+          <div className="input-field">
+            <input
+              className="px-4"
+              type="search"
+              placeholder="Tìm kiếm gói thuê"
+              name="searchField"
+              value={searchField}
+              onChange={handleChange}
+            />
+            <label htmlFor="searchfield">Tìm kiếm gói thuê</label>
+          </div>
+        </Space>
+        <div>
+          <Divider />
+          <Table
+            rowSelection={{
+              type: 'checkbox',
+              ...rowSelection,
+            }}
+            columns={columns}
+            dataSource={data}
+            pagination={{ pageSize:5 }}
           />
-          <label htmlFor="searchfield">Tìm kiếm gói thuê</label>
         </div>
-      </Space>
-      <div>
-        <Divider />
-        <Table
-          rowSelection={{
-            type: 'checkbox',
-            ...rowSelection,
-          }}
-          columns={columns}
-          dataSource={data}
-          pagination={{ pageSize:5 }}
-        />
+        <Space direction="horizontal" className="relative top-[-9%]">
+          <Button type="primary" className="bg-blue-500">
+            Thêm
+          </Button>
+          <Button danger type="primary" onClick={handleDeleteBtn}>
+            Xóa
+          </Button>
+          <Button type="primary" className="bg-green-600">
+            Sửa
+          </Button>
+        </Space>
       </div>
-      <Space direction="horizontal" className="relative top-[-9%]">
-        <Button type="primary" className="bg-blue-500">
-          Thêm
-        </Button>
-        <Button danger type="primary" onClick={handleDeleteBtn}>
-          Xóa
-        </Button>
-        <Button type="primary" className="bg-green-600">
-          Sửa
-        </Button>
-      </Space>
     </div>
+    {isAddOpen && <AddRentalPackage setIsAddOpen={setIsAddOpen} />}
   );
 };
 
