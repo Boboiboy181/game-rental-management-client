@@ -27,8 +27,8 @@ const RentalPackagePage = () => {
       dataIndex: 'packageName',
     },
     {
-      title: 'Số lượng',
-      dataIndex: 'numberofGames',
+      title: 'Số lượng Games',
+      dataIndex: 'numberOfGames',
     },
     {
       title: 'Giá thuê',
@@ -36,16 +36,16 @@ const RentalPackagePage = () => {
     },
     {
       title: 'Thời gian thuê',
-      dataIndex: 'timeofRental',
+      dataIndex: 'timeOfRental',
     },
   ];
 
   const data = rentalpackage.map((rentalpackage) => ({
     key: rentalpackage._id,
     packageName: rentalpackage.packageName,
-    numberofGames: rentalpackage.numberofGames,
+    numberofGames: rentalpackage.numberOfGames,
     price: rentalpackage.price,
-    timeofRental: rentalpackage.timeofRental,
+    timeofRental: rentalpackage.timeOfRental,
   }));
 
   const [searchField, setSearchField] = useState('');

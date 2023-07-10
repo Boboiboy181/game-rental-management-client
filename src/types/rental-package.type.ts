@@ -1,7 +1,7 @@
 export type RentalPackage = {
     _id: string;
     packageName: string;
-    numberofGames: number;
+    numberOfGames: number;
     price: number;
-    timeofRental: number;
+    timeOfRental: number;
   }
