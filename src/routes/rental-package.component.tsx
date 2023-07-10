@@ -43,9 +43,9 @@ const RentalPackagePage = () => {
   const data = rentalpackage.map((rentalpackage) => ({
     key: rentalpackage._id,
     packageName: rentalpackage.packageName,
-    numberofGames: rentalpackage.numberOfGames,
+    numberOfGames: rentalpackage.numberOfGames,
     price: rentalpackage.price,
-    timeofRental: rentalpackage.timeOfRental,
+    timeOfRental: rentalpackage.timeOfRental,
   }));
 
   const [searchField, setSearchField] = useState('');
