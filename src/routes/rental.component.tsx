@@ -11,13 +11,16 @@ type DataType = {
   key: string;
   customerName: string;
   deposit: number;
+  returnValue: number;
   returnState: string;
-  estimatedPrice: string;
+  estimatedPrice: number;
 };
 
 const RentalPage = () => {
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [filteredRentals, setFilteredRentals] = useState<Rental[]>(rentals);
+  const [searchField, setSearchField] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,15 +32,26 @@ const RentalPage = () => {
     fetchRental();
   }, []);
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toLocaleLowerCase();
+    setSearchField(value);
+  };
+
+  useEffect(() => {
+    const newFilteredRental = rentals.filter((rental) => {
+     return rental.customer.customerName.toLowerCase().includes(searchField);
+    });
+    setFilteredRental(newFilteredRental);
+  }, [searchField, filteredRental]);
+
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Khách hàng',
+      title: 'customer',
       dataIndex: 'customerName',
     },
     {
-      title: 'Tiền đặt cọc',
+      title: 'Deposit',
       dataIndex: 'deposit',
-      align: 'center',
     },
     {
       title: 'Trạng thái trả',
@@ -55,27 +69,23 @@ const RentalPage = () => {
       },
     },
     {
-      title: 'Giá trị ước tính',
-      dataIndex: 'estimatedPrice',
-      align: 'center',
+      title: 'ReturnState',
+      dataIndex: 'returnstate',
     },
     {
-      title: 'Thao tác',
-      width: 100,
-      align: 'center',
-      render: (_, record) => (
-        <Button
-          type="primary"
-          className="bg-blue-600"
-          onClick={() => handleDetailBtn(record.key)}
-        >
-          Chi tiết
-        </Button>
-      ),
+      title: 'EstimatedPrice',
+      dataIndex: 'estimatedprice',
     },
   ];
 
-  const data = rentals.map((rental) => ({
+  useEffect(() => {
+    const newFilteredRentals = rentals.filter((rental) => {
+      return rental.customer.customerName.toLowerCase().includes(searchField);
+    });
+    setFilteredRentals(newFilteredRentals);
+  }, [rentals, searchField]);
+
+  const data = filteredRentals.map((rental) => ({
     key: rental._id,
     customerName: rental.customer.customerName,
     deposit: formatPrice.format(rental.deposit),
@@ -83,7 +93,6 @@ const RentalPage = () => {
     estimatedPrice: formatPrice.format(rental.estimatedPrice),
   }));
 
-  const [searchField, setSearchField] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
