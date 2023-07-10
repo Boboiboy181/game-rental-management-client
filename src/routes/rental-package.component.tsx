@@ -2,6 +2,7 @@ import { Space, Typography, Divider, Button } from 'antd';
 import Table from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { formatPrice } from '../utils/format-price.function';
 import { RentalPackage } from '../types/rental-package.type';
 
 const { Text } = Typography;
@@ -9,6 +10,23 @@ const { Text } = Typography;
 const RentalPackagePage = () => {
   const [rentalpackage, setRentalPackage] = useState<RentalPackage[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [filteredRentalPackage, setFilteredRentalPackage] = useState<RentalPackage[]>(rentalpackage);
+  const [searchField, setSearchField] = useState('');
+
+  useEffect(() => {
+    const newFilteredRentalPackage = rentalpackage.filter((rentalpackage) => {
+      return rentalpackage.packageName.toLowerCase().includes(searchField);
+    });
+    setFilteredRentalPackage(newFilteredRentalPackage);
+  }, [rentalpackage, searchField]);
+
+  const data = filteredRentalPackage.map((rentalpackage) => ({
+    key: rentalpackage._id,
+    packageName: rentalpackage.packageName,
+    numberOfGames: rentalpackage.numberOfGames,
+    price: formatPrice.format(rentalpackage.price),
+    timeOfRental: rentalpackage.timeOfRental,
+  }));
 
   useEffect(() => {
     const fetchRentalPackage = async () => {
@@ -39,16 +57,6 @@ const RentalPackagePage = () => {
       dataIndex: 'timeOfRental',
     },
   ];
-
-  const data = rentalpackage.map((rentalpackage) => ({
-    key: rentalpackage._id,
-    packageName: rentalpackage.packageName,
-    numberOfGames: rentalpackage.numberOfGames,
-    price: rentalpackage.price,
-    timeOfRental: rentalpackage.timeOfRental,
-  }));
-
-  const [searchField, setSearchField] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
