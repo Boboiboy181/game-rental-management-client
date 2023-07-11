@@ -60,9 +60,9 @@ const AddRentalPackage = ({
 
     const RentalPackage = new FormData();
     RentalPackage.append('productName', packageName);
-    RentalPackage.append('numberOfGames', numberOfGames);
+    RentalPackage.append('numberOfGames', numberOfGames.toString());
     RentalPackage.append('price', price.toString());
-    RentalPackage.append('timeOfRental', timeOfRental);
+    RentalPackage.append('timeOfRental', timeOfRental.toString());
 
     await postRentalPackage(RentalPackage);
     setFormFields(defaultFormFields);
