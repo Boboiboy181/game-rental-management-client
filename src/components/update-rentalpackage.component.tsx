@@ -2,7 +2,7 @@ import { Button, Form, Input } from 'antd';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import { Product } from '../types/product.type';
+import { RentalPackage } from '../types/rental-package.type';
 
 const defaultFormFields = {
   price: 0,
@@ -20,7 +20,7 @@ const UpdateRentalPackage = ({
   selectedUpdate,
 }: {
   setIsUpdateOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setRentalPackage: React.Dispatch<React.SetStateAction<Product[]>>;
+  setRentalPackage: React.Dispatch<React.SetStateAction<RentalPackage[]>>;
   selectedUpdate: React.Key[];
 }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
