@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -27,10 +27,6 @@ const AddRentalPackage = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormFields((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const selectHandler = (value: string, name: string) => {
     setFormFields((prev) => ({ ...prev, [name]: value }));
   };
 
