@@ -5,9 +5,9 @@ import { ToastContainer, toast } from 'react-toastify';
 
 const defaultFormFields = {
   packageName: '',
-  numberOfGames: 0,
-  price: 0,
-  timeOfRental: 0,
+  numberOfGames: '',
+  price: '',
+  timeOfRental: '',
 };
 
 const AddRentalPackage = ({
