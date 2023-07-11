@@ -1,5 +1,5 @@
 import { Space, Typography, Divider, Button } from 'antd';
-import Table from 'antd/es/table';
+import Table, { ColumnType, ColumnGroupType } from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { RentalPackage } from '../types/rental-package.type';
@@ -21,22 +21,35 @@ const RentalPackagePage = () => {
     fetchRentalPackage();
   }, []);
 
-  const columns = [
+  const columns: (ColumnGroupType<{ key: string; packageName: string; numberOfGames: number; price: number; timeOfRental: number; }> | ColumnType<{ key: string; packageName: string; numberOfGames: number; price: number; timeOfRental: number; }>[]) = [
     {
       title: 'Tên gói thuê',
       dataIndex: 'packageName',
     },
     {
-      title: 'Số lượng Games',
+      title: 'Số lượng',
       dataIndex: 'numberOfGames',
+      align: 'center',
     },
     {
       title: 'Giá thuê',
       dataIndex: 'price',
+      align: 'center',
     },
     {
       title: 'Thời gian thuê',
       dataIndex: 'timeOfRental',
+      align: 'center',
+    },
+    {
+      title: 'Thao tác',
+      width: 100,
+      align: 'center',
+      render: (_, record) => (
+        <Button type="primary" className="bg-blue-600" onClick={() => handleDetailBtn(record.key)}>
+          Chi tiết
+        </Button>
+      ),
     },
   ];
 
