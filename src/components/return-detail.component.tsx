@@ -96,10 +96,6 @@ const ReturnDetail = () => {
     returnDate: formatDate(rentedGame.returnDate.toString()),
   }));
 
-  const handleUpdateDetailBtn = () => {
-    navigate(`/returns/update/${returnID}`);
-  };
-
   const handleCreateReturnBtn = () => {
     navigate(`/returns/create/${returnID}`);
   };
@@ -153,17 +149,6 @@ const ReturnDetail = () => {
             onClick={handleCloseDetailBtn}
           >
             Đóng
-          </Button>
-          <Button
-            className="bg-orange-600 hover:!bg-orange-500 shadow-xl"
-            type="primary"
-            onClick={handleUpdateDetailBtn}
-            disabled={
-              returnTicket.paymentState === 'RETURNED' ||
-              returnTicket.paymentState === 'NOT_ENOUGH'
-            }
-          >
-            Sửa
           </Button>
           <Button
             className="bg-green-600 hover:!bg-green-500 shadow-xl"
