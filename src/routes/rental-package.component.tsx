@@ -170,7 +170,7 @@ const RentalPackagePage = () => {
         <UpdateRentalPackage
           setIsUpdateOpen={setIsUpdateOpen}
           selectedUpdate={selectedRowKeys}
-          setRentalPackage={setRentalPackage}
+          setRentalPackages={setRentalPackage}
         />
       )}
       <ToastContainer />

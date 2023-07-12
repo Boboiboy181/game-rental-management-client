@@ -5,9 +5,9 @@ import { ToastContainer, toast } from 'react-toastify';
 
 const defaultFormFields = {
   packageName: '',
-  numberOfGames: '',
-  price: '',
-  timeOfRental: '',
+  numberOfGames: 0,
+  price: 0,
+  timeOfRental: 0,
 };
 
 const AddRentalPackage = ({
@@ -32,7 +32,7 @@ const AddRentalPackage = ({
 
   const handleCloseBtn = () => setIsAddOpen(false);
 
-  const postRentalPackage = async (data: FormData) => {
+  const postRentalPackage = async (data: any) => {
     try {
       await axios.post(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package',
@@ -58,14 +58,16 @@ const AddRentalPackage = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const RentalPackage = new FormData();
-    RentalPackage.append('productName', packageName);
-    RentalPackage.append('numberOfGames', numberOfGames.toString());
-    RentalPackage.append('price', price.toString());
-    RentalPackage.append('timeOfRental', timeOfRental.toString());
+    const rentalpackage = {
+      packageName,
+      price,
+      numberOfGames,
+      timeOfRental,
+    };
 
-    await postRentalPackage(RentalPackage);
+    await postRentalPackage(rentalpackage);
     setFormFields(defaultFormFields);
+    setIsAddOpen(false);
   };
 
   return (

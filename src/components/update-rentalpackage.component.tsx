@@ -16,11 +16,11 @@ type UpdateDto = {
 
 const UpdateRentalPackage = ({
   setIsUpdateOpen,
-  setRentalPackage,
+  setRentalPackages,
   selectedUpdate,
 }: {
   setIsUpdateOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setRentalPackage: React.Dispatch<React.SetStateAction<RentalPackage[]>>;
+  setRentalPackages: React.Dispatch<React.SetStateAction<RentalPackage[]>>;
   selectedUpdate: React.Key[];
 }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
