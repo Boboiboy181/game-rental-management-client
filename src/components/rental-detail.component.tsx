@@ -1,5 +1,5 @@
 import { Button, Divider, Space, Spin, Typography } from 'antd';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { formatDate } from '../utils/format-date.function';
@@ -111,7 +111,12 @@ const RentalDetail = () => {
   return (
     <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex flex-col items-start">
-        <Text className="text-3xl font-semibold">Phiếu thuê</Text>
+        <Text className="text-3xl font-semibold">
+          Phiếu thuê{' '}
+          <span className={'text-gray-400 font-light ml-1'}>
+            #{rental.rentalCode}
+          </span>
+        </Text>
         <p className="text-xs text-black/40">
           Ngày lập phiếu {formatDate(rental.createdAt.toString())}
         </p>
