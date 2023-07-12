@@ -171,26 +171,22 @@ const RentalPackagePage = () => {
             dataSource={data}
             pagination={{ pageSize: 5 }}
           />
-          <Space direction="horizontal" className="">
-            <Button
-              type="primary"
-              className="bg-blue-500"
-              onClick={handleAddBtn}
-            >
-              Thêm
-            </Button>
-            <Button danger type="primary" onClick={handleDeleteBtn}>
-              Xóa
-            </Button>
-            <Button
-              type="primary"
-              className="bg-green-600 hover:!bg-green-500"
-              onClick={handleUpdateBtn}
-            >
-              Sửa
-            </Button>
-          </Space>
         </div>
+        <Space direction="horizontal" className="relative top-[-9%]">
+          <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
+            Thêm
+          </Button>
+          <Button danger type="primary" onClick={handleDeleteBtn}>
+            Xóa
+          </Button>
+          <Button
+            type="primary"
+            className="bg-green-600 hover:!bg-green-500"
+            onClick={handleUpdateBtn}
+          >
+            Sửa
+          </Button>
+        </Space>
       </div>
       {isAddOpen && (
         <AddRentalPackage
