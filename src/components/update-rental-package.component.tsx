@@ -1,21 +1,20 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Col, Form, Input, Row } from 'antd';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
-
 const defaultFormFields = {
-  packageName:'',
+  packageName: '',
   price: 0,
   numberOfGames: 0,
-  timeOfRental:0,
+  timeOfRental: 0,
 };
 
 type UpdateDto = {
-  packageName:string;
+  packageName: string;
   price: number;
   numberOfGames: number;
-  timeOfRental:number;
+  timeOfRental: number;
 };
 
 const UpdateRentalPackage = ({
@@ -33,7 +32,8 @@ const UpdateRentalPackage = ({
         const response = await axios.get(
           `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/${selectedUpdate[0]}`,
         );
-        const { packageName, price, numberOfGames,timeOfRental } = response.data;
+        const { packageName, price, numberOfGames, timeOfRental } =
+          response.data;
         // Cập nhật giá trị mặc định cho formFields từ CSDL
         setFormFields({
           packageName,
@@ -51,7 +51,7 @@ const UpdateRentalPackage = ({
     }
   }, [selectedUpdate]);
 
-  const { packageName,price, numberOfGames,timeOfRental } = formFields;
+  const { packageName, price, numberOfGames, timeOfRental } = formFields;
   console.log(formFields);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +92,12 @@ const UpdateRentalPackage = ({
 
     const _id = selectedUpdate[0];
 
-    const rentalpackage: UpdateDto = { packageName,price, numberOfGames,timeOfRental };
+    const rentalpackage: UpdateDto = {
+      packageName,
+      price,
+      numberOfGames,
+      timeOfRental,
+    };
 
     await updateRentalPackage(_id, rentalpackage);
     setFormFields(defaultFormFields);
@@ -102,10 +107,13 @@ const UpdateRentalPackage = ({
     <div className="fixed bg-black/[.5] w-full h-full">
       <Form
         layout="horizontal"
-        className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 pb-0 left-[25%] top-[25%]"
+        className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 left-[25%] top-[25%]"
         onSubmitCapture={handleSubmit}
       >
-        <Form.Item label="tên gói Games">
+        <h1 className="text-2xl text-center font-semibold mb-4">
+          Sửa gói thuê
+        </h1>
+        <Form.Item label="Tên gói thuê">
           <Input
             required
             type="string"
@@ -115,11 +123,11 @@ const UpdateRentalPackage = ({
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item label="Giá thuê">
+        <Form.Item label="Giá gói thuê">
           <Input
             required
             type="number"
-            placeholder="Nhập giá thuê"
+            placeholder="Nhập giá gói thuê"
             name="price"
             value={price}
             onChange={handleChange}
@@ -145,21 +153,24 @@ const UpdateRentalPackage = ({
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item className="flex items-center justify-between">
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="bg-blue-500 mr-[14rem]"
-          >
-            Xác nhận
-          </Button>
-          <Button
-            type="primary"
-            className="bg-red-500"
-            onClick={handleCloseBtn}
-          >
-            Đóng
-          </Button>
+        <Form.Item className="mb-0">
+          <Row justify="space-between">
+            <Col>
+              <Button
+                type="primary"
+                danger
+                className="bg-red-500"
+                onClick={handleCloseBtn}
+              >
+                Đóng
+              </Button>
+            </Col>
+            <Col>
+              <Button type="primary" htmlType="submit" className="bg-blue-500">
+                Xác nhận
+              </Button>
+            </Col>
+          </Row>
         </Form.Item>
       </Form>
       <ToastContainer />

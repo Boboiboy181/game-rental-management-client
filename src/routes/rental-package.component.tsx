@@ -1,19 +1,28 @@
 import { Space, Typography, Divider, Button } from 'antd';
-import Table from 'antd/es/table';
+import Table, { ColumnsType } from 'antd/es/table';
 import { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import { formatPrice } from '../utils/format-price.function';
 import { RentalPackage } from '../types/rental-package.type';
-import AddRentalPackage from '../components/add-rentalpackage.component';
-import UpdateRentalPackage from '../components/update-rentalpackage.component';
+import AddRentalPackage from '../components/add-rental-package.component';
+import UpdateRentalPackage from '../components/update-rental-package.component';
 import { ToastContainer, toast } from 'react-toastify';
 
 const { Text } = Typography;
 
+type DataType = {
+  key: string;
+  packageName: string;
+  numberOfGames: number;
+  timeOfRental: number;
+  price: string;
+};
+
 const RentalPackagePage = () => {
   const [rentalpackage, setRentalPackage] = useState<RentalPackage[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [filteredRentalPackage, setFilteredRentalPackage] = useState<RentalPackage[]>(rentalpackage);
+  const [filteredRentalPackage, setFilteredRentalPackage] =
+    useState<RentalPackage[]>(rentalpackage);
   const [searchField, setSearchField] = useState('');
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
@@ -44,22 +53,36 @@ const RentalPackagePage = () => {
     fetchRentalPackage();
   }, []);
 
-  const columns = [
+  const columns: ColumnsType<DataType> = [
     {
       title: 'Tên gói thuê',
       dataIndex: 'packageName',
     },
     {
-      title: 'Số lượng Games',
+      title: 'Số lượng thuê',
       dataIndex: 'numberOfGames',
+      width: 200,
+    },
+    {
+      title: 'Thời gian thuê',
+      dataIndex: 'timeOfRental',
+      render: (timeOfRental: number) => <Text>{timeOfRental} ngày</Text>,
     },
     {
       title: 'Giá thuê',
       dataIndex: 'price',
+      align: 'left',
+      render: (price: number) => <Text className="font-medium">{price}</Text>,
     },
     {
-      title: 'Thời gian thuê (tính theo ngày)',
+      title: 'Thao tác',
       dataIndex: 'timeOfRental',
+      align: 'center',
+      render: (_, record) => (
+        <Button type="primary" className="bg-blue-600">
+          Chi tiết
+        </Button>
+      ),
     },
   ];
 
@@ -73,6 +96,10 @@ const RentalPackagePage = () => {
       setSelectedRowKeys(selectedKeys);
     },
   };
+
+  const rentalPackagesNameList = rentalpackage.map(
+    (rentalpackage) => rentalpackage.packageName,
+  );
 
   const handleDeleteBtn = async () => {
     try {
@@ -105,7 +132,7 @@ const RentalPackagePage = () => {
 
   const handleUpdateBtn = () => {
     if (selectedRowKeys.length === 0 || selectedRowKeys.length > 1) {
-      toast.error('Vui lòng chỉ chọn 1 Gói thuê để cập nhật 😞', {
+      toast.error('Vui lòng chỉ chọn 1 gói thuê để cập nhật 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -117,10 +144,10 @@ const RentalPackagePage = () => {
   };
 
   return (
-    <Fragment> 
-      <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
+    <Fragment>
+      <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
         <Space className="flex justify-between">
-          <Text className="text-2xl font-semibold">GÓI THUÊ</Text>
+          <Text className="text-3xl font-semibold">Gói thuê</Text>
           <div className="input-field">
             <input
               className="px-4"
@@ -133,7 +160,7 @@ const RentalPackagePage = () => {
             <label htmlFor="searchfield">Tìm kiếm gói thuê</label>
           </div>
         </Space>
-        <div className='relative'> 
+        <div className="relative">
           <Divider />
           <Table
             rowSelection={{
@@ -142,7 +169,7 @@ const RentalPackagePage = () => {
             }}
             columns={columns}
             dataSource={data}
-            pagination={{ pageSize:5 }}
+            pagination={{ pageSize: 5 }}
           />
           <Space direction="horizontal" className="">
             <Button
@@ -165,12 +192,16 @@ const RentalPackagePage = () => {
           </Space>
         </div>
       </div>
-      {isAddOpen && <AddRentalPackage setIsAddOpen={setIsAddOpen} />}
+      {isAddOpen && (
+        <AddRentalPackage
+          setIsAddOpen={setIsAddOpen}
+          rentalPackagesNameList={rentalPackagesNameList}
+        />
+      )}
       {isUpdateOpen && (
         <UpdateRentalPackage
           setIsUpdateOpen={setIsUpdateOpen}
           selectedUpdate={selectedRowKeys}
-          
         />
       )}
       <ToastContainer />

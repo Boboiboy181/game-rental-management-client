@@ -1,4 +1,4 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Col, Form, Input, Row } from 'antd';
 import { useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -12,18 +12,15 @@ const defaultFormFields = {
 
 const AddRentalPackage = ({
   setIsAddOpen,
+  rentalPackagesNameList,
 }: {
   setIsAddOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  rentalPackagesNameList: string[];
 }) => {
   // const { setIsOpen } = useContext(OverlayContext);
   const [formFields, setFormFields] = useState(defaultFormFields);
 
-  const {
-    packageName,
-    numberOfGames,
-    price,
-    timeOfRental,
-  } = formFields;
+  const { packageName, numberOfGames, price, timeOfRental } = formFields;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -65,6 +62,17 @@ const AddRentalPackage = ({
       timeOfRental,
     };
 
+    // check if the package name already exists
+    if (rentalPackagesNameList.includes(packageName)) {
+      toast.error('Gói thuê đã tồn tại 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+      return;
+    }
+
     await postRentalPackage(rentalpackage);
     setFormFields(defaultFormFields);
     setIsAddOpen(false);
@@ -74,9 +82,12 @@ const AddRentalPackage = ({
     <div className="fixed bg-black/[.5] w-full h-full">
       <Form
         layout="horizontal"
-        className="absolute w-[25rem] bg-white flex flex-col rounded-lg mt-6 h-[85%] p-6 left-[25%]"
+        className="absolute w-[25rem] bg-white flex flex-col rounded-lg mt-6 p-6 left-[25%] top-[25%]"
         onSubmitCapture={handleSubmit}
       >
+        <h1 className="text-2xl text-center font-semibold mb-4">
+          Thêm gói thuê
+        </h1>
         <Form.Item label="Tên gói thuê">
           <Input
             required
@@ -117,21 +128,24 @@ const AddRentalPackage = ({
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item className="flex items-center justify-between">
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="bg-blue-500 mr-[14rem]"
-          >
-            Xác nhận
-          </Button>
-          <Button
-            type="primary"
-            className="bg-red-500"
-            onClick={handleCloseBtn}
-          >
-            Đóng
-          </Button>
+        <Form.Item className="mb-0">
+          <Row justify="space-between">
+            <Col>
+              <Button
+                type="primary"
+                danger
+                className="bg-red-500"
+                onClick={handleCloseBtn}
+              >
+                Đóng
+              </Button>
+            </Col>
+            <Col>
+              <Button type="primary" htmlType="submit" className="bg-blue-500">
+                Xác nhận
+              </Button>
+            </Col>
+          </Row>
         </Form.Item>
       </Form>
       <ToastContainer />
