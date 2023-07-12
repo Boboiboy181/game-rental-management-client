@@ -58,7 +58,7 @@ const RentalPackagePage = () => {
       dataIndex: 'price',
     },
     {
-      title: 'Thời gian thuê',
+      title: 'Thời gian thuê (tính theo ngày)',
       dataIndex: 'timeOfRental',
     },
   ];
