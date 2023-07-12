@@ -207,10 +207,7 @@ const AddReturn = () => {
       <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
         <div>
           <Space className="flex flex-col items-start">
-            <Text className="text-3xl font-semibold">
-              Phiếu trả{' '}
-              <span className={'text-gray-400 font-light ml-1'}>#RSE100</span>
-            </Text>
+            <Text className="text-3xl font-semibold">Phiếu trả</Text>
             <p className="text-xs text-black/40">
               Ngày lập phiếu {formatDate(new Date().toString())}
             </p>
@@ -219,7 +216,7 @@ const AddReturn = () => {
             <Space className="mt-8">
               <div className="flex flex-col mr-10 border-black/20 border-b pb-1">
                 <p className="text-xs text-black/40">Mã phiếu thuê</p>
-                <p className="mt-2">SE100</p>
+                <p className="mt-2">{rental.rentalCode}</p>
               </div>
               <div className="flex flex-col border-b-black/20 border-b mr-5">
                 <p className="text-xs text-black/40">Số điện thoại</p>

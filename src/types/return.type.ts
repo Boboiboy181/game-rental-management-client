@@ -1,5 +1,6 @@
 export type Return = {
   _id: string;
+  returnCode: string;
   customer: {
     _id: string;
     customerName: string;
@@ -22,6 +23,7 @@ export type Return = {
       _id: string;
     },
   ];
+  rentalCode: string;
   estimatedPrice: number;
   createdAt: Date;
   updatedAt: Date;

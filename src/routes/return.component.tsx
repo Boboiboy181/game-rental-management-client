@@ -10,6 +10,8 @@ import { formatDate } from '../utils/format-date.function.ts';
 
 type DataType = {
   key: React.Key;
+  returnCode: string;
+  rentalCode: string;
   customer: string;
   paymentState: string;
   estimatedPrice: string;
@@ -19,7 +21,8 @@ type DataType = {
 const ReturnPage = () => {
   const [returnTickets, setReturnTickets] = useState<Return[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [filteredReturns, setFilteredReturns] = useState<Return[]>(returnTickets);
+  const [filteredReturns, setFilteredReturns] =
+    useState<Return[]>(returnTickets);
   const [searchField, setSearchField] = useState('');
   const navigate = useNavigate();
 
@@ -38,15 +41,21 @@ const ReturnPage = () => {
 
   const columns: ColumnsType<DataType> = [
     {
+      title: 'Mã phiếu trả',
+      dataIndex: 'returnCode',
+      key: 'returnCode',
+      width: 150,
+    },
+    {
+      title: 'Mã phiếu thuê',
+      dataIndex: 'rentalCode',
+      key: 'rentalCode',
+      width: 150,
+    },
+    {
       title: 'Khách hàng',
       dataIndex: 'customer',
       key: 'customer',
-    },
-    {
-      title: 'Tổng tiền thuê',
-      dataIndex: 'estimatedPrice',
-      align: 'center',
-      key: 'estimatedPrice',
     },
     {
       title: 'Ngày trả',
@@ -88,13 +97,17 @@ const ReturnPage = () => {
 
   useEffect(() => {
     const newFilteredReturns = returnTickets.filter((returnTicket) => {
-      return returnTicket.customer.customerName.toLowerCase().includes(searchField);
+      return returnTicket.customer.customerName
+        .toLowerCase()
+        .includes(searchField);
     });
     setFilteredReturns(newFilteredReturns);
   }, [returnTickets, searchField]);
 
   const data: DataType[] = filteredReturns.map((returnTicket) => ({
     key: returnTicket._id,
+    returnCode: returnTicket.returnCode,
+    rentalCode: returnTicket.rentalCode,
     customer: returnTicket.customer.customerName,
     paymentState: returnTicket.paymentState,
     estimatedPrice: formatPrice.format(returnTicket.estimatedPrice),

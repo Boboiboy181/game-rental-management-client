@@ -10,6 +10,7 @@ import { formatDate } from '../utils/format-date.function.ts';
 
 type DataType = {
   key: string;
+  rentalCode: string;
   customerName: string;
   createdAt: string;
   deposit: number;
@@ -32,6 +33,10 @@ const RentalPage = () => {
   }, []);
 
   const columns: ColumnsType<DataType> = [
+    {
+      title: 'Mã phiếu thuê',
+      dataIndex: 'rentalCode',
+    },
     {
       title: 'Khách hàng',
       dataIndex: 'customerName',
@@ -84,6 +89,7 @@ const RentalPage = () => {
 
   const data = rentals.map((rental) => ({
     key: rental._id,
+    rentalCode: rental.rentalCode,
     customerName: rental.customer.customerName,
     createdAt: formatDate(rental.createdAt),
     deposit: formatPrice.format(rental.deposit),

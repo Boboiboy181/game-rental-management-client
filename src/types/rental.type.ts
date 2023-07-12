@@ -1,5 +1,6 @@
 export type Rental = {
   _id: string;
+  rentalCode: string;
   customer: {
     _id: string;
     customerName: string;

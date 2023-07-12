@@ -105,7 +105,9 @@ const ReturnDetail = () => {
       <Space className="flex flex-col items-start">
         <Text className="text-3xl font-semibold">
           Phiếu trả{' '}
-          <span className={'text-gray-400 font-light ml-1'}>#RSE100</span>
+          <span className={'text-gray-400 font-light ml-1'}>
+            #{returnTicket.returnCode}
+          </span>
         </Text>
         <p className="text-xs text-black/40">
           Ngày lập phiếu {formatDate(returnTicket.createdAt.toString())}
@@ -115,7 +117,7 @@ const ReturnDetail = () => {
         <Space className="mt-6">
           <div className="flex flex-col mr-10 border-black/20 border-b pb-1">
             <p className="text-xs text-black/40">Mã phiếu thuê</p>
-            <p className="mt-2">SE100</p>
+            <p className="mt-2">{returnTicket.rentalCode}</p>
           </div>
           <div className="flex flex-col mr-10 border-black/20 border-b pb-1">
             <p className="text-xs text-black/40">Số điện thoại</p>
