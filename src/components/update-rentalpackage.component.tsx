@@ -2,25 +2,27 @@ import { Button, Form, Input } from 'antd';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import { RentalPackage } from '../types/rental-package.type';
+
 
 const defaultFormFields = {
+  packageName:'',
   price: 0,
   numberOfGames: 0,
+  timeOfRental:0,
 };
 
 type UpdateDto = {
+  packageName:string;
   price: number;
   numberOfGames: number;
+  timeOfRental:number;
 };
 
 const UpdateRentalPackage = ({
   setIsUpdateOpen,
-  setRentalPackages,
   selectedUpdate,
 }: {
   setIsUpdateOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setRentalPackages: React.Dispatch<React.SetStateAction<RentalPackage[]>>;
   selectedUpdate: React.Key[];
 }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
@@ -31,12 +33,13 @@ const UpdateRentalPackage = ({
         const response = await axios.get(
           `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/${selectedUpdate[0]}`,
         );
-        const { price, numberOfGames } = response.data;
-
+        const { packageName, price, numberOfGames,timeOfRental } = response.data;
         // Cập nhật giá trị mặc định cho formFields từ CSDL
         setFormFields({
+          packageName,
           price,
           numberOfGames,
+          timeOfRental,
         });
       } catch (error) {
         console.log(error);
@@ -48,7 +51,7 @@ const UpdateRentalPackage = ({
     }
   }, [selectedUpdate]);
 
-  const { price, numberOfGames } = formFields;
+  const { packageName,price, numberOfGames,timeOfRental } = formFields;
   console.log(formFields);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,9 +92,9 @@ const UpdateRentalPackage = ({
 
     const _id = selectedUpdate[0];
 
-    const RentalPackage: UpdateDto = { price, numberOfGames };
+    const rentalpackage: UpdateDto = { packageName,price, numberOfGames,timeOfRental };
 
-    await updateRentalPackage(_id, RentalPackage);
+    await updateRentalPackage(_id, rentalpackage);
     setFormFields(defaultFormFields);
   };
 
@@ -102,6 +105,16 @@ const UpdateRentalPackage = ({
         className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 pb-0 left-[25%] top-[25%]"
         onSubmitCapture={handleSubmit}
       >
+        <Form.Item label="tên gói Games">
+          <Input
+            required
+            type="string"
+            placeholder="Nhập tên gói Game"
+            name="packageName"
+            value={packageName}
+            onChange={handleChange}
+          />
+        </Form.Item>
         <Form.Item label="Giá thuê">
           <Input
             required
@@ -112,13 +125,23 @@ const UpdateRentalPackage = ({
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item label="Số lượng Games">
+        <Form.Item label="Số lượng game trong gói thuê">
           <Input
             required
             type="number"
-            placeholder="Nhập số lượng Games"
-            name="quantity"
+            placeholder="Nhập số lượng game thuê"
+            name="numberOfGames"
             value={numberOfGames}
+            onChange={handleChange}
+          />
+        </Form.Item>
+        <Form.Item label="Thời gian cho gói thuê">
+          <Input
+            required
+            type="number"
+            placeholder="Nhập thời gian game cho thuê"
+            name="timeOfRental"
+            value={timeOfRental}
             onChange={handleChange}
           />
         </Form.Item>
