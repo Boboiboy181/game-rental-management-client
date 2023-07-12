@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Row } from 'antd';
+import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -24,6 +24,10 @@ const AddRentalPackage = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    setFormFields((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const selectHandler = (value: string, name: string) => {
     setFormFields((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -118,15 +122,16 @@ const AddRentalPackage = ({
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item label="Thời gian thuê">
-          <Input
-            required
-            type="number"
-            placeholder="Nhập thời gian thuê"
-            name="timeOfRental"
+        <Form.Item label="Thời gian cho thuê gói theo ngày">
+          <Select
             value={timeOfRental}
-            onChange={handleChange}
-          />
+            onSelect={(value) => selectHandler(value.toString(), 'timeOfRental')}
+          >
+            <Select.Option value="7">7</Select.Option>
+            <Select.Option value="14">14</Select.Option>
+            <Select.Option value="30">30</Select.Option>
+            <Select.Option value="60">60</Select.Option>
+          </Select>
         </Form.Item>
         <Form.Item className="mb-0">
           <Row justify="space-between">
