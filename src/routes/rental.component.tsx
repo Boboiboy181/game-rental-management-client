@@ -1,4 +1,4 @@
-import { Space, Button, Tag } from 'antd';
+import { Button, Space, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useEffect, useState } from 'react';
 import { Rental } from '../types/rental.type';
@@ -6,10 +6,12 @@ import { formatPrice } from '../utils/format-price.function';
 import { useNavigate } from 'react-router-dom';
 import { delelteRental, getRentals } from '../api/rental.service';
 import ShowData from '../components/page.component';
+import { formatDate } from '../utils/format-date.function.ts';
 
 type DataType = {
   key: string;
   customerName: string;
+  createdAt: string;
   deposit: number;
   returnState: string;
   estimatedPrice: string;
@@ -35,10 +37,20 @@ const RentalPage = () => {
       dataIndex: 'customerName',
     },
     {
-      title: 'Tiền đặt cọc',
-      dataIndex: 'deposit',
+      title: 'Giá trị ước tính',
+      dataIndex: 'estimatedPrice',
       align: 'center',
     },
+    {
+      title: 'Ngày thuê',
+      dataIndex: 'createdAt',
+      align: 'center',
+    },
+    // {
+    //   title: 'Tiền đặt cọc',
+    //   dataIndex: 'deposit',
+    //   align: 'center',
+    // },
     {
       title: 'Trạng thái trả',
       dataIndex: 'returnState',
@@ -53,11 +65,6 @@ const RentalPage = () => {
           </Tag>
         );
       },
-    },
-    {
-      title: 'Giá trị ước tính',
-      dataIndex: 'estimatedPrice',
-      align: 'center',
     },
     {
       title: 'Thao tác',
@@ -78,6 +85,7 @@ const RentalPage = () => {
   const data = rentals.map((rental) => ({
     key: rental._id,
     customerName: rental.customer.customerName,
+    createdAt: formatDate(rental.createdAt),
     deposit: formatPrice.format(rental.deposit),
     returnState: rental.returnState,
     estimatedPrice: formatPrice.format(rental.estimatedPrice),

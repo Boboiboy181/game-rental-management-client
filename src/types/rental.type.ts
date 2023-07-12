@@ -21,6 +21,7 @@ export type Rental = {
       _id: string;
     },
   ];
+  returnIDs: string[];
   estimatedPrice: number;
   createdAt: string;
 };

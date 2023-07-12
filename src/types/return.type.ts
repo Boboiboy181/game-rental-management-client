@@ -1,18 +1,18 @@
 export type Return = {
   _id: string;
   customer: {
-    _id:string;
-    customerName:string;
-    phoneNumber:string;
+    _id: string;
+    customerName: string;
+    phoneNumber: string;
   };
-  deposit: number;  
+  deposit: number;
   paymentState: string;
   rentedGames: [
     {
-      game:{
+      game: {
         _id: string;
-        productName:string;
-        price:number;
+        productName: string;
+        price: number;
       };
       preOrderQuantity: number;
       numberOfRentalDays: number;
@@ -20,9 +20,9 @@ export type Return = {
       daysPastDue: number;
       fine: number;
       _id: string;
-    }
-  ]
+    },
+  ];
   estimatedPrice: number;
   createdAt: Date;
   updatedAt: Date;
-}
+};

@@ -1,4 +1,4 @@
-import { Space, Button, Tag } from 'antd';
+import { Button, Space, Tag } from 'antd';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Return } from '../types/return.type';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { ColumnsType } from 'antd/es/table';
 import PageComponent from '../components/page.component.tsx';
 import { formatPrice } from '../utils/format-price.function.ts';
 import { deleteReturn, getReturns } from '../api/return.service.ts';
+import { formatDate } from '../utils/format-date.function.ts';
 
 type DataType = {
   key: React.Key;
@@ -35,11 +36,6 @@ const ReturnPage = () => {
     fetchReturnTicket();
   }, []);
 
-  const formatCreatedAt = (date: Date) => {
-    const formattedDate = date.toISOString().slice(0, 10);
-    return formattedDate;
-  };
-
   const columns: ColumnsType<DataType> = [
     {
       title: 'Khách hàng',
@@ -53,7 +49,7 @@ const ReturnPage = () => {
       key: 'estimatedPrice',
     },
     {
-      title: 'Ngày tạo',
+      title: 'Ngày trả',
       dataIndex: 'createdAt',
       align: 'center',
       key: 'createdAt',
@@ -102,7 +98,7 @@ const ReturnPage = () => {
     customer: returnTicket.customer.customerName,
     paymentState: returnTicket.paymentState,
     estimatedPrice: formatPrice.format(returnTicket.estimatedPrice),
-    createdAt: formatCreatedAt(new Date(returnTicket.createdAt)), // Convert createdAt to a Date object before formatting
+    createdAt: formatDate(returnTicket.createdAt.toString()), // Convert createdAt to a Date object before formatting
   }));
 
   const handleDetailBtn = (key: React.Key) => {

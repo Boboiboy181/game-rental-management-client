@@ -1,13 +1,12 @@
 import { Button, Divider, Space, Spin, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { formatDate } from '../utils/format-date.function.ts';
+import { formatDate } from '../utils/format-date.function';
 import Table, { ColumnsType } from 'antd/es/table';
-import { formatPrice } from '../utils/format-price.function.ts';
-import { calculatePrice } from '../utils/caculate-price.function.ts';
+import { formatPrice } from '../utils/format-price.function';
+import { calculatePrice } from '../utils/caculate-price.function';
 import { Return } from '../types/return.type.ts';
-import axios  from 'axios';
-
+import { getReturnByID } from '../api/return.service.ts';
 
 const { Text } = Typography;
 
@@ -30,9 +29,7 @@ const ReturnDetail = () => {
 
   useEffect(() => {
     const fetchRental = async () => {
-      const { data }: { data: Return } = await axios.get(
-        `https://game-rental-management-app-yh3ve.ondigitalocean.app/return/${returnID}`,
-      );
+      const data = await getReturnByID(returnID || '');
       setReturnTicket(data);
       setLoading(false);
     };
@@ -99,13 +96,10 @@ const ReturnDetail = () => {
     returnDate: formatDate(rentedGame.returnDate.toString()),
   }));
 
-  const handleUpdateDetailBtn = () => {
-    navigate(`/returns/update/${returnID}`);
-  };
-
   const handleCreateReturnBtn = () => {
     navigate(`/returns/create/${returnID}`);
   };
+
   return (
     <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex flex-col items-start">
@@ -155,17 +149,6 @@ const ReturnDetail = () => {
             onClick={handleCloseDetailBtn}
           >
             Đóng
-          </Button>
-          <Button
-            className="bg-orange-600 hover:!bg-orange-500 shadow-xl"
-            type="primary"
-            onClick={handleUpdateDetailBtn}
-            disabled={
-              returnTicket.paymentState === 'RETURNED' ||
-              returnTicket.paymentState === 'NOT_ENOUGH'
-            }
-          >
-            Sửa
           </Button>
           <Button
             className="bg-green-600 hover:!bg-green-500 shadow-xl"
