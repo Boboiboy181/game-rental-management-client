@@ -61,17 +61,19 @@ const RentalPackagePage = () => {
     {
       title: 'Số lượng thuê',
       dataIndex: 'numberOfGames',
+      align: 'center',
       width: 200,
     },
     {
       title: 'Thời gian thuê',
       dataIndex: 'timeOfRental',
+      align: 'center',
       render: (timeOfRental: number) => <Text>{timeOfRental} ngày</Text>,
     },
     {
       title: 'Giá thuê',
       dataIndex: 'price',
-      align: 'left',
+      align: 'center',
       render: (price: number) => <Text className="font-medium">{price}</Text>,
     },
     {
