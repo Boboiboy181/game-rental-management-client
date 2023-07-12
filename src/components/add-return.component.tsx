@@ -1,4 +1,4 @@
-import { Button, Input, Space, Spin, Typography } from 'antd';
+import { Button, Space, Spin, Typography } from 'antd';
 import { Fragment, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatDate } from '../utils/format-date.function';
@@ -8,7 +8,7 @@ import { Rental } from '../types/rental.type.ts';
 import { getRentalById } from '../api/rental.service.ts';
 import { CreateReturn } from '../types/create-return.type.ts';
 import { Return } from '../types/return.type.ts';
-import { createReturn } from '../api/return.service.ts';
+import { createReturn, getReturnByID } from '../api/return.service.ts';
 
 const { Text } = Typography;
 
@@ -19,6 +19,18 @@ type DataType = {
   preOrderQuantity: number;
   numberOfRentalDays: number;
   returnDate: string;
+};
+
+type RentedGame = {
+  game: {
+    _id: string;
+    productName: string;
+    price: number;
+  };
+  preOrderQuantity: number;
+  numberOfRentalDays: number;
+  returnDate: string;
+  _id: string;
 };
 
 const AddReturn = () => {
@@ -41,17 +53,49 @@ const AddReturn = () => {
     fetchRental();
   }, []);
 
+  const gamesReturnedList = async (returnIDs: any): Promise<RentedGame[]> => {
+    const gameReturnedFromReturnIDs = returnIDs.map(
+      async (returnID: string) => {
+        const returnTicket: Return = await getReturnByID(returnID);
+        return returnTicket.rentedGames;
+      },
+    );
+
+    return (await Promise.all(gameReturnedFromReturnIDs)).reduce(
+      (acc: RentedGame[], curr) => {
+        return [...acc, ...curr];
+      },
+      [],
+    );
+  };
+
   useEffect(() => {
     if (!isLoading && rental.rentedGames.length > 0) {
-      const returnGamesData = rental.rentedGames.map((item) => ({
-        key: item._id,
-        gameID: item.game._id,
-        productName: item.game.productName,
-        preOrderQuantity: item.preOrderQuantity,
-        numberOfRentalDays: item.numberOfRentalDays,
-        returnDate: item.returnDate,
-      }));
-      setReturnGames(returnGamesData);
+      const handleGameReturned = async () => {
+        const gameReturned = await gamesReturnedList(rental.returnIDs);
+
+        const returnGamesData = rental.rentedGames
+          .filter((item) => {
+            return !gameReturned.some(
+              (returnedItem) => returnedItem.game._id === item.game._id,
+            );
+          })
+          .map((item) => {
+            return {
+              key: item._id,
+              gameID: item.game._id,
+              productName: item.game.productName,
+              preOrderQuantity: item.preOrderQuantity,
+              numberOfRentalDays: item.numberOfRentalDays,
+              returnDate: item.returnDate,
+            };
+          });
+
+        // set the video-games to be returned
+        setReturnGames(returnGamesData);
+      };
+
+      handleGameReturned();
     }
   }, [isLoading, rental.rentedGames]);
 
@@ -72,15 +116,15 @@ const AddReturn = () => {
       title: 'Số lượng',
       dataIndex: 'preOrderQuantity',
       align: 'center',
-      render: (_, record) => (
-        <Input
-          type="number"
-          min={1}
-          max={record.preOrderQuantity}
-          defaultValue={record.preOrderQuantity}
-          className="w-[65px]"
-        />
-      ),
+      // render: (_, record) => (
+      //   <Input
+      //     type="number"
+      //     min={1}
+      //     max={record.preOrderQuantity}
+      //     defaultValue={record.preOrderQuantity}
+      //     className="w-[65px]"
+      //   />
+      // ),
     },
     {
       title: 'Số ngày thuê',
