@@ -6,6 +6,7 @@ import { formatPrice } from '../utils/format-price.function';
 import { RentalPackage } from '../types/rental-package.type';
 import AddRentalPackage from '../components/add-rental-package.component';
 import UpdateRentalPackage from '../components/update-rental-package.component';
+import DetailRentalPackage from '../components/detail-rental-package.component';
 import { ToastContainer, toast } from 'react-toastify';
 
 const { Text } = Typography;
@@ -18,40 +19,61 @@ type DataType = {
   price: string;
 };
 
+interface DetailedRentalPackage extends RentalPackage {
+  customers: { name: string; email: string }[];
+}
+
 const RentalPackagePage = () => {
-  const [rentalpackage, setRentalPackage] = useState<RentalPackage[]>([]);
+  const [rentalPackages, setRentalPackages] = useState<RentalPackage[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [filteredRentalPackage, setFilteredRentalPackage] =
-    useState<RentalPackage[]>(rentalpackage);
+  const [filteredRentalPackages, setFilteredRentalPackages] = useState<RentalPackage[]>([]);
   const [searchField, setSearchField] = useState('');
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
+  const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
+  const [selectedRentalPackage, setSelectedRentalPackage] = useState<DetailedRentalPackage | null>(null);
+  const [customers, setCustomers] = useState<{ name: string; email: string }[]>([]);
 
   useEffect(() => {
-    const newFilteredRentalPackage = rentalpackage.filter((rentalpackage) => {
-      return rentalpackage.packageName.toLowerCase().includes(searchField);
-    });
-    setFilteredRentalPackage(newFilteredRentalPackage);
-  }, [rentalpackage, searchField]);
-
-  const data = filteredRentalPackage.map((rentalpackage) => ({
-    key: rentalpackage._id,
-    packageName: rentalpackage.packageName,
-    numberOfGames: rentalpackage.numberOfGames,
-    price: formatPrice.format(rentalpackage.price),
-    timeOfRental: rentalpackage.timeOfRental,
-  }));
-
-  useEffect(() => {
-    const fetchRentalPackage = async () => {
-      const { data }: { data: RentalPackage[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package',
-      );
-      setRentalPackage(data);
+    const fetchRentalPackages = async () => {
+      try {
+        const response = await axios.get('https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package');
+        setRentalPackages(response.data);
+      } catch (error) {
+        console.log('Error fetching rental packages:', error);
+      }
     };
 
-    fetchRentalPackage();
+    fetchRentalPackages();
   }, []);
+
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const response = await axios.get('https://game-rental-management-app-yh3ve.ondigitalocean.app/customer');
+        setCustomers(response.data);
+      } catch (error) {
+        console.log('Error fetching customers:', error);
+      }
+    };
+
+    fetchCustomers();
+  }, []);
+
+  useEffect(() => {
+    const newFilteredRentalPackages = rentalPackages.filter((pkg) => {
+      return pkg.packageName.toLowerCase().includes(searchField);
+    });
+    setFilteredRentalPackages(newFilteredRentalPackages);
+  }, [rentalPackages, searchField]);
+
+  const data = filteredRentalPackages.map((pkg) => ({
+    key: pkg._id,
+    packageName: pkg.packageName,
+    numberOfGames: pkg.numberOfGames,
+    price: formatPrice.format(pkg.price),
+    timeOfRental: pkg.timeOfRental,
+  }));
 
   const columns: ColumnsType<DataType> = [
     {
@@ -81,7 +103,7 @@ const RentalPackagePage = () => {
       dataIndex: 'timeOfRental',
       align: 'center',
       render: (_, record) => (
-        <Button type="primary" className="bg-blue-600">
+        <Button type="primary" className="bg-blue-600" onClick={() => handleDetailBtn(record)}>
           Chi tiết
         </Button>
       ),
@@ -99,32 +121,25 @@ const RentalPackagePage = () => {
     },
   };
 
-  const rentalPackagesNameList = rentalpackage.map(
-    (rentalpackage) => rentalpackage.packageName,
-  );
+  const rentalPackagesNameList = rentalPackages.map((pkg) => pkg.packageName);
 
   const handleDeleteBtn = async () => {
     try {
       // Delete selected rows
       await Promise.all(
         selectedRowKeys.map(async (key) => {
-          await axios.delete(
-            `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/${key}`,
-          );
-        }),
+          await axios.delete(`https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/${key}`);
+        })
       );
 
-      // Fetch updated products data
-      const { data }: { data: RentalPackage[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package',
-      );
-
-      setRentalPackage(data);
+      // Fetch updated rental packages data
+      const response = await axios.get('https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package');
+      setRentalPackages(response.data);
       setSelectedRowKeys([]);
 
       setSearchField('');
     } catch (error) {
-      console.log('Error deleting rows:', error);
+      console.log('Error deleting rental packages:', error);
     }
   };
 
@@ -143,6 +158,36 @@ const RentalPackagePage = () => {
       return;
     }
     setIsUpdateOpen(true);
+  };
+
+  const handleDetailBtn = async (record: DataType) => {
+    const selectedPackage = rentalPackages.find((pkg) => pkg._id === record.key);
+    if (selectedPackage) {
+      try {
+        const response = await axios.get('https://game-rental-management-app-yh3ve.ondigitalocean.app/customer');
+        const customersData = response.data;
+        const customersList = customersData
+          .filter((customer: any) => customer.rentalPackage === selectedPackage._id)
+          .reduce((acc: { [key: string]: { name: string; email: string } }, customer: any) => {
+            const { email, name } = customer;
+            if (acc[email]) {
+              acc[email].name += `, ${name}`;
+            } else {
+              acc[email] = { name, email };
+            }
+            return acc;
+          }, {});
+        setSelectedRentalPackage({ ...selectedPackage, customers: Object.values(customersList) });
+        setIsDetailOpen(true);
+      } catch (error) {
+        console.log('Error fetching customer information:', error);
+      }
+    }
+  };
+
+  const handleCloseDetail = () => {
+    setIsDetailOpen(false);
+    setSelectedRentalPackage(null);
   };
 
   return (
@@ -200,6 +245,13 @@ const RentalPackagePage = () => {
         <UpdateRentalPackage
           setIsUpdateOpen={setIsUpdateOpen}
           selectedUpdate={selectedRowKeys}
+        />
+      )}
+      {isDetailOpen && (
+        <DetailRentalPackage
+          rentalPackage={selectedRentalPackage}
+          customers={selectedRentalPackage?.customers || []}
+          onClose={handleCloseDetail}
         />
       )}
       <ToastContainer />
