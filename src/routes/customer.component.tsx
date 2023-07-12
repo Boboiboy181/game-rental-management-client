@@ -1,6 +1,6 @@
-import { Space, Typography, Divider, Button } from 'antd';
+import { Button, Divider, Space, Typography } from 'antd';
 import Table from 'antd/es/table';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import UpdateCustomer from '../components/update-customer.component';
 import { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
@@ -143,7 +143,7 @@ const CustomerPage = () => {
             pagination={{ pageSize: 5 }}
           />
         </div>
-        <Space direction="horizontal">
+        <Space direction="horizontal" className={'relative top-[-9%]'}>
           <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
             Thêm
           </Button>
