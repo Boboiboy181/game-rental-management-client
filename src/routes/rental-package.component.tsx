@@ -31,6 +31,7 @@ const RentalPackagePage = () => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
+  const [selectedRow, setSelectedRow] = useState<DataType | null>(null);
   const [selectedRentalPackage, setSelectedRentalPackage] = useState<DetailedRentalPackage | null>(null);
   const [customers, setCustomers] = useState<{ name: string; email: string }[]>([]);
 
@@ -50,7 +51,7 @@ const RentalPackagePage = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get('https://game-rental-management-app-yh3ve.ondigitalocean.app/customer');
+        const response = await axios.get(`https://game-rental-management-app-yh3ve.ondigitalocean.app/customer`);
         setCustomers(response.data);
       } catch (error) {
         console.log('Error fetching customers:', error);
@@ -58,7 +59,7 @@ const RentalPackagePage = () => {
     };
 
     fetchCustomers();
-  }, []);
+  }, [selectedRow]);
 
   useEffect(() => {
     const newFilteredRentalPackages = rentalPackages.filter((pkg) => {
@@ -106,7 +107,7 @@ const RentalPackagePage = () => {
         <Button type="primary" className="bg-blue-600" onClick={() => handleDetailBtn(record)}>
           Chi tiết
         </Button>
-      ),
+      ),      
     },
   ];
 
@@ -164,20 +165,13 @@ const RentalPackagePage = () => {
     const selectedPackage = rentalPackages.find((pkg) => pkg._id === record.key);
     if (selectedPackage) {
       try {
-        const response = await axios.get('https://game-rental-management-app-yh3ve.ondigitalocean.app/customer');
+        const response = await axios.get(`https://game-rental-management-app-yh3ve.ondigitalocean.app/customer`);
         const customersData = response.data;
-        const customersList = customersData
-          .filter((customer: any) => customer.rentalPackage === selectedPackage._id)
-          .reduce((acc: { [key: string]: { name: string; email: string } }, customer: any) => {
-            const { email, name } = customer;
-            if (acc[email]) {
-              acc[email].name += `, ${name}`;
-            } else {
-              acc[email] = { name, email };
-            }
-            return acc;
-          }, {});
-        setSelectedRentalPackage({ ...selectedPackage, customers: Object.values(customersList) });
+        const customersList = customersData.map((customer: any) => ({
+          name: customer.name,
+          email: customer.email,
+        }));
+        setSelectedRentalPackage({ ...selectedPackage, customers: customersList });
         setIsDetailOpen(true);
       } catch (error) {
         console.log('Error fetching customer information:', error);
@@ -249,8 +243,7 @@ const RentalPackagePage = () => {
       )}
       {isDetailOpen && (
         <DetailRentalPackage
-          rentalPackage={selectedRentalPackage}
-          customers={selectedRentalPackage?.customers || []}
+          rentalPackageId={selectedRow?.key || ''}
           onClose={handleCloseDetail}
         />
       )}

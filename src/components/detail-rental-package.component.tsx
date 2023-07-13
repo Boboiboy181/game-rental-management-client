@@ -1,15 +1,48 @@
 import { Modal, Typography, Table } from 'antd';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { RentalPackage } from '../types/rental-package.type';
 
 const { Text } = Typography;
 
 interface DetailRentalPackageProps {
-  rentalPackage: RentalPackage | null;
-  customers: { name: string; email: string }[];
+  rentalPackageId: string;
   onClose: () => void;
 }
 
-const DetailRentalPackage: React.FC<DetailRentalPackageProps> = ({ rentalPackage, customers, onClose }) => {
+interface Customer {
+  customerName: string;
+  email: string;
+  phoneNumber: string;
+}
+
+const DetailRentalPackage: React.FC<DetailRentalPackageProps> = ({ rentalPackageId, onClose }) => {
+  const [rentalPackage, setRentalPackage] = useState<RentalPackage | null>(null);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+
+  useEffect(() => {
+    const fetchRentalPackage = async () => {
+      try {
+        const response = await axios.get(`https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/${rentalPackageId}`);
+        setRentalPackage(response.data);
+      } catch (error) {
+        console.log('Error fetching rental package:', error);
+      }
+    };
+
+    const fetchCustomers = async () => {
+      try {
+        const response = await axios.get(`https://game-rental-management-app-yh3ve.ondigitalocean.app/customer`);
+        setCustomers(response.data);
+      } catch (error) {
+        console.log('Error fetching customers:', error);
+      }
+    };
+
+    fetchRentalPackage();
+    fetchCustomers();
+  }, [rentalPackageId]);
+
   if (!rentalPackage) {
     return null;
   }
@@ -17,7 +50,7 @@ const DetailRentalPackage: React.FC<DetailRentalPackageProps> = ({ rentalPackage
   const customerColumns = [
     {
       title: 'Tên khách hàng',
-      dataIndex: 'name',
+      dataIndex: 'customerName',
     },
     {
       title: 'Email',
@@ -43,7 +76,7 @@ const DetailRentalPackage: React.FC<DetailRentalPackageProps> = ({ rentalPackage
       <p>Giá thuê: {rentalPackage.price}</p>
 
       <Text strong>Danh sách khách hàng đăng ký gói thuê:</Text>
-      {customers && customers.length > 0 ? (
+      {customers.length > 0 ? (
         <Table columns={customerColumns} dataSource={customers} pagination={false} />
       ) : (
         <p>Không có khách hàng đăng ký gói thuê</p>
