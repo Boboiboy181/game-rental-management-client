@@ -1,12 +1,13 @@
 import { Button, Space, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Rental } from '../types/rental.type';
 import { formatPrice } from '../utils/format-price.function';
 import { useNavigate } from 'react-router-dom';
 import { delelteRental, getRentals } from '../api/rental.service';
 import ShowData from '../components/page.component';
 import { formatDate } from '../utils/format-date.function.ts';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 type DataType = {
   key: string;
@@ -22,6 +23,12 @@ const RentalPage = () => {
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const navigate = useNavigate();
+
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('4');
+  }, []);
 
   useEffect(() => {
     const fetchRental = async () => {

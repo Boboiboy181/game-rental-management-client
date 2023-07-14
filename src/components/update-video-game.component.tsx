@@ -1,7 +1,7 @@
 import { Button, Form, Input } from 'antd';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { Product } from '../types/product.type';
 
 const defaultFormFields = {
@@ -16,7 +16,6 @@ type UpdateDto = {
 
 const UpdateProduct = ({
   setIsUpdateOpen,
-  setProducts,
   selectedUpdate,
 }: {
   setIsUpdateOpen: React.Dispatch<React.SetStateAction<boolean>>;

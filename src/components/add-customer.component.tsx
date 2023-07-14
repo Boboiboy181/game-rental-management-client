@@ -1,7 +1,7 @@
 import { Button, Form, Input } from 'antd';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 const defaultFormFields = {
   customerName: '',
@@ -28,7 +28,7 @@ const AddCustomer = ({
 
   const postCustomer = async (data: FormData) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/customer',
         data,
       );
@@ -68,7 +68,9 @@ const AddCustomer = ({
         className="absolute w-[25rem] bg-white flex flex-col rounded-lg mt-6 p-6 pb-0 left-[25%] top-[25%]"
         onSubmitCapture={handleSubmit}
       >
-        <h1 className="text-2xl text-center font-semibold mb-4">Thêm khách hàng</h1>
+        <h1 className="text-2xl text-center font-semibold mb-4">
+          Thêm khách hàng
+        </h1>
         <Form.Item label="Họ và tên">
           <Input
             required

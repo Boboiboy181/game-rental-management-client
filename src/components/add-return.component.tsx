@@ -1,5 +1,5 @@
 import { Button, Space, Spin, Typography } from 'antd';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatDate } from '../utils/format-date.function';
 import Table, { ColumnsType } from 'antd/es/table';
@@ -9,6 +9,7 @@ import { getRentalById } from '../api/rental.service.ts';
 import { CreateReturn } from '../types/create-return.type.ts';
 import { Return } from '../types/return.type.ts';
 import { createReturn, getReturnByID } from '../api/return.service.ts';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
 
@@ -39,6 +40,12 @@ const AddReturn = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [rental, setRental] = useState<Rental>({} as Rental);
   const [returnGames, setReturnGames] = useState<DataType[]>([]);
+
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('5');
+  }, []);
 
   useEffect(() => {
     const fetchRental = async () => {

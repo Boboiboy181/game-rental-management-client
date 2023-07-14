@@ -1,5 +1,5 @@
 import { Button, Divider, Input, Space, Spin, Typography } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { formatDate } from '../utils/format-date.function';
@@ -8,6 +8,7 @@ import { formatPrice } from '../utils/format-price.function';
 import { calculatePrice } from '../utils/caculate-price.function';
 import { Rental } from '../types/rental.type';
 import { updateRental } from '../api/rental.service';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
 
@@ -27,6 +28,12 @@ const UpdateRental = () => {
   const [rental, setRental] = useState<Rental>({} as Rental);
   const [loading, setLoading] = useState(true);
   const [deposit, setDeposit] = useState<number>(0);
+
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('4');
+  }, []);
 
   useEffect(() => {
     const fetchRental = async () => {

@@ -1,5 +1,5 @@
 import { Button, Space, Tag } from 'antd';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Return } from '../types/return.type';
 import { useNavigate } from 'react-router-dom';
 import { ColumnsType } from 'antd/es/table';
@@ -7,6 +7,7 @@ import PageComponent from '../components/page.component.tsx';
 import { formatPrice } from '../utils/format-price.function.ts';
 import { deleteReturn, getReturns } from '../api/return.service.ts';
 import { formatDate } from '../utils/format-date.function.ts';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 type DataType = {
   key: React.Key;
@@ -25,6 +26,12 @@ const ReturnPage = () => {
     useState<Return[]>(returnTickets);
   const [searchField, setSearchField] = useState('');
   const navigate = useNavigate();
+
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('5');
+  }, []);
 
   useEffect(() => {
     const fetchReturnTicket = async () => {
@@ -153,7 +160,7 @@ const ReturnPage = () => {
     <Fragment>
       <div
         className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%]
-      translate-x-[-50%] translate-y-[-30%] p-10"
+      translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl"
       >
         <PageComponent
           pageName="Phiếu trả"

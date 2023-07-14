@@ -1,13 +1,13 @@
-import { Space, Button } from 'antd';
+import { Button, Space } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { useEffect, useState } from 'react';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PreOrder } from '../types/pre-order.type';
 import { formatDate } from '../utils/format-date.function';
 import { formatPrice } from '../utils/format-price.function';
 import { deletePreOrder, getPreOrders } from '../api/pre-order.service';
 import ShowData from '../components/page.component';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 type DataType = {
   key: string;
@@ -23,6 +23,12 @@ const PreOrderPage = () => {
     useState<PreOrder[]>(preOrders);
   const [searchField, setSearchField] = useState('');
   const navigate = useNavigate();
+
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('3');
+  }, []);
 
   useEffect(() => {
     const fetchCustomers = async () => {

@@ -1,12 +1,13 @@
 import { Button, Divider, Space, Typography } from 'antd';
 import Table from 'antd/es/table';
-import { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Product } from '../types/product.type';
 import { toast, ToastContainer } from 'react-toastify';
 import { formatPrice } from '../utils/format-price.function';
 import AddProduct from '../components/add-product.component';
 import UpdateProduct from '../components/update-video-game.component';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
 
@@ -17,6 +18,12 @@ const ProductPage = () => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const [searchField, setSearchField] = useState('');
+
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('2');
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();

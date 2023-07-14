@@ -1,5 +1,5 @@
 import { Button, Divider, Space, Spin, Typography } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatDate } from '../utils/format-date.function';
 import Table, { ColumnsType } from 'antd/es/table';
@@ -7,6 +7,7 @@ import { formatPrice } from '../utils/format-price.function';
 import { calculatePrice } from '../utils/caculate-price.function';
 import { Return } from '../types/return.type.ts';
 import { getReturnByID } from '../api/return.service.ts';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
 
@@ -26,6 +27,12 @@ const ReturnDetail = () => {
   const handleCloseDetailBtn = () => navigate('/returns');
   const [returnTicket, setReturnTicket] = useState<Return>({} as Return);
   const [loading, setLoading] = useState(true);
+
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('5');
+  }, []);
 
   useEffect(() => {
     const fetchRental = async () => {

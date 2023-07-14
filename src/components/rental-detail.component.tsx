@@ -1,5 +1,5 @@
 import { Button, Divider, Space, Spin, Typography } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { formatDate } from '../utils/format-date.function';
@@ -7,6 +7,7 @@ import Table, { ColumnsType } from 'antd/es/table';
 import { formatPrice } from '../utils/format-price.function';
 import { calculatePrice } from '../utils/caculate-price.function';
 import { Rental } from '../types/rental.type';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
 
@@ -25,6 +26,12 @@ const RentalDetail = () => {
   const handleCloseDetailBtn = () => navigate('/rentals');
   const [rental, setRental] = useState<Rental>({} as Rental);
   const [loading, setLoading] = useState(true);
+
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('4');
+  }, []);
 
   useEffect(() => {
     const fetchRental = async () => {

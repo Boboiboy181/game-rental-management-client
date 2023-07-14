@@ -2,10 +2,11 @@ import { Button, Divider, Space, Typography } from 'antd';
 import Table from 'antd/es/table';
 import { toast, ToastContainer } from 'react-toastify';
 import UpdateCustomer from '../components/update-customer.component';
-import { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import AddCustomer from '../components/add-customer.component';
 import { Customer } from '../types/customer.type';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
 
@@ -14,6 +15,12 @@ const CustomerPage = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
+
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('1');
+  }, []);
 
   useEffect(() => {
     const fetchCustomers = async () => {

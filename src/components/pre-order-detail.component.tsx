@@ -1,5 +1,5 @@
 import { Button, Divider, Space, Spin, Typography } from 'antd';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatDate } from '../utils/format-date.function';
 import { PreOrder } from '../types/pre-order.type';
@@ -8,6 +8,7 @@ import { formatPrice } from '../utils/format-price.function';
 import { calculatePrice } from '../utils/caculate-price.function';
 import { createRental } from '../api/rental.service';
 import { deletePreOrder, getPreOrder } from '../api/pre-order.service';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
 
@@ -26,6 +27,11 @@ const PreOrderDetail = () => {
   const handleCloseDetailBtn = () => navigate('/pre-orders');
   const [preOrder, setPreOrder] = useState<PreOrder>({} as PreOrder);
   const [loading, setLoading] = useState(true);
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('3');
+  }, []);
 
   useEffect(() => {
     const fetchPreOrder = async () => {

@@ -8,10 +8,11 @@ import { CartContext } from '../context/cart.context';
 import { ProductForCart } from '../types/product-cart.type';
 import { formatPrice } from '../utils/format-price.function';
 import { RentalDaysEnum } from '../enums/rental-days.enum';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { getCustomers } from '../api/customer.service';
 import { createRental } from '../api/rental.service';
 import { CreateRental } from '../types/create-rental.type';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
 
@@ -50,6 +51,11 @@ const AddRental = () => {
   const { cartItems, updateCartItem, deleteCartItem, resetCart } =
     useContext(CartContext);
   const navigate = useNavigate();
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('4');
+  }, []);
 
   useEffect(() => {
     // Convert selectQuantity into an array of { productId, quantity } pairs
