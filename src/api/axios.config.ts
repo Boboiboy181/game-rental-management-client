@@ -3,7 +3,7 @@ const URL  ={
   DEPLOY_URL:'https://game-rental-management-app-yh3ve.ondigitalocean.app/',
   LOCALHOST:'http://localhost:3000/',
 }
-const BASE_URL = URL.LOCALHOST;
+const BASE_URL = URL.DEPLOY_URL;
 
 const api = axios.create({
   withCredentials: true,

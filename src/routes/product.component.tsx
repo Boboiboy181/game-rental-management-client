@@ -39,7 +39,7 @@ const ProductPage = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [isAddOpen, isUpdateOpen]);
 
   const columns = [
     {
@@ -105,6 +105,8 @@ const ProductPage = () => {
     }
   };
 
+  const productsNameList = products.map((product) => product.productName);
+
   const handleAddBtn = () => {
     setIsAddOpen(true);
   };
@@ -167,7 +169,9 @@ const ProductPage = () => {
           </Button>
         </Space>
       </div>
-      {isAddOpen && <AddProduct setIsAddOpen={setIsAddOpen} />}
+      {isAddOpen && (
+        <AddProduct setIsAddOpen={setIsAddOpen} productsNameList={productsNameList} />
+      )}
       {isUpdateOpen && (
         <UpdateProduct
           setIsUpdateOpen={setIsUpdateOpen}
