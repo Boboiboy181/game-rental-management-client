@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import Input from './input.component';
-import axios from 'axios';
 import { UserContext } from '../contexts/user.context';
 import { useNavigate } from 'react-router-dom';
+import api from '../api/axios.config';
 
 const defaultFormFields = {
   username: '',
@@ -24,7 +24,7 @@ const SignInForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
+      const response = await api.post(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/auth/login',
         fomrFields,
       );

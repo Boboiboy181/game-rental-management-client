@@ -1,9 +1,9 @@
 import { MouseEventHandler, useContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import ProductList from '../components/product-list.component';
 import { Product } from '../types/product.type';
 import { SearchContext } from '../contexts/search.context';
+import api from '../api/axios.config';
 
 const Shop = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -13,7 +13,7 @@ const Shop = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const { data }: { data: Product[] } = await axios.get(
+      const { data }: { data: Product[] } = await api.get(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
       );
       setProducts(data);

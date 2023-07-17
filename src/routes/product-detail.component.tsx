@@ -1,5 +1,4 @@
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../contexts/cart.context.tsx';
@@ -7,6 +6,7 @@ import { ProductForOrder } from '../types/product-order.type.ts';
 import RentalDayListComponent from '../components/rental-day-list.component';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import api from '../api/axios.config.ts';
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -21,7 +21,7 @@ const ProductDetail = () => {
   // get product by id
   useEffect(() => {
     const fetchProduct = async () => {
-      const { data }: { data: ProductForOrder } = await axios.get(
+      const { data }: { data: ProductForOrder } = await api.get(
         `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${productId}`,
       );
       setProduct(data);

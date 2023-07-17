@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
-import axios from 'axios';
 import { PreOrder } from '../types/pre-order.type';
 import { CartContext } from '../contexts/cart.context';
 import { toast, ToastContainer } from 'react-toastify';
+import api from '../api/axios.config';
 
 type FormFields = {
   email: string;
@@ -35,7 +35,7 @@ const ContactInfo = () => {
 
   const postPreOrder = async (preOrder: PreOrder) => {
     try {
-      const response = await axios.post(
+      const response = await api.post(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/pre-order',
         preOrder,
       );
