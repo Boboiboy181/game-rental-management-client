@@ -18,7 +18,7 @@ const ProductCard = ({ product, onClickHandler }: ProductCardProps) => {
       className="w-1/5 min-h-[400px] mb-3 text-center cursor-pointer transition duration-500 ease-in-out transform hover:-translate-y-2 hover:shadow-xl hover:rounded-md"
       onClick={onClickHandler(product._id)}
     >
-      <div className="image-container w-[220px] h-[300px] overflow-hidden rounded-md m-auto">
+      <div className="image-container w-[220px] h-[300px] overflow-hidden rounded-md m-auto shadow-2xl">
         <img src={`${product.imageUrl}`} alt="" className="" />
       </div>
       <div className="mt-3 mb-4 text-center">

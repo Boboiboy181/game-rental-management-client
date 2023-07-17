@@ -3,11 +3,9 @@ import ContactInfo from '../components/pre-order-info.component';
 import OrderSummary from '../components/pre-order-summary.component';
 import { CartContext } from '../contexts/cart.context';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../contexts/user.context';
 
 const Checkout = () => {
   const { cartItems } = useContext(CartContext);
-  const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleBackToShop = () => navigate('/');

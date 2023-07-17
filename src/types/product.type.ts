@@ -3,7 +3,7 @@ export type Product = {
   productName: string;
   price: number;
   quantity: number;
-  manufacturer: string;
+  manufacture: string;
   genre: string;
   releaseDate: string;
   language: string;

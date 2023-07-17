@@ -30,6 +30,8 @@ const ProductDetail = () => {
     fetchProduct();
   }, [productId]);
 
+  console.log(product);
+
   const priceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = e.target.value;
@@ -92,7 +94,7 @@ const ProductDetail = () => {
         Our shop / Products / {`${product.productName}`}
       </p>
       <div className="flex items-center">
-        <div className="w-[40%] overflow-hidden m-auto rounded-xl">
+        <div className="w-[40%] overflow-hidden m-auto rounded-xl shadow-2xl">
           <img
             className=""
             src={`${product.imageUrl}`}
@@ -105,7 +107,7 @@ const ProductDetail = () => {
             <p>Genre: {product.genre}</p>
             <p>Release date: {product.releaseDate}</p>
             <p>Language: {product.language}</p>
-            <p>Manufacture: {product.manufacturer}</p>
+            <p>Manufacture: {product.manufacture}</p>
             <p>System: {product.system}</p>
           </div>
           <p className="text-3xl font-semibold mt-5 text-red-500">
@@ -120,12 +122,13 @@ const ProductDetail = () => {
               className="rounded-md bg-blue-600 text-white px-6 py-2 transition duration-500 hover:bg-indigo-600 w-full focus:-translate-y-[.1rem] focus:outline-none focus:shadow-xl"
               type="submit"
               onClick={handleAddToCart}
+              disabled={product.quantity < 0}
             >
               Add to cart
             </button>
             <ToastContainer />
           </div>
-          <div className="text-center cursor-pointer bg-gradient-to-br from-yellow-200 to-yellow-300 mt-4 rounded-lg p-4">
+          <div className="text-center cursor-pointer bg-yellow-100 mt-4 rounded-lg p-4 text-indigo-700 hover:bg-yellow-200">
             <p className="font-light">
               Please call to check the quantity before going to the store
             </p>
@@ -134,6 +137,7 @@ const ProductDetail = () => {
               <span className="absolute block bg-black left-0 w-0 h-[2px] transition-transform duration-500 hover:w-full"></span>
             </a>
           </div>
+
           <p className="mt-10">Description</p>
           <p className="text-black/[0.5] mt-5">{product.description}</p>
         </div>

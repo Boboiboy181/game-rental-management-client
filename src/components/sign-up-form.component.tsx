@@ -3,7 +3,7 @@ import Input from './input.component';
 const SignUpForm = () => {
   return (
     <div className="ml-5">
-      <h2 className="text-3xl font-cursive mb-2">Don't have an account</h2>
+      <h2 className="text-3xl font-cursive mb-2">Don't have an account ?</h2>
       <p className="font-light text-sm mb-7">
         Sign up with your email, username and password
       </p>
