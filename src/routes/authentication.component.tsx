@@ -1,5 +1,5 @@
 import SignInForm from '../components/sign-in-form.component';
-import SignUpForm from '../components/sign-up-form.component';
+// import SignUpForm from '../components/sign-up-form.component';
 import { useNavigate } from 'react-router-dom';
 
 const Authentication = () => {
@@ -17,7 +17,7 @@ const Authentication = () => {
       </p>
       <div className="absolute flex items-start justify-center w-screen h-[350px] top-[50%] translate-y-[-50%]">
         <SignInForm />
-        <SignUpForm />
+        {/* <SignUpForm /> */}
       </div>
     </div>
   );

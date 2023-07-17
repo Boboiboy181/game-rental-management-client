@@ -18,7 +18,6 @@ const defaultFormFields: FormFields = {
 
 const ContactInfo = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
-  const [status, setStatus] = useState<number>(0);
   const { cartItems } = useContext(CartContext);
   const { email, customerName, phoneNumber } = formFields;
 
@@ -41,9 +40,6 @@ const ContactInfo = () => {
         preOrder,
       );
       console.log(response);
-
-      setStatus(response.status);
-
       toast.success('Pre-order created successfully 🥳', {
         position: toast.POSITION.BOTTOM_LEFT,
         autoClose: 8000,
