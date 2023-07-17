@@ -5,7 +5,7 @@ const URL = {
   LOCALHOST: 'http://localhost:3000/',
 };
 
-const BASE_URL = URL.LOCALHOST;
+const BASE_URL = URL.DEPLOY_URL;
 
 const api = axios.create({
   withCredentials: true,
