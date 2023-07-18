@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../contexts/cart.context.tsx';
@@ -91,7 +91,10 @@ const ProductDetail = () => {
   return (
     <div className="pt-16 pl-14 pr-14 pb-24">
       <p className="text-black/[.5] mb-6">
-        Our shop / Products / {`${product.productName}`}
+        <Link to="/" className="hover:text-blue-500">
+          Our shop / Products /
+        </Link>
+        <span>{`${product.productName}`}</span>
       </p>
       <div className="flex items-center">
         <div className="w-[40%] overflow-hidden m-auto rounded-xl shadow-2xl">
