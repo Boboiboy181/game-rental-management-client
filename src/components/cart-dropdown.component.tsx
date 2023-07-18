@@ -17,7 +17,7 @@ const CartDropdown = () => {
       {cartItems.length === 0 ? (
         <div className="text-center text-lg font-semibold flex flex-col justify-around items-center">
           <p className="mt-2">Your cart is empty !</p>
-          <img src="src/assets/empty-card.png" alt="" className="w-[200px]" />
+          <img src="/empty-card.png" alt="" className="w-[200px]" />
         </div>
       ) : (
         <div>
