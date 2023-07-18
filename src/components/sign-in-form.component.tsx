@@ -24,10 +24,7 @@ const SignInForm = () => {
     e.preventDefault();
 
     try {
-      const response = await api.post(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/auth/login',
-        fomrFields,
-      );
+      const response = await api.post('/auth/login', fomrFields);
       setUser(response.data);
       navigate('/');
     } catch (error) {

@@ -13,9 +13,7 @@ const Shop = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const { data }: { data: Product[] } = await api.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
-      );
+      const { data }: { data: Product[] } = await api.get('/video-game');
       setProducts(data);
     };
 

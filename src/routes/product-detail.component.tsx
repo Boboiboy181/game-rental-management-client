@@ -22,7 +22,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       const { data }: { data: ProductForOrder } = await api.get(
-        `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${productId}`,
+        `/${productId}`,
       );
       setProduct(data);
       setPrice(data.price);

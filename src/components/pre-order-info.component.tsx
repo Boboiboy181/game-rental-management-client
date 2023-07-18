@@ -35,10 +35,7 @@ const ContactInfo = () => {
 
   const postPreOrder = async (preOrder: PreOrder) => {
     try {
-      const response = await api.post(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/pre-order',
-        preOrder,
-      );
+      const response = await api.post('/pre-order', preOrder);
       console.log(response);
       toast.success('Pre-order created successfully 🥳', {
         position: toast.POSITION.BOTTOM_LEFT,
