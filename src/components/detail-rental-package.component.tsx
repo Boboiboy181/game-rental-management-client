@@ -1,4 +1,4 @@
-import { Modal, Typography, Table } from 'antd';
+import { Modal, Typography, Table, Button, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { RentalPackage } from '../types/rental-package.type';
@@ -62,18 +62,43 @@ const DetailRentalPackage: React.FC<DetailRentalPackageProps> = ({ rentalPackage
     return null;
   }
 
+  const rentalPackageColumns = [
+    {
+      title: 'Tên gói thuê',
+      dataIndex: 'packageName',
+    },
+    {
+      title: 'Số lượng thuê',
+      dataIndex: 'numberOfGames',
+      align: 'center',
+      render: (numberOfGames: number) => <Text>{numberOfGames}</Text>,
+    },
+    {
+      title: 'Thời gian thuê',
+      dataIndex: 'timeOfRental',
+      align: 'center',
+      render: (timeOfRental: number) => <Text>{timeOfRental} ngày</Text>,
+    },
+    {
+      title: 'Giá thuê',
+      dataIndex: 'price',
+      align: 'center',
+      render: (price: number) => <Text className="font-medium">{price} đ</Text>,
+    },
+  ];
+
   const customerColumns = [
     {
       title: 'Tên khách hàng',
       dataIndex: 'customerName',
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-    },
-    {
       title: 'Số điện thoại',
       dataIndex: 'phoneNumber',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
     },
   ];
 
@@ -82,20 +107,43 @@ const DetailRentalPackage: React.FC<DetailRentalPackageProps> = ({ rentalPackage
       visible
       title="Chi tiết gói thuê"
       onCancel={onClose}
-      onOk={onClose}
-      okText="Đóng"
+      footer={null}
+      width={600}
     >
-      <p>Tên gói thuê: {rentalPackage.packageName}</p>
-      <p>Số lượng thuê: {rentalPackage.numberOfGames}</p>
-      <p>Thời gian thuê: {rentalPackage.timeOfRental} ngày</p>
-      <p>Giá thuê: {rentalPackage.price}</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div>
+          <Text strong>Thông tin gói thuê:</Text>
+          <Table
+            columns={rentalPackageColumns}
+            dataSource={[rentalPackage]}
+            pagination={false}
+            size="small"
+          />
+        </div>
 
-      <Text strong>Danh sách khách hàng đăng ký gói thuê:</Text>
-      {customers.length > 0 ? (
-        <Table columns={customerColumns} dataSource={customers} pagination={false} />
-      ) : (
-        <p>Không có khách hàng đăng ký gói thuê</p>
-      )}
+        <div>
+          <Text strong style={{ marginBottom: 8 }}>Danh sách khách hàng đăng ký gói thuê:</Text>
+          {customers.length > 0 ? (
+            <Table
+              columns={customerColumns}
+              dataSource={customers}
+              pagination={false}
+              size="small"
+            />
+          ) : (
+            <p>Không có khách hàng đăng ký gói thuê</p>
+          )}
+        </div>
+
+        <Space direction="horizontal">
+          <Button type="primary" className="bg-red-600" >
+            Xóa
+          </Button>
+          <Button type="primary" className="bg-green-600" style={{ marginLeft: 10 }}>
+            Sửa
+          </Button>
+        </Space>
+      </div>
     </Modal>
   );
 };
