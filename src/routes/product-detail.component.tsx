@@ -22,7 +22,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       const { data }: { data: ProductForOrder } = await api.get(
-        `/${productId}`,
+        `video-game/${productId}`,
       );
       setProduct(data);
       setPrice(data.price);
