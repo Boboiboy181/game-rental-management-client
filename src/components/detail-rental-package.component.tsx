@@ -11,6 +11,7 @@ interface DetailRentalPackageProps {
 }
 
 interface Customer {
+  _id: string;
   customerName: string;
   email: string;
   phoneNumber: string;
@@ -21,26 +22,40 @@ const DetailRentalPackage: React.FC<DetailRentalPackageProps> = ({ rentalPackage
   const [customers, setCustomers] = useState<Customer[]>([]);
 
   useEffect(() => {
-    const fetchRentalPackage = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(`https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/${rentalPackageId}`);
-        setRentalPackage(response.data);
+        const rentalPackageResponse = await axios.get(
+          `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/${rentalPackageId}`
+        );
+        setRentalPackage(rentalPackageResponse.data);
+
+        const customersResponse = await axios.get(
+          `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/registration-list`
+        );
+        const registrations = customersResponse.data;
+
+        const filteredRegistrations = registrations.filter(
+          (registration: any) => registration.rentalPackage === rentalPackageId
+        );
+
+        const customerIds = filteredRegistrations.map((registration: any) => registration.customer);
+        const uniqueCustomerIds = Array.from(new Set<string>(customerIds));
+
+        const customerPromises = uniqueCustomerIds.map(async (customerId: string) => {
+          const customerResponse = await axios.get(
+            `https://game-rental-management-app-yh3ve.ondigitalocean.app/customer/${customerId}`
+          );
+          return customerResponse.data;
+        });
+
+        const customersData = await Promise.all<Customer>(customerPromises);
+        setCustomers(customersData);
       } catch (error) {
-        console.log('Error fetching rental package:', error);
+        console.log('Error fetching data:', error);
       }
     };
 
-    const fetchCustomers = async () => {
-      try {
-        const response = await axios.get(`https://game-rental-management-app-yh3ve.ondigitalocean.app/customer`);
-        setCustomers(response.data);
-      } catch (error) {
-        console.log('Error fetching customers:', error);
-      }
-    };
-
-    fetchRentalPackage();
-    fetchCustomers();
+    fetchData();
   }, [rentalPackageId]);
 
   if (!rentalPackage) {

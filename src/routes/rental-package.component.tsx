@@ -107,7 +107,7 @@ const RentalPackagePage = () => {
         <Button type="primary" className="bg-blue-600" onClick={() => handleDetailBtn(record)}>
           Chi tiết
         </Button>
-      ),      
+      ),
     },
   ];
 
@@ -165,19 +165,34 @@ const RentalPackagePage = () => {
     const selectedPackage = rentalPackages.find((pkg) => pkg._id === record.key);
     if (selectedPackage) {
       try {
-        const response = await axios.get(`https://game-rental-management-app-yh3ve.ondigitalocean.app/customer`);
-        const customersData = response.data;
-        const customersList = customersData.map((customer: any) => ({
-          name: customer.name,
-          email: customer.email,
-        }));
-        setSelectedRentalPackage({ ...selectedPackage, customers: customersList });
+        setSelectedRow(record); // Add this line to set the selectedRow state
+        const response = await axios.get(
+          `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/registration-list`
+        );
+        const registrations = response.data;
+
+        const filteredRegistrations = registrations.filter(
+          (registration: any) => registration.rentalPackage === selectedPackage._id
+        );
+
+        const customerPromises = filteredRegistrations.map(
+          async (registration: any) => {
+            const customerResponse = await axios.get(
+              `https://game-rental-management-app-yh3ve.ondigitalocean.app/customer/${registration.customer}`
+            );
+            return customerResponse.data;
+          }
+        );
+
+        const customersData = await Promise.all(customerPromises);
+        setSelectedRentalPackage({ ...selectedPackage, customers: customersData });
         setIsDetailOpen(true);
       } catch (error) {
         console.log('Error fetching customer information:', error);
       }
     }
   };
+  
 
   const handleCloseDetail = () => {
     setIsDetailOpen(false);
