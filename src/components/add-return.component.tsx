@@ -44,7 +44,7 @@ const AddReturn = () => {
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
-    setNavigationKey('5');
+    setNavigationKey('6');
   }, []);
 
   useEffect(() => {
