@@ -27,7 +27,7 @@ const RentalPage = () => {
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
-    setNavigationKey('4');
+    setNavigationKey('5');
   }, []);
 
   useEffect(() => {

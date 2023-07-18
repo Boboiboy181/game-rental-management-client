@@ -27,7 +27,7 @@ const PreOrderPage = () => {
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
-    setNavigationKey('3');
+    setNavigationKey('4');
   }, []);
 
   useEffect(() => {

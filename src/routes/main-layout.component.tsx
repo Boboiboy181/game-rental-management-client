@@ -4,6 +4,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
+  BookOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, Typography } from 'antd';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
@@ -43,18 +44,24 @@ const MainLayout: React.FC = () => {
     },
     {
       key: '3',
+      icon: <BookOutlined />,
+      label: 'Gói thuê',
+      path: '/rental-packages',
+    },
+    {
+      key: '4',
       icon: <ContainerOutlined />,
       label: 'Phiếu đặt trước',
       path: '/pre-orders',
     },
     {
-      key: '4',
+      key: '5',
       icon: <ContainerOutlined />,
       label: 'Phiếu thuê',
       path: '/rentals',
     },
     {
-      key: '5',
+      key: '6',
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +81,7 @@ const MainLayout: React.FC = () => {
       path: '/returns',
     },
     {
-      key: '6',
+      key: '7',
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
