@@ -16,6 +16,8 @@ import UpdateRental from './components/update-rental.component';
 import ReturnDetail from './components/return-detail.component.tsx';
 import AddReturn from './components/add-return.component.tsx';
 import RentalPackagePage from './routes/rental-package.component';
+import InvoicePage from './routes/invoice.component.tsx';
+import AddInvoice from './components/add-invoice.component.tsx';
 
 const App = () => {
   useEffect(() => {
@@ -40,7 +42,8 @@ const App = () => {
           <Route path="returns" element={<ReturnPage />} />
           <Route path="returns/:returnID" element={<ReturnDetail />} />
           <Route path="returns/create/:rentalID?" element={<AddReturn />} />
-          <Route path="invoices" element={<div>Invoices</div>} />
+          <Route path="invoices" element={<InvoicePage />} />
+          <Route path="invoices/create/:returnID?" element={<AddInvoice />} />
         </Route>
       </Routes>
     </ConfigProvider>
