@@ -17,6 +17,7 @@ type DataType = {
   price: number;
   preOrderQuantity: number;
   numberOfRentalDays: number;
+  dayPastDue: number;
   returnDate: string;
   fine: number;
 };
@@ -70,6 +71,12 @@ const ReturnDetail = () => {
       title: 'Số ngày trễ hạn',
       dataIndex: 'dayPastDue',
       align: 'center',
+      render: (_, record) =>
+        record.dayPastDue > 0 ? (
+          <span>{record.dayPastDue}</span>
+        ) : (
+          <span>0</span>
+        ),
     },
     {
       title: 'Tiền phạt',
@@ -103,8 +110,8 @@ const ReturnDetail = () => {
     returnDate: formatDate(rentedGame.returnDate.toString()),
   }));
 
-  const handleCreateReturnBtn = () => {
-    navigate(`/returns/create/${returnID}`);
+  const handleCreateInvoiceBtn = () => {
+    navigate(`/invoices/create/${returnID}`);
   };
 
   return (
@@ -162,8 +169,8 @@ const ReturnDetail = () => {
           <Button
             className="bg-green-600 hover:!bg-green-500 shadow-xl"
             type="primary"
-            onClick={handleCreateReturnBtn}
-            disabled={returnTicket.paymentState === 'RETURNED'}
+            onClick={handleCreateInvoiceBtn}
+            disabled={returnTicket.paymentState === 'PAID'}
           >
             Tạo hóa đơn
           </Button>
