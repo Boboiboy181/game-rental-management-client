@@ -167,8 +167,8 @@ const ReturnPage = () => {
           columns={columns}
           data={data}
           rowSelection={rowSelection}
-          placeHolder="Tên khách hàng"
-          inputName="searchField"
+          placeHolder="Tìm kiếm khách hàng"
+          inputName="Tìm kiếm khách hàng"
           inputValue={searchField}
           handleChange={handleChange}
         />

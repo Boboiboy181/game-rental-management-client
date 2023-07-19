@@ -1,11 +1,12 @@
-import { Button, Divider, Space, Typography } from 'antd';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
+import { Button, Space, Typography } from 'antd';
 import Table from 'antd/es/table';
 import { toast, ToastContainer } from 'react-toastify';
 import UpdateCustomer from '../components/update-customer.component';
-import React, { Fragment, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import AddCustomer from '../components/add-customer.component';
 import { Customer } from '../types/customer.type';
+import ShowData from '../components/page.component';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
@@ -35,7 +36,7 @@ const CustomerPage = () => {
 
   const columns = [
     {
-      title: 'Customer Name',
+      title: 'Tên khách hàng',
       dataIndex: 'customerName',
     },
     {
@@ -43,15 +44,15 @@ const CustomerPage = () => {
       dataIndex: 'email',
     },
     {
-      title: 'Phone Number',
+      title: 'Số điện thoại',
       dataIndex: 'phoneNumber',
     },
     {
-      title: 'Address',
+      title: 'Địa chỉ',
       dataIndex: 'address',
     },
     {
-      title: 'Point',
+      title: 'Điểm tích lũy',
       dataIndex: 'point',
     },
   ];
@@ -68,7 +69,7 @@ const CustomerPage = () => {
   const [searchField, setSearchField] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toLocaleLowerCase();
+    const value = e.target.value.toLowerCase();
     setSearchField(value);
   };
 
@@ -124,32 +125,16 @@ const CustomerPage = () => {
   return (
     <Fragment>
       <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
-        <Space className="flex justify-between">
-          <Text className="text-2xl font-semibold">Customer</Text>
-          <div className="input-field">
-            <input
-              className="px-4"
-              type="search"
-              placeholder="Search customer"
-              name="searchField"
-              value={searchField}
-              onChange={handleChange}
-            />
-            <label htmlFor="searchfield">Search customer</label>
-          </div>
-        </Space>
-        <div>
-          <Divider />
-          <Table
-            rowSelection={{
-              type: 'checkbox',
-              ...rowSelection,
-            }}
-            columns={columns}
-            dataSource={data}
-            pagination={{ pageSize: 5 }}
-          />
-        </div>
+        <ShowData
+          pageName="Khách hàng"
+          placeHolder="Tên khách hàng"
+          inputName="Tìm khách hàng"
+          inputValue={searchField}
+          handleChange={handleChange}
+          columns={columns}
+          data={data}
+          rowSelection={rowSelection}
+        />
         <Space direction="horizontal" className={'relative top-[-9%]'}>
           <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
             Thêm
