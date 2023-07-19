@@ -53,20 +53,19 @@ const PreOrderPage = () => {
 
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Customer Name',
+      title: 'Tên khách hàng',
       dataIndex: 'customerName',
     },
     {
-      title: 'Estimated Price',
+      title: 'Giá ước tính',
       dataIndex: 'estimatedPrice',
     },
     {
-      title: 'Created At',
+      title: 'Ngày đặt',
       dataIndex: 'createdAt',
     },
     {
-      title: 'Action',
-      width: 100,
+      title: 'Hành động',
       align: 'center',
       render: (_, record) => (
         <Button
