@@ -1,54 +1,52 @@
-import { Space, Typography, Divider, Button } from 'antd';
-import Table, { ColumnsType } from 'antd/es/table';
-import { useEffect, useState } from 'react';
+import { Button, Space, Typography } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import React from 'react';
 import { Invoice } from '../types/invoice.type';
+import { formatPrice } from '../utils/format-price.function.ts';
+import { formatDate } from '../utils/format-date.function.ts';
+import ShowData from '../components/page.component.tsx';
 
 const { Text } = Typography;
-
 
 type DataType = {
   key: string;
   invoiceID: string;
-  customer: string;
-  finalprice: number;
+  customerName: string;
+  finalPrice: number;
+  createdAt: string;
 };
 
 const InvoicePage = () => {
-  const [invoice, setInvoice] = useState<Invoice[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [filteredInvoice, setFilteredInvoice] = useState<Invoice[]>(invoice);
+  const [filteredInvoice, setFilteredInvoice] = useState<Invoice[]>(invoices);
   const [searchField, setSearchField] = useState('');
-
-  useEffect(() => {
-    const newFilteredInvoice = invoice.filter((invoice) => {
-      return invoice.customer.toLowerCase().includes(searchField);
-    });
-    setFilteredInvoice(newFilteredInvoice);
-  }, [invoice, searchField]);
-
-  const data = filteredInvoice.map((invoice) => ({
-    key: invoice._id,
-    customer: invoice.customer,
-    finalprice: invoice.finalPrice,
-  }));
 
   useEffect(() => {
     const fetchInvoice = async () => {
       const { data }: { data: Invoice[] } = await axios.get(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/invoice',
       );
-      setInvoice(data);
+      setInvoices(data);
     };
 
     fetchInvoice();
   }, []);
 
+  useEffect(() => {
+    const newFilteredInvoice = invoices.filter((invoice) => {
+      return invoice.invoiceID.toLowerCase().includes(searchField);
+    });
+    setFilteredInvoice(newFilteredInvoice);
+  }, [invoices, searchField]);
+
   const columns: ColumnsType<DataType> = [
     {
       title: 'Mã hóa đơn',
       dataIndex: 'invoiceID',
+      align: 'center',
+      width: '15%',
     },
     {
       title: 'Tên khách hàng',
@@ -56,20 +54,35 @@ const InvoicePage = () => {
     },
     {
       title: 'Giá thuê cuối cùng',
-      dataIndex: 'price',
-      align: 'left',
-      render: (price: number) => <Text className="font-medium">{price}</Text>,
+      dataIndex: 'finalPrice',
+      align: 'center',
+      render: (price: number) => (
+        <Text className="font-medium">{formatPrice.format(price)}</Text>
+      ),
+    },
+    {
+      title: 'Ngày thanh toán',
+      dataIndex: 'createdAt',
+      align: 'center',
     },
     {
       title: 'Thao tác',
       align: 'center',
-      render: (_, record) => (
+      render: () => (
         <Button type="primary" className="bg-blue-600">
           Chi tiết
         </Button>
       ),
     },
   ];
+
+  const data = filteredInvoice.map((invoice) => ({
+    key: invoice._id,
+    invoiceID: invoice.invoiceID,
+    customerName: invoice.customer.customerName,
+    finalPrice: invoice.finalPrice,
+    createdAt: formatDate(invoice.createdAt),
+  }));
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
@@ -98,7 +111,7 @@ const InvoicePage = () => {
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/invoice',
       );
 
-      setInvoice(data);
+      setInvoices(data);
       setSelectedRowKeys([]);
       setSearchField('');
     } catch (error) {
@@ -107,42 +120,23 @@ const InvoicePage = () => {
   };
 
   return (
-    <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
-      <Space className="flex justify-between">
-        <Text className="text-2xl font-semibold">Hóa đơn</Text>
-        <div className="input-field">
-          <input
-            className="px-4"
-            type="search"
-            placeholder="Search rentalform"
-            name="searchField"
-            value={searchField}
-            onChange={handleChange}
-          />
-          <label htmlFor="searchfield">Tìm kiếm hóa đơn</label>
-        </div>
-      </Space>
-      <div>
-        <Divider />
-        <Table
-          rowSelection={{
-            type: 'checkbox',
-            ...rowSelection,
-          }}
-          columns={columns}
-          dataSource={data}
-          pagination={{ pageSize:5 }}
-        />
-      </div>
+    <div
+      className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%]
+      translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl"
+    >
+      <ShowData
+        pageName={'Hóa đơn'}
+        columns={columns}
+        data={data}
+        rowSelection={rowSelection}
+        placeHolder={'Mã hóa đơn'}
+        inputName={'invoiceID'}
+        inputValue={searchField}
+        handleChange={handleChange}
+      />
       <Space direction="horizontal" className="relative top-[-9%]">
-        <Button type="primary" className="bg-blue-500">
-          Thêm
-        </Button>
         <Button danger type="primary" onClick={handleDeleteBtn}>
           Xóa
-        </Button>
-        <Button type="primary" className="bg-green-600">
-          Sửa
         </Button>
       </Space>
     </div>
