@@ -1,6 +1,5 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { Button, Space, Typography } from 'antd';
-import Table from 'antd/es/table';
+import { Button, Space } from 'antd';
 import { toast, ToastContainer } from 'react-toastify';
 import UpdateCustomer from '../components/update-customer.component';
 import axios from 'axios';
@@ -8,8 +7,6 @@ import AddCustomer from '../components/add-customer.component';
 import { Customer } from '../types/customer.type';
 import ShowData from '../components/page.component';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
-
-const { Text } = Typography;
 
 const CustomerPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -54,6 +51,7 @@ const CustomerPage = () => {
     {
       title: 'Điểm tích lũy',
       dataIndex: 'point',
+      align: 'center',
     },
   ];
 
