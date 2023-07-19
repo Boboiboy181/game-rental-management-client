@@ -11,6 +11,7 @@ import ProductPage from './routes/product.component';
 import RentalPage from './routes/rental.component';
 import ReturnPage from './routes/return.component';
 import RentalPackagePage from './routes/rental-package.component';
+import RentalPackageDetail from './components/rental-package-detail.component';
 
 const App = () => {
   useEffect(() => {
@@ -26,6 +27,10 @@ const App = () => {
           <Route path="customers" element={<CustomerPage />} />
           <Route path="video-games" element={<ProductPage />} />
           <Route path="rental-packages" element={<RentalPackagePage />} />
+          <Route
+            path="rental-packages/:rentalPackageID"
+            element={<RentalPackageDetail />}
+          />
           <Route path="pre-orders" element={<PreOrderPage />} />
           <Route path="pre-orders/:preOrderID" element={<PreOrderDetail />} />
           <Route path="rentals" element={<RentalPage />} />
