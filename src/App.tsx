@@ -16,6 +16,7 @@ import UpdateRental from './components/update-rental.component';
 import ReturnDetail from './components/return-detail.component.tsx';
 import AddReturn from './components/add-return.component.tsx';
 import RentalPackagePage from './routes/rental-package.component';
+import RentalPackageDetail from './components/rental-package-detail.component';
 import InvoicePage from './routes/invoice.component.tsx';
 import AddInvoice from './components/add-invoice.component.tsx';
 
@@ -33,6 +34,10 @@ const App = () => {
           <Route path="customers" element={<CustomerPage />} />
           <Route path="video-games" element={<ProductPage />} />
           <Route path="rental-packages" element={<RentalPackagePage />} />
+          <Route
+            path="rental-packages/:rentalPackageID"
+            element={<RentalPackageDetail />}
+          />
           <Route path="pre-orders" element={<PreOrderPage />} />
           <Route path="pre-orders/:preOrderID" element={<PreOrderDetail />} />
           <Route path="rentals" element={<RentalPage />} />
