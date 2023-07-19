@@ -1,14 +1,11 @@
-export type Return = {
+export type Invoice = {
   _id: string;
-  returnCode: string;
+  invoiceID: string;
   customer: {
     _id: string;
     customerName: string;
     phoneNumber: string;
-    point: number;
   };
-  deposit: number;
-  paymentState: string;
   rentedGames: [
     {
       game: {
@@ -24,8 +21,8 @@ export type Return = {
       _id: string;
     },
   ];
-  rentalCode: string;
-  estimatedPrice: number;
-  createdAt: Date;
-  updatedAt: Date;
+  voucher: string[];
+  fine: number;
+  finalPrice: number;
+  return: string;
 };

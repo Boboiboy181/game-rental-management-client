@@ -1,6 +1,6 @@
-import { Space, Typography, Divider, Button } from 'antd';
+import { Button, Divider, Space, Typography } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
-import { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { formatPrice } from '../utils/format-price.function';
 import { RentalPackage } from '../types/rental-package.type';
@@ -8,6 +8,7 @@ import AddRentalPackage from '../components/add-rental-package.component';
 import UpdateRentalPackage from '../components/update-rental-package.component';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts';
 
 const { Text } = Typography;
 
@@ -29,6 +30,12 @@ const RentalPackagePage = () => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('3');
+  }, []);
 
   useEffect(() => {
     const fetchRentalPackages = async () => {

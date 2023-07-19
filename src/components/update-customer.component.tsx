@@ -1,41 +1,42 @@
 import { Button, Form, Input } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
-import { Product } from '../types/product.type';
+import { ToastContainer, toast } from 'react-toastify';
 
 const defaultFormFields = {
-  price: 0,
-  quantity: 0,
+  customerName: '',
+  email: '',
+  phoneNumber:'',
 };
 
 type UpdateDto = {
-  price: number;
-  quantity: number;
+  customerName: string;
+  email: string;
+  phoneNumber: string;
 };
 
-const UpdateProduct = ({
+const UpdateCustomer = ({
   setIsUpdateOpen,
   selectedUpdate,
 }: {
   setIsUpdateOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   selectedUpdate: React.Key[];
 }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchCustomerData = async () => {
       try {
         const response = await axios.get(
-          `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${selectedUpdate[0]}`,
+          `https://game-rental-management-app-yh3ve.ondigitalocean.app/customer/${selectedUpdate[0]}`
         );
-        const { price, quantity } = response.data;
+        const { customerName, email, phoneNumber } = response.data;
 
         // Cập nhật giá trị mặc định cho formFields từ CSDL
         setFormFields({
-          price,
-          quantity,
+          customerName,
+          email,
+          phoneNumber,
         });
       } catch (error) {
         console.log(error);
@@ -43,12 +44,11 @@ const UpdateProduct = ({
     };
 
     if (selectedUpdate.length > 0) {
-      fetchProducts();
+      fetchCustomerData();
     }
   }, [selectedUpdate]);
 
-  const { price, quantity } = formFields;
-  console.log(formFields);
+  const { customerName, email, phoneNumber } = formFields;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -57,23 +57,25 @@ const UpdateProduct = ({
 
   const handleCloseBtn = () => setIsUpdateOpen(false);
 
-  const updateVideoGame = async (id: React.Key, updateDto: UpdateDto) => {
+  const UpdateCustomer = async (id: React.Key, updateDto: UpdateDto) => {
     try {
-      await axios.patch(
-        `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${id}`,
+      const response = await axios.patch(
+        `https://game-rental-management-app-yh3ve.ondigitalocean.app/customer/${id}`,
         updateDto,
       );
 
+      console.log(response);
+
       setIsUpdateOpen(false);
 
-      toast.success('Video game updated successfully 🥳', {
+      toast.success('Customer info updated successfully 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
         pauseOnHover: true,
       });
     } catch (error) {
-      toast.error('Failed to update video game 😞', {
+      toast.error('Failed to update customer info 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -88,9 +90,9 @@ const UpdateProduct = ({
 
     const _id = selectedUpdate[0];
 
-    const videoGame: UpdateDto = { price, quantity };
+    const customer: UpdateDto = { customerName, email, phoneNumber };
 
-    await updateVideoGame(_id, videoGame);
+    await UpdateCustomer(_id, customer);
     setFormFields(defaultFormFields);
   };
 
@@ -101,23 +103,34 @@ const UpdateProduct = ({
         className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 pb-0 left-[25%] top-[25%]"
         onSubmitCapture={handleSubmit}
       >
-        <Form.Item label="Giá tiền">
+        <h1 className="text-2xl font-semibold mb-4">Cập nhật thông tin khách hàng</h1>
+        <Form.Item label="Họ và tên">
           <Input
             required
-            type="number"
-            placeholder="Nhập giá tiền"
-            name="price"
-            value={price}
+            type="string"
+            placeholder="Nhập tên khách hàng"
+            name="customerName"
+            value={customerName}
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item label="Số lượng">
+        <Form.Item label="Email của khách hàng">
           <Input
             required
-            type="number"
-            placeholder="Nhập số lượng"
-            name="quantity"
-            value={quantity}
+            type="string"
+            placeholder="Nhập email"
+            name="email"
+            value={email}
+            onChange={handleChange}
+          />
+        </Form.Item>
+        <Form.Item label="SDT của khách hàng">
+          <Input
+            required
+            type="string"
+            placeholder="Nhập SDT"
+            name="phoneNumber"
+            value={phoneNumber}
             onChange={handleChange}
           />
         </Form.Item>
@@ -143,4 +156,4 @@ const UpdateProduct = ({
   );
 };
 
-export default UpdateProduct;
+export default UpdateCustomer;

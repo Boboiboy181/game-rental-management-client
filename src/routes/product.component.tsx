@@ -1,11 +1,13 @@
-import { Space, Typography, Divider, Button } from 'antd';
+import { Button, Divider, Space, Typography } from 'antd';
 import Table from 'antd/es/table';
-import { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import AddVideoGame from '../components/add-video-game.component';
 import { Product } from '../types/product.type';
-import UpdateVideoGame from '../components/update-video-game.component';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import { formatPrice } from '../utils/format-price.function';
+import AddProduct from '../components/add-product.component';
+import UpdateProduct from '../components/update-video-game.component';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
 
@@ -16,6 +18,12 @@ const ProductPage = () => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const [searchField, setSearchField] = useState('');
+
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('2');
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
@@ -31,7 +39,7 @@ const ProductPage = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [isAddOpen, isUpdateOpen]);
 
   const columns = [
     {
@@ -62,7 +70,7 @@ const ProductPage = () => {
   const data = filteredProducts.map((product) => ({
     key: product._id,
     productName: product.productName,
-    price: product.price,
+    price: formatPrice.format(product.price),
     quantity: product.quantity,
     releaseDate: product.releaseDate,
   }));
@@ -96,6 +104,8 @@ const ProductPage = () => {
       console.log('Error deleting rows:', error);
     }
   };
+
+  const productsNameList = products.map((product) => product.productName);
 
   const handleAddBtn = () => {
     setIsAddOpen(true);
@@ -131,7 +141,7 @@ const ProductPage = () => {
             <label htmlFor="searchfield">Search game</label>
           </div>
         </Space>
-        <div>
+        <div className="relative">
           <Divider />
           <Table
             rowSelection={{
@@ -152,16 +162,18 @@ const ProductPage = () => {
           </Button>
           <Button
             type="primary"
-            className="bg-green-600"
+            className="bg-green-600 hover:!bg-green-500"
             onClick={handleUpdateBtn}
           >
             Sửa
           </Button>
         </Space>
       </div>
-      {isAddOpen && <AddVideoGame setIsAddOpen={setIsAddOpen} />}
+      {isAddOpen && (
+        <AddProduct setIsAddOpen={setIsAddOpen} productsNameList={productsNameList} />
+      )}
       {isUpdateOpen && (
-        <UpdateVideoGame
+        <UpdateProduct
           setIsUpdateOpen={setIsUpdateOpen}
           selectedUpdate={selectedRowKeys}
           setProducts={setProducts}

@@ -1,13 +1,13 @@
-import { Button, Divider, Space, Spin, Typography } from 'antd';
-import { useContext, useEffect, useState } from 'react';
+import { Button, Divider, Input, Space, Spin, Typography } from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 import { formatDate } from '../utils/format-date.function';
-import { PreOrder } from '../types/pre-order.type';
 import Table, { ColumnsType } from 'antd/es/table';
 import { formatPrice } from '../utils/format-price.function';
 import { calculatePrice } from '../utils/caculate-price.function';
-import { createRental } from '../api/rental.service';
-import { deletePreOrder, getPreOrder } from '../api/pre-order.service';
+import { Rental } from '../types/rental.type';
+import { updateRental } from '../api/rental.service';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
@@ -21,27 +21,30 @@ type DataType = {
   returnDate: string;
 };
 
-const PreOrderDetail = () => {
-  const { preOrderID } = useParams();
+const UpdateRental = () => {
+  const { rentalID } = useParams();
   const navigate = useNavigate();
-  const handleCloseDetailBtn = () => navigate('/pre-orders');
-  const [preOrder, setPreOrder] = useState<PreOrder>({} as PreOrder);
+  const handleCloseDetailBtn = () => navigate(`/rentals/${rentalID}`);
+  const [rental, setRental] = useState<Rental>({} as Rental);
   const [loading, setLoading] = useState(true);
+  const [deposit, setDeposit] = useState<number>(0);
+
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
-    setNavigationKey('3');
-  }, []);
+    setNavigationKey('5');
 
-  useEffect(() => {
-    const fetchPreOrder = async () => {
-      const preOrderData = await getPreOrder(preOrderID);
-      setPreOrder(preOrderData);
+    const fetchRental = async () => {
+      const { data }: { data: Rental } = await axios.get(
+        `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental/${rentalID}`,
+      );
+      setRental(data);
+      setDeposit(data.deposit);
       setLoading(false);
     };
 
-    fetchPreOrder();
-  }, [setPreOrder]);
+    fetchRental();
+  }, [setRental]);
 
   if (loading) {
     return (
@@ -76,7 +79,8 @@ const PreOrderDetail = () => {
       render: (_, record) => (
         <p className="font-semibold">
           {formatPrice.format(
-            calculatePrice(record.price, record.numberOfRentalDays),
+            record.preOrderQuantity *
+              calculatePrice(record.price, record.numberOfRentalDays),
           )}
         </p>
       ),
@@ -95,7 +99,7 @@ const PreOrderDetail = () => {
     },
   ];
 
-  const data = preOrder.rentedGames.map((rentedGame, index) => ({
+  const data = rental.rentedGames.map((rentedGame, index) => ({
     key: index,
     productName: rentedGame.game.productName,
     price: rentedGame.game.price,
@@ -104,37 +108,56 @@ const PreOrderDetail = () => {
     returnDate: formatDate(rentedGame.returnDate.toString()),
   }));
 
-  const handleCreateBtn = async (preOrderID: string | undefined) => {
-    if (!preOrderID) return;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setDeposit(Number(value));
+  };
 
+  console.log(deposit);
+
+  const handleSaveReturnBtn = async () => {
     try {
-      const rentalTicket = await createRental({ preOrderID });
-      const { _id } = rentalTicket;
-      navigate(`/rentals/${_id}`);
-      await deletePreOrder(preOrderID);
+      const respone = await updateRental(rentalID, { deposit: deposit });
+      console.log(respone);
     } catch (error) {
-      console.log('Error creating rental:', error);
+      console.log(error);
     }
+    navigate(`/rentals/${rentalID}`);
   };
 
   return (
     <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex flex-col items-start">
-        <Text className="text-2xl font-semibold">Phiếu đặt trước</Text>
+        <Text className="text-3xl font-semibold">Phiếu thuê</Text>
         <p className="text-xs text-black/40">
-          Ngày lập phiếu {formatDate(preOrder.createdAt.toString())}
+          Ngày lập phiếu {formatDate(rental.createdAt.toString())}
         </p>
       </Space>
-      <Space className="mt-6">
-        <div className="flex flex-col mr-10 border-black/20 border-b pb-1">
-          <p className="text-xs text-black/40">Số điện thoại</p>
-          <p className="mt-2">{preOrder.customer.phoneNumber}</p>
+      <div className="flex items-end justify-between">
+        <Space className="mt-6">
+          <div className="flex flex-col mr-10 border-black/20 border-b pb-1">
+            <p className="text-xs text-black/40">Số điện thoại</p>
+            <p className="mt-2">{rental.customer.phoneNumber}</p>
+          </div>
+          <div className="flex flex-col border-black/20 border-b pb-1">
+            <p className="text-xs text-black/40">Tên khách hàng</p>
+            <p className="mt-2">{rental.customer.customerName}</p>
+          </div>
+        </Space>
+        <div className="flex flex-col border-b-black/20 border-b w-[180px]">
+          <p className="text-xs text-black/40">Tiền đặt cọc</p>
+          <Input
+            className="p-0 py-1"
+            allowClear
+            required
+            bordered={false}
+            type="number"
+            name="deposit"
+            value={deposit}
+            onChange={handleChange}
+          />
         </div>
-        <div className="flex flex-col border-black/20 border-b pb-1">
-          <p className="text-xs text-black/40">Tên khách hàng</p>
-          <p className="mt-2">{preOrder.customer.customerName}</p>
-        </div>
-      </Space>
+      </div>
       <div>
         <Divider />
         <Table
@@ -146,24 +169,24 @@ const PreOrderDetail = () => {
       <div className="flex justify-between items-center">
         <Space direction="horizontal" className="relative top-[-9%]">
           <Button
-            className="bg-blue-500"
+            className="bg-blue-500 shadow-xl"
             type="primary"
             onClick={handleCloseDetailBtn}
           >
             Đóng
           </Button>
           <Button
-            className="bg-green-600"
+            className="bg-green-600 hover:!bg-green-500 shadow-xl"
             type="primary"
-            onClick={() => handleCreateBtn(preOrderID)}
+            onClick={handleSaveReturnBtn}
           >
-            Tạo phiếu thuê
+            Lưu
           </Button>
         </Space>
         <p className="text-xl">
           Tổng tiền:{' '}
           <span className="font-semibold text-red-600">
-            {formatPrice.format(preOrder.estimatedPrice)}
+            {formatPrice.format(rental.estimatedPrice)}
           </span>
         </p>
       </div>
@@ -171,4 +194,4 @@ const PreOrderDetail = () => {
   );
 };
 
-export default PreOrderDetail;
+export default UpdateRental;

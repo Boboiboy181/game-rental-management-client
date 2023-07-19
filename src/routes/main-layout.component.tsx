@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
+  ContainerOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
-  ContainerOutlined,
   BookOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Button, Typography } from 'antd';
+import { Button, Layout, Menu, Typography } from 'antd';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Header, Sider } = Layout;
 const { Text } = Typography;
 
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const { navigationKey, setNavigationKey } = useContext(NavigationKeyContexts);
 
   const items = [
     {
@@ -102,6 +104,8 @@ const MainLayout: React.FC = () => {
 
   const logoOnClick = () => navigate('/');
 
+  const changeNavigationKey = (e: any) => setNavigationKey(e.key);
+
   return (
     <Layout className="h-screen">
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -122,9 +126,18 @@ const MainLayout: React.FC = () => {
             F4 Store
           </div>
         </div>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['0']}>
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={['0']}
+          selectedKeys={[navigationKey]}
+        >
           {items.map((item) => (
-            <Menu.Item key={item.key} icon={item.icon}>
+            <Menu.Item
+              key={item.key}
+              icon={item.icon}
+              onClick={changeNavigationKey}
+            >
               <Link to={item.path}>{item.label}</Link>
             </Menu.Item>
           ))}
