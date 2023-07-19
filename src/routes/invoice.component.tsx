@@ -1,11 +1,12 @@
 import { Button, Space, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Invoice } from '../types/invoice.type';
 import { formatPrice } from '../utils/format-price.function.ts';
 import { formatDate } from '../utils/format-date.function.ts';
 import ShowData from '../components/page.component.tsx';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
 
@@ -22,8 +23,10 @@ const InvoicePage = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [filteredInvoice, setFilteredInvoice] = useState<Invoice[]>(invoices);
   const [searchField, setSearchField] = useState('');
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
+    setNavigationKey('7');
     const fetchInvoice = async () => {
       const { data }: { data: Invoice[] } = await axios.get(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/invoice',
