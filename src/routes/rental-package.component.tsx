@@ -1,12 +1,12 @@
-import { Space, Typography, Divider, Button } from 'antd';
+import { Button, Divider, Space, Typography } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
-import { Fragment, useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { formatPrice } from '../utils/format-price.function';
 import { RentalPackage } from '../types/rental-package.type';
 import AddRentalPackage from '../components/add-rental-package.component';
 import UpdateRentalPackage from '../components/update-rental-package.component';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts';
 
 const { Text } = Typography;
@@ -28,12 +28,11 @@ const RentalPackagePage = () => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
 
-    const { setNavigationKey } = useContext(NavigationKeyContexts);
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
 
-    useEffect(() => {
-      setNavigationKey('3');
-    }, []);
-
+  useEffect(() => {
+    setNavigationKey('3');
+  }, []);
 
   useEffect(() => {
     const newFilteredRentalPackage = rentalpackage.filter((rentalpackage) => {
@@ -86,7 +85,7 @@ const RentalPackagePage = () => {
       title: 'Thao tác',
       dataIndex: 'timeOfRental',
       align: 'center',
-      render: (_, record) => (
+      render: (_) => (
         <Button type="primary" className="bg-blue-600">
           Chi tiết
         </Button>

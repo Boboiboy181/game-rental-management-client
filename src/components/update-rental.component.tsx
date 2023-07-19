@@ -32,10 +32,8 @@ const UpdateRental = () => {
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
-    setNavigationKey('4');
-  }, []);
+    setNavigationKey('5');
 
-  useEffect(() => {
     const fetchRental = async () => {
       const { data }: { data: Rental } = await axios.get(
         `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental/${rentalID}`,

@@ -5,6 +5,7 @@ export type Return = {
     _id: string;
     customerName: string;
     phoneNumber: string;
+    point: number;
   };
   deposit: number;
   paymentState: string;
