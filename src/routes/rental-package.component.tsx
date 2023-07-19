@@ -6,8 +6,8 @@ import { formatPrice } from '../utils/format-price.function';
 import { RentalPackage } from '../types/rental-package.type';
 import AddRentalPackage from '../components/add-rental-package.component';
 import UpdateRentalPackage from '../components/update-rental-package.component';
-import DetailRentalPackage from '../components/detail-rental-package.component';
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const { Text } = Typography;
 
@@ -19,26 +19,23 @@ type DataType = {
   price: string;
 };
 
-interface DetailedRentalPackage extends RentalPackage {
-  customers: { name: string; email: string }[];
-}
-
 const RentalPackagePage = () => {
   const [rentalPackages, setRentalPackages] = useState<RentalPackage[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [filteredRentalPackages, setFilteredRentalPackages] = useState<RentalPackage[]>([]);
+  const [filteredRentalPackages, setFilteredRentalPackages] = useState<
+    RentalPackage[]
+  >([]);
   const [searchField, setSearchField] = useState('');
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
-  const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
-  const [selectedRow, setSelectedRow] = useState<DataType | null>(null);
-  const [selectedRentalPackage, setSelectedRentalPackage] = useState<DetailedRentalPackage | null>(null);
-  const [customers, setCustomers] = useState<{ name: string; email: string }[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRentalPackages = async () => {
       try {
-        const response = await axios.get('https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package');
+        const response = await axios.get(
+          'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package',
+        );
         setRentalPackages(response.data);
       } catch (error) {
         console.log('Error fetching rental packages:', error);
@@ -47,19 +44,6 @@ const RentalPackagePage = () => {
 
     fetchRentalPackages();
   }, []);
-
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        const response = await axios.get(`https://game-rental-management-app-yh3ve.ondigitalocean.app/customer`);
-        setCustomers(response.data);
-      } catch (error) {
-        console.log('Error fetching customers:', error);
-      }
-    };
-
-    fetchCustomers();
-  }, [selectedRow]);
 
   useEffect(() => {
     const newFilteredRentalPackages = rentalPackages.filter((pkg) => {
@@ -104,7 +88,11 @@ const RentalPackagePage = () => {
       dataIndex: 'timeOfRental',
       align: 'center',
       render: (_, record) => (
-        <Button type="primary" className="bg-blue-600" onClick={() => handleDetailBtn(record)}>
+        <Button
+          type="primary"
+          className="bg-blue-600"
+          onClick={() => handleDetailBtn(record.key)}
+        >
           Chi tiết
         </Button>
       ),
@@ -129,12 +117,16 @@ const RentalPackagePage = () => {
       // Delete selected rows
       await Promise.all(
         selectedRowKeys.map(async (key) => {
-          await axios.delete(`https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/${key}`);
-        })
+          await axios.delete(
+            `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/${key}`,
+          );
+        }),
       );
 
       // Fetch updated rental packages data
-      const response = await axios.get('https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package');
+      const response = await axios.get(
+        'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package',
+      );
       setRentalPackages(response.data);
       setSelectedRowKeys([]);
 
@@ -142,6 +134,10 @@ const RentalPackagePage = () => {
     } catch (error) {
       console.log('Error deleting rental packages:', error);
     }
+  };
+
+  const handleDetailBtn = (key: string) => {
+    navigate(`/rental-packages/${key}`);
   };
 
   const handleAddBtn = () => {
@@ -159,44 +155,6 @@ const RentalPackagePage = () => {
       return;
     }
     setIsUpdateOpen(true);
-  };
-
-  const handleDetailBtn = async (record: DataType) => {
-    const selectedPackage = rentalPackages.find((pkg) => pkg._id === record.key);
-    if (selectedPackage) {
-      try {
-        setSelectedRow(record); // Add this line to set the selectedRow state
-        const response = await axios.get(
-          `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/registration-list`
-        );
-        const registrations = response.data;
-
-        const filteredRegistrations = registrations.filter(
-          (registration: any) => registration.rentalPackage === selectedPackage._id
-        );
-
-        const customerPromises = filteredRegistrations.map(
-          async (registration: any) => {
-            const customerResponse = await axios.get(
-              `https://game-rental-management-app-yh3ve.ondigitalocean.app/customer/${registration.customer}`
-            );
-            return customerResponse.data;
-          }
-        );
-
-        const customersData = await Promise.all(customerPromises);
-        setSelectedRentalPackage({ ...selectedPackage, customers: customersData });
-        setIsDetailOpen(true);
-      } catch (error) {
-        console.log('Error fetching customer information:', error);
-      }
-    }
-  };
-  
-
-  const handleCloseDetail = () => {
-    setIsDetailOpen(false);
-    setSelectedRentalPackage(null);
   };
 
   return (
@@ -254,12 +212,6 @@ const RentalPackagePage = () => {
         <UpdateRentalPackage
           setIsUpdateOpen={setIsUpdateOpen}
           selectedUpdate={selectedRowKeys}
-        />
-      )}
-      {isDetailOpen && (
-        <DetailRentalPackage
-          rentalPackageId={selectedRow?.key || ''}
-          onClose={handleCloseDetail}
         />
       )}
       <ToastContainer />
