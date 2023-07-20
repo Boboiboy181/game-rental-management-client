@@ -23,15 +23,14 @@ type DataType = {
 const RentalPage = () => {
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [filteredRentals, setFilteredRentals] = useState<Rental[]>(rentals);
+  const [searchField, setSearchField] = useState('');
   const navigate = useNavigate();
 
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
     setNavigationKey('5');
-  }, []);
-
-  useEffect(() => {
     const fetchRental = async () => {
       const rentalData: Rental[] = await getRentals();
       setRentals(rentalData);
@@ -59,11 +58,6 @@ const RentalPage = () => {
       dataIndex: 'createdAt',
       align: 'center',
     },
-    // {
-    //   title: 'Tiền đặt cọc',
-    //   dataIndex: 'deposit',
-    //   align: 'center',
-    // },
     {
       title: 'Trạng thái trả',
       dataIndex: 'returnState',
@@ -95,7 +89,14 @@ const RentalPage = () => {
     },
   ];
 
-  const data = rentals.map((rental) => ({
+  useEffect(() => {
+    const newFilteredRentals = rentals.filter((rental) => {
+      return rental.customer.customerName.toLowerCase().includes(searchField);
+    });
+    setFilteredRentals(newFilteredRentals);
+  }, [rentals, searchField]);
+
+  const data = filteredRentals.map((rental) => ({
     key: rental._id,
     rentalCode: rental.rentalCode,
     customerName: rental.customer.customerName,
@@ -104,8 +105,6 @@ const RentalPage = () => {
     returnState: rental.returnState,
     estimatedPrice: formatPrice.format(rental.estimatedPrice),
   }));
-
-  const [searchField, setSearchField] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
@@ -120,7 +119,7 @@ const RentalPage = () => {
 
   const checkRentalStatus = () => {
     return selectedRowKeys.some((key) => {
-      const rental = rentals.find((rental) => rental._id === key);
+      const rental = filteredRentals.find((rental) => rental._id === key);
       return (
         rental?.returnState === 'RETURNED' ||
         rental?.returnState === 'NOT_ENOUGH'
