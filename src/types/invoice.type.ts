@@ -25,4 +25,5 @@ export type Invoice = {
   fine: number;
   finalPrice: number;
   return: string;
+  createdAt: string;
 };
