@@ -146,6 +146,13 @@ const RentalPage = () => {
         }),
       );
 
+      toast.success('Xóa phiếu thuê thành công', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+
       // Fetch updated products data
       const rentalData: Rental[] = await getRentals();
       // Update customer state and selectedRowKeys state
@@ -155,6 +162,13 @@ const RentalPage = () => {
       // Refresh the page by updating the searchField state
       setSearchField('');
     } catch (error) {
+      toast.success('Không thể xóa phiếu thuê 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+
       console.log('Error deleting rows:', error);
     }
   };

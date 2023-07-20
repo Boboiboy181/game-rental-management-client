@@ -165,6 +165,13 @@ const ReturnPage = () => {
         }),
       );
 
+      toast.success('Xóa phiếu trả thành công', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+
       // Fetch updated return tickets data
       const returnList: Return[] = await getReturns();
 
@@ -172,6 +179,12 @@ const ReturnPage = () => {
       setReturnTickets(returnList);
       setSelectedRowKeys([]);
     } catch (error) {
+      toast.success('Không thể xóa phiếu trả', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
       console.log('Error deleting rows:', error);
     }
   };

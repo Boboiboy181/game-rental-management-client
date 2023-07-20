@@ -1,12 +1,13 @@
 import { Button, Space, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Invoice } from '../types/invoice.type';
 import { formatPrice } from '../utils/format-price.function.ts';
 import { formatDate } from '../utils/format-date.function.ts';
 import ShowData from '../components/page.component.tsx';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { deleteInvoice, getInvoices } from '../api/invoice.service.ts';
+import { ToastContainer, toast } from 'react-toastify';
 
 const { Text } = Typography;
 
@@ -111,6 +112,13 @@ const InvoicePage = () => {
         }),
       );
 
+      toast.success('Xóa hóa đơn thành công', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+
       // Fetch updated products data
       const data = await getInvoices();
 
@@ -118,31 +126,40 @@ const InvoicePage = () => {
       setSelectedRowKeys([]);
       setSearchField('');
     } catch (error) {
+      toast.error('Không thể xóa hóa đơn 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
       console.log('Error deleting rows:', error);
     }
   };
 
   return (
-    <div
-      className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%]
+    <Fragment>
+      <div
+        className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%]
       translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl"
-    >
-      <ShowData
-        pageName={'Hóa đơn'}
-        columns={columns}
-        data={data}
-        rowSelection={rowSelection}
-        placeHolder={'Mã hóa đơn'}
-        inputName={'invoiceID'}
-        inputValue={searchField}
-        handleChange={handleChange}
-      />
-      <Space direction="horizontal" className="relative top-[-9%]">
-        <Button danger type="primary" onClick={handleDeleteBtn}>
-          Xóa
-        </Button>
-      </Space>
-    </div>
+      >
+        <ShowData
+          pageName={'Hóa đơn'}
+          columns={columns}
+          data={data}
+          rowSelection={rowSelection}
+          placeHolder={'Mã hóa đơn'}
+          inputName={'invoiceID'}
+          inputValue={searchField}
+          handleChange={handleChange}
+        />
+        <Space direction="horizontal" className="relative top-[-9%]">
+          <Button danger type="primary" onClick={handleDeleteBtn}>
+            Xóa
+          </Button>
+        </Space>
+      </div>
+      <ToastContainer />
+    </Fragment>
   );
 };
 
