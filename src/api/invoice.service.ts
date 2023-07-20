@@ -8,3 +8,12 @@ export const createInvoice = async (
   const { data }: { data: Invoice } = await api.post('invoice', { ...invoice });
   return data;
 };
+
+export const getInvoices = async (): Promise<Invoice[]> => {
+  const { data }: { data: Invoice[] } = await api.get('invoice');
+  return data;
+};
+
+export const deleteInvoice = async (id: string): Promise<void> => {
+  await api.delete(`invoice/${id}`);
+};

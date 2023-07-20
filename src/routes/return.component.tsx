@@ -8,6 +8,7 @@ import { formatPrice } from '../utils/format-price.function.ts';
 import { deleteReturn, getReturns } from '../api/return.service.ts';
 import { formatDate } from '../utils/format-date.function.ts';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { toast, ToastContainer } from 'react-toastify';
 
 type DataType = {
   key: React.Key;
@@ -136,14 +137,40 @@ const ReturnPage = () => {
     },
   };
 
+  const checkReturnStatus = () => {
+    return selectedRowKeys.some((key) => {
+      const returnTicket = filteredReturns.find(
+        (returnTicket) => returnTicket._id === key,
+      );
+      return returnTicket?.paymentState === 'PAID';
+    });
+  };
+
   const handleDeleteBtn = async () => {
     try {
+      if (checkReturnStatus()) {
+        toast.error('Không thể xóa phiếu trả 😞', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 8000,
+          theme: 'colored',
+          pauseOnHover: true,
+        });
+        return;
+      }
+
       // Delete selected rows
       await Promise.all(
         selectedRowKeys.map(async (key) => {
           await deleteReturn(key as string);
         }),
       );
+
+      toast.success('Xóa phiếu trả thành công', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
 
       // Fetch updated return tickets data
       const returnList: Return[] = await getReturns();
@@ -152,6 +179,12 @@ const ReturnPage = () => {
       setReturnTickets(returnList);
       setSelectedRowKeys([]);
     } catch (error) {
+      toast.success('Không thể xóa phiếu trả', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
       console.log('Error deleting rows:', error);
     }
   };
@@ -183,6 +216,7 @@ const ReturnPage = () => {
           </Button>
         </Space>
       </div>
+      <ToastContainer />
     </Fragment>
   );
 };

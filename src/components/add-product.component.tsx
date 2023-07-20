@@ -1,7 +1,7 @@
 import { Button, Form, Input, Select, Space, Spin } from 'antd';
-import { useState } from 'react';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import React, { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import { createProduct } from '../api/product.service.ts';
 
 const defaultFormFields = {
   productName: '',
@@ -73,11 +73,8 @@ const AddProduct = ({
   const postVideoGame = async (data: FormData) => {
     try {
       setIsLoading(true);
-      const respone = await axios.post(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
-        data,
-      );
-      respone.status === 201 ? setIsLoading(false) : setIsLoading(true);
+      const respone = await createProduct(data);
+      respone.productName ? setIsLoading(false) : setIsLoading(true);
       toast.success('Thêm video game thành công 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
@@ -123,6 +120,7 @@ const AddProduct = ({
     }
 
     await postVideoGame(videoGame);
+    setIsAddOpen(false);
     setFormFields(defaultFormFields);
   };
 

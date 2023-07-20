@@ -1,7 +1,6 @@
-import { Button, Divider, Space, Typography } from 'antd';
-import Table, { ColumnsType } from 'antd/es/table';
+import { Button, Space, Typography } from 'antd';
+import { ColumnsType } from 'antd/es/table';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import { formatPrice } from '../utils/format-price.function';
 import { RentalPackage } from '../types/rental-package.type';
 import AddRentalPackage from '../components/add-rental-package.component';
@@ -9,6 +8,11 @@ import UpdateRentalPackage from '../components/update-rental-package.component';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts';
+import {
+  deleteRentalPackage,
+  getRentalPackages,
+} from '../api/rental-package.service.ts';
+import ShowData from '../components/page.component.tsx';
 
 const { Text } = Typography;
 
@@ -22,7 +26,7 @@ type DataType = {
 
 const RentalPackagePage = () => {
   const [rentalPackages, setRentalPackages] = useState<RentalPackage[]>([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [filteredRentalPackages, setFilteredRentalPackages] = useState<
     RentalPackage[]
   >([]);
@@ -40,10 +44,8 @@ const RentalPackagePage = () => {
   useEffect(() => {
     const fetchRentalPackages = async () => {
       try {
-        const response = await axios.get(
-          'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package',
-        );
-        setRentalPackages(response.data);
+        const response = await getRentalPackages();
+        setRentalPackages(response);
       } catch (error) {
         console.log('Error fetching rental packages:', error);
       }
@@ -112,7 +114,7 @@ const RentalPackagePage = () => {
   };
 
   const rowSelection = {
-    onChange: (selectedKeys: React.Key[]) => {
+    onChange: (selectedKeys: string[]) => {
       setSelectedRowKeys(selectedKeys);
     },
   };
@@ -124,17 +126,13 @@ const RentalPackagePage = () => {
       // Delete selected rows
       await Promise.all(
         selectedRowKeys.map(async (key) => {
-          await axios.delete(
-            `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/${key}`,
-          );
+          await deleteRentalPackage(key.toString());
         }),
       );
 
       // Fetch updated rental packages data
-      const response = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package',
-      );
-      setRentalPackages(response.data);
+      const response = await getRentalPackages();
+      setRentalPackages(response);
       setSelectedRowKeys([]);
 
       setSearchField('');
@@ -167,32 +165,16 @@ const RentalPackagePage = () => {
   return (
     <Fragment>
       <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
-        <Space className="flex justify-between">
-          <Text className="text-3xl font-semibold">Gói thuê</Text>
-          <div className="input-field">
-            <input
-              className="px-4"
-              type="search"
-              placeholder="Tìm kiếm gói thuê"
-              name="searchField"
-              value={searchField}
-              onChange={handleChange}
-            />
-            <label htmlFor="searchfield">Tìm kiếm gói thuê</label>
-          </div>
-        </Space>
-        <div className="relative">
-          <Divider />
-          <Table
-            rowSelection={{
-              type: 'checkbox',
-              ...rowSelection,
-            }}
-            columns={columns}
-            dataSource={data}
-            pagination={{ pageSize: 5 }}
-          />
-        </div>
+        <ShowData
+          pageName="Gói thuê"
+          placeHolder="Tên gói thuê"
+          inputName="searchField"
+          inputValue={searchField}
+          handleChange={handleChange}
+          columns={columns}
+          data={data}
+          rowSelection={rowSelection}
+        />
         <Space direction="horizontal" className="relative top-[-9%]">
           <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
             Thêm

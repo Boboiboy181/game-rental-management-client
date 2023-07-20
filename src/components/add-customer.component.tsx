@@ -1,7 +1,7 @@
 import { Button, Form, Input } from 'antd';
 import React, { useState } from 'react';
-import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
+import { createCustomer } from '../api/customer.service.ts';
 
 const defaultFormFields = {
   customerName: '',
@@ -26,20 +26,17 @@ const AddCustomer = ({
 
   const handleCloseBtn = () => setIsAddOpen(false);
 
-  const postCustomer = async (data: FormData) => {
+  const postCustomer = async (data: any) => {
     try {
-      await axios.post(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/customer',
-        data,
-      );
-      toast.success('New customer created successfully 🥳', {
+      await createCustomer(data);
+      toast.success('Tạo khách hàng mới thành công 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
         pauseOnHover: true,
       });
     } catch (error) {
-      toast.error('Failed to create a customer 😞', {
+      toast.error('Không thể tạo khách hàng mới 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -52,12 +49,15 @@ const AddCustomer = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const customer = new FormData();
-    customer.append('customerName', customerName);
-    customer.append('email', email);
-    customer.append('phoneNumber', phoneNumber);
-    customer.append('address', address);
+    const customer = {
+      customerName,
+      email,
+      phoneNumber,
+      address,
+    };
+
     await postCustomer(customer);
+    setIsAddOpen(false);
     setFormFields(defaultFormFields);
   };
 

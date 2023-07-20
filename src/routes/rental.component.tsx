@@ -1,6 +1,6 @@
 import { Button, Space, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Rental } from '../types/rental.type';
 import { formatPrice } from '../utils/format-price.function';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { delelteRental, getRentals } from '../api/rental.service';
 import ShowData from '../components/page.component';
 import { formatDate } from '../utils/format-date.function.ts';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { toast, ToastContainer } from 'react-toastify';
 
 type DataType = {
   key: string;
@@ -22,15 +23,14 @@ type DataType = {
 const RentalPage = () => {
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [filteredRentals, setFilteredRentals] = useState<Rental[]>(rentals);
+  const [searchField, setSearchField] = useState('');
   const navigate = useNavigate();
 
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
     setNavigationKey('5');
-  }, []);
-
-  useEffect(() => {
     const fetchRental = async () => {
       const rentalData: Rental[] = await getRentals();
       setRentals(rentalData);
@@ -58,11 +58,6 @@ const RentalPage = () => {
       dataIndex: 'createdAt',
       align: 'center',
     },
-    // {
-    //   title: 'Tiền đặt cọc',
-    //   dataIndex: 'deposit',
-    //   align: 'center',
-    // },
     {
       title: 'Trạng thái trả',
       dataIndex: 'returnState',
@@ -94,7 +89,14 @@ const RentalPage = () => {
     },
   ];
 
-  const data = rentals.map((rental) => ({
+  useEffect(() => {
+    const newFilteredRentals = rentals.filter((rental) => {
+      return rental.rentalCode.toLowerCase().includes(searchField);
+    });
+    setFilteredRentals(newFilteredRentals);
+  }, [rentals, searchField]);
+
+  const data = filteredRentals.map((rental) => ({
     key: rental._id,
     rentalCode: rental.rentalCode,
     customerName: rental.customer.customerName,
@@ -103,8 +105,6 @@ const RentalPage = () => {
     returnState: rental.returnState,
     estimatedPrice: formatPrice.format(rental.estimatedPrice),
   }));
-
-  const [searchField, setSearchField] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
@@ -117,14 +117,41 @@ const RentalPage = () => {
     },
   };
 
+  const checkRentalStatus = () => {
+    return selectedRowKeys.some((key) => {
+      const rental = filteredRentals.find((rental) => rental._id === key);
+      return (
+        rental?.returnState === 'RETURNED' ||
+        rental?.returnState === 'NOT_ENOUGH'
+      );
+    });
+  };
+
   const handleDeleteBtn = async () => {
     try {
+      // Check if any selected row has status of RETURNED or NOT_ENOUGH
+      if (checkRentalStatus()) {
+        toast.error('Không thể xóa phiếu thuê 😞', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 8000,
+          theme: 'colored',
+          pauseOnHover: true,
+        });
+        return;
+      }
       // Delete selected rows
       await Promise.all(
         selectedRowKeys.map(async (key) => {
           await delelteRental(key);
         }),
       );
+
+      toast.success('Xóa phiếu thuê thành công', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
 
       // Fetch updated products data
       const rentalData: Rental[] = await getRentals();
@@ -135,6 +162,13 @@ const RentalPage = () => {
       // Refresh the page by updating the searchField state
       setSearchField('');
     } catch (error) {
+      toast.success('Không thể xóa phiếu thuê 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+
       console.log('Error deleting rows:', error);
     }
   };
@@ -148,29 +182,32 @@ const RentalPage = () => {
   };
 
   return (
-    <div
-      className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] 
+    <Fragment>
+      <div
+        className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%]
     translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl"
-    >
-      <ShowData
-        pageName="Phiếu thuê"
-        placeHolder="Tên khách hàng"
-        inputName="searchField"
-        inputValue={searchField}
-        handleChange={handleChange}
-        columns={columns}
-        data={data}
-        rowSelection={rowSelection}
-      />
-      <Space direction="horizontal" className="relative top-[-9%]">
-        <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
-          Thêm
-        </Button>
-        <Button danger type="primary" onClick={handleDeleteBtn}>
-          Xóa
-        </Button>
-      </Space>
-    </div>
+      >
+        <ShowData
+          pageName="Phiếu thuê"
+          placeHolder="Mã phiếu thuê"
+          inputName="searchField"
+          inputValue={searchField}
+          handleChange={handleChange}
+          columns={columns}
+          data={data}
+          rowSelection={rowSelection}
+        />
+        <Space direction="horizontal" className="relative top-[-9%]">
+          <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
+            Thêm
+          </Button>
+          <Button danger type="primary" onClick={handleDeleteBtn}>
+            Xóa
+          </Button>
+        </Space>
+      </div>
+      <ToastContainer />
+    </Fragment>
   );
 };
 

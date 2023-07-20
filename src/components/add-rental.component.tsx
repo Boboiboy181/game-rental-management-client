@@ -1,5 +1,5 @@
 import { AutoComplete, Button, Input, Space, Typography } from 'antd';
-import { Fragment, useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../utils/format-date.function';
 import Table, { ColumnsType } from 'antd/es/table';
@@ -13,6 +13,7 @@ import { getCustomers } from '../api/customer.service';
 import { createRental } from '../api/rental.service';
 import { CreateRental } from '../types/create-rental.type';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import IsCreating from './is-creating.component.tsx';
 
 const { Text } = Typography;
 
@@ -52,6 +53,7 @@ const AddRental = () => {
     useContext(CartContext);
   const navigate = useNavigate();
   const { setNavigationKey } = useContext(NavigationKeyContexts);
+  const [isCreating, setIsCreating] = useState<boolean>(false);
 
   useEffect(() => {
     setNavigationKey('5');
@@ -187,14 +189,9 @@ const AddRental = () => {
   const postRental = async (rental: CreateRental) => {
     try {
       const respone = await createRental(rental);
-      toast.success('Rental ticket created successfully 🥳', {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 8000,
-        theme: 'colored',
-        pauseOnHover: true,
-      });
       return respone._id;
     } catch (error) {
+      setIsCreating(false);
       toast.error('Failed to create a rental ticket 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
@@ -215,6 +212,8 @@ const AddRental = () => {
       rentedGames: rentalItems,
       deposit,
     };
+
+    setIsCreating(true);
 
     const rentalID = await postRental(rental);
     if (rentalID) {
@@ -355,6 +354,7 @@ const AddRental = () => {
             </p>
           </div>
         </form>
+        {isCreating && <IsCreating />}
       </div>
       {isAddProductOpen && (
         <AddProductToCart setIsAddProductOpen={setIsAddProductOpen} />

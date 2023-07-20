@@ -1,7 +1,8 @@
 import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { UpdateRentalPackageDto } from '../types/update-rental-package.type';
+import { getRentalPackageByID } from '../api/rental-package.service';
 
 const defaultFormFields = {
   packageName: '',
@@ -10,30 +11,20 @@ const defaultFormFields = {
   timeOfRental: 0,
 };
 
-type UpdateDto = {
-  packageName: string;
-  price: number;
-  numberOfGames: number;
-  timeOfRental: number;
-};
-
 const UpdateRentalPackage = ({
   setIsUpdateOpen,
   selectedUpdate,
 }: {
   setIsUpdateOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedUpdate: React.Key[];
+  selectedUpdate: string[];
 }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
 
   useEffect(() => {
     const fetchRentalPackage = async () => {
       try {
-        const response = await axios.get(
-          `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/${selectedUpdate[0]}`,
-        );
-        const { packageName, price, numberOfGames, timeOfRental } =
-          response.data;
+        const response = await getRentalPackageByID(selectedUpdate[0]);
+        const { packageName, price, numberOfGames, timeOfRental } = response;
         // Cập nhật giá trị mặc định cho formFields từ CSDL
         setFormFields({
           packageName,
@@ -65,13 +56,12 @@ const UpdateRentalPackage = ({
 
   const handleCloseBtn = () => setIsUpdateOpen(false);
 
-  const updateRentalPackage = async (id: React.Key, updateDto: UpdateDto) => {
+  const updateRentalPackage = async (
+    id: React.Key,
+    updateDto: UpdateRentalPackageDto,
+  ) => {
     try {
-      await axios.patch(
-        `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package/${id}`,
-        updateDto,
-      );
-
+      await updateRentalPackage(id, updateDto);
       setIsUpdateOpen(false);
 
       toast.success('Cập nhật gói thuê thành công 🥳', {
@@ -96,7 +86,7 @@ const UpdateRentalPackage = ({
 
     const _id = selectedUpdate[0];
 
-    const rentalpackage: UpdateDto = {
+    const rentalpackage: UpdateRentalPackageDto = {
       packageName,
       price,
       numberOfGames,
@@ -150,7 +140,9 @@ const UpdateRentalPackage = ({
         <Form.Item label="Thời gian cho thuê gói theo ngày">
           <Select
             value={timeOfRental}
-            onSelect={(value) => selectHandler(value.toString(), 'timeOfRental')}
+            onSelect={(value) =>
+              selectHandler(value.toString(), 'timeOfRental')
+            }
           >
             <Select.Option value="7">7</Select.Option>
             <Select.Option value="14">14</Select.Option>
