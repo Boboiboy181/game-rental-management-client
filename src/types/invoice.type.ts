@@ -24,5 +24,9 @@ export type Invoice = {
   voucher: string[];
   fine: number;
   finalPrice: number;
-  return: string;
+  return: {
+    _id: string;
+    returnCode: string;
+  };
+  createdAt: string;
 };

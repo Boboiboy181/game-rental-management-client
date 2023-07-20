@@ -91,7 +91,7 @@ const RentalPage = () => {
 
   useEffect(() => {
     const newFilteredRentals = rentals.filter((rental) => {
-      return rental.customer.customerName.toLowerCase().includes(searchField);
+      return rental.rentalCode.toLowerCase().includes(searchField);
     });
     setFilteredRentals(newFilteredRentals);
   }, [rentals, searchField]);
@@ -175,7 +175,7 @@ const RentalPage = () => {
       >
         <ShowData
           pageName="Phiếu thuê"
-          placeHolder="Tên khách hàng"
+          placeHolder="Mã phiếu thuê"
           inputName="searchField"
           inputValue={searchField}
           handleChange={handleChange}

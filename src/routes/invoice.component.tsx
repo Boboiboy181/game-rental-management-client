@@ -1,18 +1,19 @@
 import { Button, Space, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import React, { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import { Invoice } from '../types/invoice.type';
 import { formatPrice } from '../utils/format-price.function.ts';
 import { formatDate } from '../utils/format-date.function.ts';
 import ShowData from '../components/page.component.tsx';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { deleteInvoice, getInvoices } from '../api/invoice.service.ts';
 
 const { Text } = Typography;
 
 type DataType = {
   key: string;
   invoiceID: string;
+  returnCode: string;
   customerName: string;
   finalPrice: number;
   createdAt: string;
@@ -28,9 +29,7 @@ const InvoicePage = () => {
   useEffect(() => {
     setNavigationKey('7');
     const fetchInvoice = async () => {
-      const { data }: { data: Invoice[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/invoice',
-      );
+      const data = await getInvoices();
       setInvoices(data);
     };
 
@@ -48,7 +47,11 @@ const InvoicePage = () => {
     {
       title: 'Mã hóa đơn',
       dataIndex: 'invoiceID',
-      align: 'center',
+      width: '15%',
+    },
+    {
+      title: 'Mã phiếu trả',
+      dataIndex: 'returnCode',
       width: '15%',
     },
     {
@@ -82,6 +85,7 @@ const InvoicePage = () => {
   const data = filteredInvoice.map((invoice) => ({
     key: invoice._id,
     invoiceID: invoice.invoiceID,
+    returnCode: invoice.return.returnCode,
     customerName: invoice.customer.customerName,
     finalPrice: invoice.finalPrice,
     createdAt: formatDate(invoice.createdAt),
@@ -103,16 +107,12 @@ const InvoicePage = () => {
       // Delete selected rows
       await Promise.all(
         selectedRowKeys.map(async (key) => {
-          await axios.delete(
-            `https://game-rental-management-app-yh3ve.ondigitalocean.app/invoice/${key}`,
-          );
+          await deleteInvoice(key.toString());
         }),
       );
 
       // Fetch updated products data
-      const { data }: { data: Invoice[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/invoice',
-      );
+      const data = await getInvoices();
 
       setInvoices(data);
       setSelectedRowKeys([]);
