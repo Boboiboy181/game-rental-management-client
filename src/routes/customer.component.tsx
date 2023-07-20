@@ -13,14 +13,12 @@ const CustomerPage = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
-
+  const [searchField, setSearchField] = useState('');
+  const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>(customers);
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
     setNavigationKey('1');
-  }, []);
-
-  useEffect(() => {
     const fetchCustomers = async () => {
       const { data }: { data: Customer[] } = await axios.get(
         'https://game-rental-management-app-yh3ve.ondigitalocean.app/customer',
@@ -30,6 +28,13 @@ const CustomerPage = () => {
 
     fetchCustomers();
   }, []);
+
+  useEffect(() => {
+    const newFilteredCustomers = customers.filter((customer) => {
+      return customer.customerName.toLowerCase().includes(searchField);
+    });
+    setFilteredCustomers(newFilteredCustomers);
+  }, [customers, searchField]);
 
   const columns = [
     {
@@ -55,7 +60,7 @@ const CustomerPage = () => {
     },
   ];
 
-  const data = customers.map((customer) => ({
+  const data = filteredCustomers.map((customer) => ({
     key: customer._id,
     customerName: customer.customerName,
     email: customer.email,
@@ -63,8 +68,6 @@ const CustomerPage = () => {
     address: customer.address,
     point: customer.point,
   }));
-
-  const [searchField, setSearchField] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();

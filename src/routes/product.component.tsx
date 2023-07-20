@@ -1,5 +1,5 @@
 import { Button, Divider, Space, Typography } from 'antd';
-import Table from 'antd/es/table';
+import Table, { ColumnsType } from 'antd/es/table';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Product } from '../types/product.type';
@@ -10,6 +10,14 @@ import UpdateProduct from '../components/update-video-game.component';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
+
+type DataType = {
+  key: string;
+  productName: string;
+  price: string;
+  quantity: number;
+  releaseDate: string;
+}
 
 const ProductPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -41,7 +49,7 @@ const ProductPage = () => {
     fetchProducts();
   }, [isAddOpen, isUpdateOpen]);
 
-  const columns = [
+  const columns: ColumnsType<DataType> = [
     {
       title: 'Tên sản phẩm',
       dataIndex: 'productName',
@@ -53,10 +61,12 @@ const ProductPage = () => {
     {
       title: 'Số lượng',
       dataIndex: 'quantity',
+      align: 'center',
     },
     {
       title: 'Ngày sản xuất',
       dataIndex: 'releaseDate',
+      align: 'center',
     },
   ];
 

@@ -96,7 +96,7 @@ const AddCustomer = ({
             required
             type="text"
             placeholder="Nhập số điện thoại"
-            name="text"
+            name="phoneNumber"
             value={phoneNumber}
             onChange={handleChange}
           />
