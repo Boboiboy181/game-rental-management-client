@@ -1,8 +1,8 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { Product } from '../types/product.type';
+import { getProduct, updateProduct } from '../api/product.service.ts';
 
 const defaultFormFields = {
   price: 0,
@@ -27,10 +27,8 @@ const UpdateProduct = ({
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(
-          `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${selectedUpdate[0]}`,
-        );
-        const { price, quantity } = response.data;
+        const response = await getProduct(selectedUpdate[0].toString());
+        const { price, quantity } = response;
 
         // Cập nhật giá trị mặc định cho formFields từ CSDL
         setFormFields({
@@ -48,7 +46,6 @@ const UpdateProduct = ({
   }, [selectedUpdate]);
 
   const { price, quantity } = formFields;
-  console.log(formFields);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -59,13 +56,8 @@ const UpdateProduct = ({
 
   const updateVideoGame = async (id: React.Key, updateDto: UpdateDto) => {
     try {
-      await axios.patch(
-        `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${id}`,
-        updateDto,
-      );
-
+      await updateProduct(id.toString(), updateDto);
       setIsUpdateOpen(false);
-
       toast.success('Video game updated successfully 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
@@ -87,9 +79,7 @@ const UpdateProduct = ({
     e.preventDefault();
 
     const _id = selectedUpdate[0];
-
     const videoGame: UpdateDto = { price, quantity };
-
     await updateVideoGame(_id, videoGame);
     setFormFields(defaultFormFields);
   };
@@ -101,6 +91,9 @@ const UpdateProduct = ({
         className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 pb-0 left-[25%] top-[25%]"
         onSubmitCapture={handleSubmit}
       >
+        <h1 className="text-2xl text-center font-semibold mb-6">
+          Cập nhật sản phẩm
+        </h1>
         <Form.Item label="Giá tiền">
           <Input
             required
@@ -121,21 +114,23 @@ const UpdateProduct = ({
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item className="flex items-center justify-between">
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="bg-blue-500 mr-[14rem]"
-          >
-            Gửi
-          </Button>
-          <Button
-            type="primary"
-            className="bg-red-500"
-            onClick={handleCloseBtn}
-          >
-            Đóng
-          </Button>
+        <Form.Item>
+          <Space className={'flex justify-between items-center'}>
+            <Button
+              type="primary"
+              className="bg-red-500 hover:!bg-red-400"
+              onClick={handleCloseBtn}
+            >
+              Đóng
+            </Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="bg-blue-500 w-[70px]"
+            >
+              Gửi
+            </Button>
+          </Space>
         </Form.Item>
       </Form>
       <ToastContainer />

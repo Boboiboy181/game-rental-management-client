@@ -1,13 +1,13 @@
 import { Button, Divider, Space, Typography } from 'antd';
 import Table from 'antd/es/table';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import { Product } from '../types/product.type';
 import { toast, ToastContainer } from 'react-toastify';
 import { formatPrice } from '../utils/format-price.function';
 import AddProduct from '../components/add-product.component';
 import UpdateProduct from '../components/update-video-game.component';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { deleteProduct, getProducts } from '../api/product.service.ts';
 
 const { Text } = Typography;
 
@@ -21,20 +21,15 @@ const ProductPage = () => {
 
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
-  useEffect(() => {
-    setNavigationKey('2');
-  }, []);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
     setSearchField(value);
   };
 
   useEffect(() => {
+    setNavigationKey('2');
     const fetchProducts = async () => {
-      const { data }: { data: Product[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
-      );
+      const data = await getProducts();
       setProducts(data);
     };
 
@@ -86,21 +81,30 @@ const ProductPage = () => {
       // Delete selected rows
       await Promise.all(
         selectedRowKeys.map(async (key) => {
-          await axios.delete(
-            `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${key}`,
-          );
+          await deleteProduct(key.toString());
         }),
       );
 
-      // Fetch updated products data
-      const { data }: { data: Product[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
-      );
+      toast.success('Xóa video game thành công 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
 
-      // Update products state and selectedRowKeys state
+      const data = await getProducts();
       setProducts(data);
       setSelectedRowKeys([]);
-    } catch (error) {
+    } catch (error: any) {
+      // if (error.response.status === 404) {
+      toast.error('Không thể xóa video game 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+      // return;
+      // }
       console.log('Error deleting rows:', error);
     }
   };
@@ -170,7 +174,10 @@ const ProductPage = () => {
         </Space>
       </div>
       {isAddOpen && (
-        <AddProduct setIsAddOpen={setIsAddOpen} productsNameList={productsNameList} />
+        <AddProduct
+          setIsAddOpen={setIsAddOpen}
+          productsNameList={productsNameList}
+        />
       )}
       {isUpdateOpen && (
         <UpdateProduct

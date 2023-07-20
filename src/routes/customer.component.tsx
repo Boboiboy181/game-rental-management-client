@@ -91,7 +91,6 @@ const CustomerPage = () => {
       const data = await getCustomers();
       setCustomers(data);
       setSelectedRowKeys([]);
-
       setSearchField('');
     } catch (error: any) {
       if (error.response.status === 404) {
@@ -103,7 +102,6 @@ const CustomerPage = () => {
         });
         return;
       }
-
       console.log('Error deleting rows:', error);
     }
   };
