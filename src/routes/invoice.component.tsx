@@ -8,6 +8,7 @@ import ShowData from '../components/page.component.tsx';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { deleteInvoice, getInvoices } from '../api/invoice.service.ts';
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const { Text } = Typography;
 
@@ -26,6 +27,7 @@ const InvoicePage = () => {
   const [filteredInvoice, setFilteredInvoice] = useState<Invoice[]>(invoices);
   const [searchField, setSearchField] = useState('');
   const { setNavigationKey } = useContext(NavigationKeyContexts);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setNavigationKey('7');
@@ -75,8 +77,12 @@ const InvoicePage = () => {
     {
       title: 'Thao tác',
       align: 'center',
-      render: () => (
-        <Button type="primary" className="bg-blue-600">
+      render: (_, record) => (
+        <Button
+          type="primary"
+          className="bg-blue-600"
+          onClick={() => handleDetailBtn(record.key)}
+        >
           Chi tiết
         </Button>
       ),
@@ -95,6 +101,10 @@ const InvoicePage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
     setSearchField(value);
+  };
+
+  const handleDetailBtn = (key: string) => {
+    navigate(`/invoices/${key}`);
   };
 
   const rowSelection = {
