@@ -104,7 +104,7 @@ const ReturnPage = () => {
 
   useEffect(() => {
     const newFilteredReturns = returnTickets.filter((returnTicket) => {
-      return returnTicket.customer.customerName
+      return returnTicket.returnCode
         .toLowerCase()
         .includes(searchField);
     });
