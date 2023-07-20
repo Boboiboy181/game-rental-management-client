@@ -104,7 +104,7 @@ const ReturnPage = () => {
 
   useEffect(() => {
     const newFilteredReturns = returnTickets.filter((returnTicket) => {
-      return returnTicket.customer.customerName
+      return returnTicket.returnCode
         .toLowerCase()
         .includes(searchField);
     });
@@ -167,8 +167,8 @@ const ReturnPage = () => {
           columns={columns}
           data={data}
           rowSelection={rowSelection}
-          placeHolder="Tìm kiếm khách hàng"
-          inputName="Tìm kiếm khách hàng"
+          placeHolder="Mã phiếu trả"
+          inputName="searchField"
           inputValue={searchField}
           handleChange={handleChange}
         />
