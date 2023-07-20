@@ -167,7 +167,7 @@ const ReturnPage = () => {
           columns={columns}
           data={data}
           rowSelection={rowSelection}
-          placeHolder="Tên khách hàng"
+          placeHolder="Mã phiếu trả"
           inputName="searchField"
           inputValue={searchField}
           handleChange={handleChange}

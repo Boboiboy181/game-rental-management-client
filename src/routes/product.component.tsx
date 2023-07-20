@@ -43,19 +43,19 @@ const ProductPage = () => {
 
   const columns = [
     {
-      title: 'Product Name',
+      title: 'Tên sản phẩm',
       dataIndex: 'productName',
     },
     {
-      title: 'Price',
+      title: 'Giá tiền',
       dataIndex: 'price',
     },
     {
-      title: 'Quantity',
+      title: 'Số lượng',
       dataIndex: 'quantity',
     },
     {
-      title: 'Release Date',
+      title: 'Ngày sản xuất',
       dataIndex: 'releaseDate',
     },
   ];
@@ -113,7 +113,7 @@ const ProductPage = () => {
 
   const handleUpdateBtn = () => {
     if (selectedRowKeys.length === 0 || selectedRowKeys.length > 1) {
-      toast.error('Please select only 1 video game to update 😞', {
+      toast.error('Vui lòng chỉ chọn 1 sản phẩm để cập nhật 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -128,17 +128,17 @@ const ProductPage = () => {
     <Fragment>
       <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
         <Space className="flex justify-between">
-          <Text className="text-2xl font-semibold">Video Games</Text>
+          <Text className="text-2xl font-semibold">Sản phẩm</Text>
           <div className="input-field">
             <input
               className="px-4"
               type="search"
-              placeholder="Search game"
+              placeholder="Tên sản phẩm"
               name="searchField"
               value={searchField}
               onChange={handleChange}
             />
-            <label htmlFor="searchfield">Search game</label>
+            <label htmlFor="searchfield">Tên sản phẩm</label>
           </div>
         </Space>
         <div className="relative">
