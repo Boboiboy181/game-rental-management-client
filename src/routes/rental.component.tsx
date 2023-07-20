@@ -1,6 +1,6 @@
 import { Button, Space, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Rental } from '../types/rental.type';
 import { formatPrice } from '../utils/format-price.function';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { delelteRental, getRentals } from '../api/rental.service';
 import ShowData from '../components/page.component';
 import { formatDate } from '../utils/format-date.function.ts';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { toast, ToastContainer } from 'react-toastify';
 
 type DataType = {
   key: string;
@@ -117,8 +118,28 @@ const RentalPage = () => {
     },
   };
 
+  const checkRentalStatus = () => {
+    return selectedRowKeys.some((key) => {
+      const rental = rentals.find((rental) => rental._id === key);
+      return (
+        rental?.returnState === 'RETURNED' ||
+        rental?.returnState === 'NOT_ENOUGH'
+      );
+    });
+  };
+
   const handleDeleteBtn = async () => {
     try {
+      // Check if any selected row has status of RETURNED or NOT_ENOUGH
+      if (checkRentalStatus()) {
+        toast.error('Không thể xóa phiếu thuê 😞', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 8000,
+          theme: 'colored',
+          pauseOnHover: true,
+        });
+        return;
+      }
       // Delete selected rows
       await Promise.all(
         selectedRowKeys.map(async (key) => {
@@ -148,29 +169,32 @@ const RentalPage = () => {
   };
 
   return (
-    <div
-      className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] 
+    <Fragment>
+      <div
+        className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%]
     translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl"
-    >
-      <ShowData
-        pageName="Phiếu thuê"
-        placeHolder="Tên khách hàng"
-        inputName="searchField"
-        inputValue={searchField}
-        handleChange={handleChange}
-        columns={columns}
-        data={data}
-        rowSelection={rowSelection}
-      />
-      <Space direction="horizontal" className="relative top-[-9%]">
-        <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
-          Thêm
-        </Button>
-        <Button danger type="primary" onClick={handleDeleteBtn}>
-          Xóa
-        </Button>
-      </Space>
-    </div>
+      >
+        <ShowData
+          pageName="Phiếu thuê"
+          placeHolder="Tên khách hàng"
+          inputName="searchField"
+          inputValue={searchField}
+          handleChange={handleChange}
+          columns={columns}
+          data={data}
+          rowSelection={rowSelection}
+        />
+        <Space direction="horizontal" className="relative top-[-9%]">
+          <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
+            Thêm
+          </Button>
+          <Button danger type="primary" onClick={handleDeleteBtn}>
+            Xóa
+          </Button>
+        </Space>
+      </div>
+      <ToastContainer />
+    </Fragment>
   );
 };
 
