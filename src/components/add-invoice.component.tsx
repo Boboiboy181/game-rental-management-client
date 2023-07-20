@@ -181,8 +181,6 @@ const AddInvoice = () => {
       voucherCode: voucher.voucherCode,
     };
 
-    console.log(createInvoiceDto);
-
     try {
       const respone = await createInvoice(createInvoiceDto);
       console.log(respone);
