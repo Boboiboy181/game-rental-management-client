@@ -1,18 +1,21 @@
 import { Button, Form, Input } from 'antd';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import { updateCustomer } from '../api/customer.service.ts';
 
 const defaultFormFields = {
   customerName: '',
   email: '',
-  phoneNumber:'',
+  phoneNumber: '',
+  address: '',
 };
 
 type UpdateDto = {
   customerName: string;
   email: string;
   phoneNumber: string;
+  address: string;
 };
 
 const UpdateCustomer = ({
@@ -28,15 +31,16 @@ const UpdateCustomer = ({
     const fetchCustomerData = async () => {
       try {
         const response = await axios.get(
-          `https://game-rental-management-app-yh3ve.ondigitalocean.app/customer/${selectedUpdate[0]}`
+          `https://game-rental-management-app-yh3ve.ondigitalocean.app/customer/${selectedUpdate[0]}`,
         );
-        const { customerName, email, phoneNumber } = response.data;
+        const { customerName, email, phoneNumber, address } = response.data;
 
         // Cập nhật giá trị mặc định cho formFields từ CSDL
         setFormFields({
           customerName,
           email,
           phoneNumber,
+          address,
         });
       } catch (error) {
         console.log(error);
@@ -48,7 +52,7 @@ const UpdateCustomer = ({
     }
   }, [selectedUpdate]);
 
-  const { customerName, email, phoneNumber } = formFields;
+  const { customerName, email, phoneNumber, address } = formFields;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -57,25 +61,19 @@ const UpdateCustomer = ({
 
   const handleCloseBtn = () => setIsUpdateOpen(false);
 
-  const UpdateCustomer = async (id: React.Key, updateDto: UpdateDto) => {
+  const UpdateCustomer = async (id: string, updateDto: UpdateDto) => {
     try {
-      const response = await axios.patch(
-        `https://game-rental-management-app-yh3ve.ondigitalocean.app/customer/${id}`,
-        updateDto,
-      );
-
-      console.log(response);
+      await updateCustomer(id, updateDto);
 
       setIsUpdateOpen(false);
-
-      toast.success('Customer info updated successfully 🥳', {
+      toast.success('Cập nhật thông tin thành công 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
         pauseOnHover: true,
       });
     } catch (error) {
-      toast.error('Failed to update customer info 😞', {
+      toast.error('Không thể cập nhật thông tin 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -88,9 +86,8 @@ const UpdateCustomer = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const _id = selectedUpdate[0];
-
-    const customer: UpdateDto = { customerName, email, phoneNumber };
+    const _id = selectedUpdate[0].toString();
+    const customer: UpdateDto = { customerName, email, phoneNumber, address };
 
     await UpdateCustomer(_id, customer);
     setFormFields(defaultFormFields);
@@ -103,7 +100,9 @@ const UpdateCustomer = ({
         className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 pb-0 left-[25%] top-[25%]"
         onSubmitCapture={handleSubmit}
       >
-        <h1 className="text-2xl font-semibold mb-4">Cập nhật thông tin khách hàng</h1>
+        <h1 className="text-2xl font-semibold mb-4">
+          Cập nhật thông tin khách hàng
+        </h1>
         <Form.Item label="Họ và tên">
           <Input
             required
@@ -131,6 +130,16 @@ const UpdateCustomer = ({
             placeholder="Nhập SDT"
             name="phoneNumber"
             value={phoneNumber}
+            onChange={handleChange}
+          />
+        </Form.Item>
+        <Form.Item label="Địa chỉ">
+          <Input
+            required
+            type="string"
+            placeholder="Nhập địa chỉ"
+            name="address"
+            value={address}
             onChange={handleChange}
           />
         </Form.Item>

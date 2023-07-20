@@ -3,10 +3,10 @@ import Table from 'antd/es/table';
 import { toast, ToastContainer } from 'react-toastify';
 import UpdateCustomer from '../components/update-customer.component';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import AddCustomer from '../components/add-customer.component';
 import { Customer } from '../types/customer.type';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { deleteCustomer, getCustomers } from '../api/customer.service.ts';
 
 const { Text } = Typography;
 
@@ -20,18 +20,13 @@ const CustomerPage = () => {
 
   useEffect(() => {
     setNavigationKey('1');
-  }, []);
-
-  useEffect(() => {
     const fetchCustomers = async () => {
-      const { data }: { data: Customer[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/customer',
-      );
+      const data = await getCustomers();
       setCustomers(data);
     };
 
     fetchCustomers();
-  }, []);
+  }, [isAddOpen, isUpdateOpen]);
 
   const columns = [
     {
@@ -80,26 +75,35 @@ const CustomerPage = () => {
 
   const handleDeleteBtn = async () => {
     try {
-      // Delete selected rows
       await Promise.all(
         selectedRowKeys.map(async (key) => {
-          await axios.delete(
-            `https://game-rental-management-app-yh3ve.ondigitalocean.app/customer/${key}`,
-          );
+          await deleteCustomer(key as string);
         }),
       );
 
-      // Fetch updated products data
-      const { data }: { data: Customer[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/customer',
-      );
-      // Update customer state and selectedRowKeys state
+      toast.success('Xóa khách hàng thành công 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+
+      const data = await getCustomers();
       setCustomers(data);
       setSelectedRowKeys([]);
 
-      // Refresh the page by updating the searchField state
       setSearchField('');
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        toast.error('Không thể xóa khách hàng 😞', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 8000,
+          theme: 'colored',
+          pauseOnHover: true,
+        });
+        return;
+      }
+
       console.log('Error deleting rows:', error);
     }
   };
