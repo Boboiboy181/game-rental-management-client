@@ -1,5 +1,5 @@
 import { Button, Divider, Space, Typography } from 'antd';
-import Table from 'antd/es/table';
+import Table, { ColumnsType } from 'antd/es/table';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Product } from '../types/product.type';
 import { toast, ToastContainer } from 'react-toastify';
@@ -10,6 +10,14 @@ import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx'
 import { deleteProduct, getProducts } from '../api/product.service.ts';
 
 const { Text } = Typography;
+
+type DataType = {
+  key: string;
+  productName: string;
+  price: string;
+  quantity: number;
+  releaseDate: string;
+}
 
 const ProductPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -36,22 +44,24 @@ const ProductPage = () => {
     fetchProducts();
   }, [isAddOpen, isUpdateOpen]);
 
-  const columns = [
+  const columns: ColumnsType<DataType> = [
     {
-      title: 'Product Name',
+      title: 'Tên sản phẩm',
       dataIndex: 'productName',
     },
     {
-      title: 'Price',
+      title: 'Giá tiền',
       dataIndex: 'price',
     },
     {
-      title: 'Quantity',
+      title: 'Số lượng',
       dataIndex: 'quantity',
+      align: 'center',
     },
     {
-      title: 'Release Date',
+      title: 'Ngày sản xuất',
       dataIndex: 'releaseDate',
+      align: 'center',
     },
   ];
 
@@ -117,7 +127,7 @@ const ProductPage = () => {
 
   const handleUpdateBtn = () => {
     if (selectedRowKeys.length === 0 || selectedRowKeys.length > 1) {
-      toast.error('Please select only 1 video game to update 😞', {
+      toast.error('Vui lòng chỉ chọn 1 sản phẩm để cập nhật 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -132,17 +142,17 @@ const ProductPage = () => {
     <Fragment>
       <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
         <Space className="flex justify-between">
-          <Text className="text-2xl font-semibold">Video Games</Text>
+          <Text className="text-2xl font-semibold">Sản phẩm</Text>
           <div className="input-field">
             <input
               className="px-4"
               type="search"
-              placeholder="Search game"
+              placeholder="Tên sản phẩm"
               name="searchField"
               value={searchField}
               onChange={handleChange}
             />
-            <label htmlFor="searchfield">Search game</label>
+            <label htmlFor="searchfield">Tên sản phẩm</label>
           </div>
         </Space>
         <div className="relative">

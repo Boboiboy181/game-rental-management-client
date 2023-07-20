@@ -1,21 +1,20 @@
-import { Button, Divider, Space, Typography } from 'antd';
-import Table from 'antd/es/table';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
+import { Button, Space } from 'antd';
 import { toast, ToastContainer } from 'react-toastify';
 import UpdateCustomer from '../components/update-customer.component';
-import React, { Fragment, useContext, useEffect, useState } from 'react';
 import AddCustomer from '../components/add-customer.component';
 import { Customer } from '../types/customer.type';
+import ShowData from '../components/page.component';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { deleteCustomer, getCustomers } from '../api/customer.service.ts';
-
-const { Text } = Typography;
 
 const CustomerPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
-
+  const [searchField, setSearchField] = useState('');
+  const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>(customers);
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
@@ -28,9 +27,16 @@ const CustomerPage = () => {
     fetchCustomers();
   }, [isAddOpen, isUpdateOpen]);
 
+  useEffect(() => {
+    const newFilteredCustomers = customers.filter((customer) => {
+      return customer.customerName.toLowerCase().includes(searchField);
+    });
+    setFilteredCustomers(newFilteredCustomers);
+  }, [customers, searchField]);
+
   const columns = [
     {
-      title: 'Customer Name',
+      title: 'Tên khách hàng',
       dataIndex: 'customerName',
     },
     {
@@ -38,20 +44,21 @@ const CustomerPage = () => {
       dataIndex: 'email',
     },
     {
-      title: 'Phone Number',
+      title: 'Số điện thoại',
       dataIndex: 'phoneNumber',
     },
     {
-      title: 'Address',
+      title: 'Địa chỉ',
       dataIndex: 'address',
     },
     {
-      title: 'Point',
+      title: 'Điểm tích lũy',
       dataIndex: 'point',
+      align: 'center',
     },
   ];
 
-  const data = customers.map((customer) => ({
+  const data = filteredCustomers.map((customer) => ({
     key: customer._id,
     customerName: customer.customerName,
     email: customer.email,
@@ -60,10 +67,8 @@ const CustomerPage = () => {
     point: customer.point,
   }));
 
-  const [searchField, setSearchField] = useState('');
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toLocaleLowerCase();
+    const value = e.target.value.toLowerCase();
     setSearchField(value);
   };
 
@@ -126,32 +131,16 @@ const CustomerPage = () => {
   return (
     <Fragment>
       <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
-        <Space className="flex justify-between">
-          <Text className="text-2xl font-semibold">Customer</Text>
-          <div className="input-field">
-            <input
-              className="px-4"
-              type="search"
-              placeholder="Search customer"
-              name="searchField"
-              value={searchField}
-              onChange={handleChange}
-            />
-            <label htmlFor="searchfield">Search customer</label>
-          </div>
-        </Space>
-        <div>
-          <Divider />
-          <Table
-            rowSelection={{
-              type: 'checkbox',
-              ...rowSelection,
-            }}
-            columns={columns}
-            dataSource={data}
-            pagination={{ pageSize: 5 }}
-          />
-        </div>
+        <ShowData
+          pageName="Khách hàng"
+          placeHolder="Tên khách hàng"
+          inputName="Tìm khách hàng"
+          inputValue={searchField}
+          handleChange={handleChange}
+          columns={columns}
+          data={data}
+          rowSelection={rowSelection}
+        />
         <Space direction="horizontal" className={'relative top-[-9%]'}>
           <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
             Thêm
