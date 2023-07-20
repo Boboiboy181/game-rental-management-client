@@ -1,3 +1,5 @@
+import { Voucher } from './voucher.type.ts';
+
 export type Invoice = {
   _id: string;
   invoiceID: string;
@@ -21,8 +23,12 @@ export type Invoice = {
       _id: string;
     },
   ];
-  voucher: string[];
+  voucher: Voucher;
   fine: number;
   finalPrice: number;
-  return: string;
+  return: {
+    _id: string;
+    returnCode: string;
+  };
+  createdAt: string;
 };

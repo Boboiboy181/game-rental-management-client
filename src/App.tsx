@@ -19,6 +19,7 @@ import RentalPackagePage from './routes/rental-package.component';
 import RentalPackageDetail from './components/rental-package-detail.component';
 import InvoicePage from './routes/invoice.component.tsx';
 import AddInvoice from './components/add-invoice.component.tsx';
+import InvoiceDetail from './components/invoice-detail.component.tsx';
 
 const App = () => {
   useEffect(() => {
@@ -49,6 +50,7 @@ const App = () => {
           <Route path="returns/create/:rentalID?" element={<AddReturn />} />
           <Route path="invoices" element={<InvoicePage />} />
           <Route path="invoices/create/:returnID?" element={<AddInvoice />} />
+          <Route path="invoices/:invoiceID" element={<InvoiceDetail />} />
         </Route>
       </Routes>
     </ConfigProvider>
