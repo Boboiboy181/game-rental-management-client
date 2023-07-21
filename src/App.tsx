@@ -20,6 +20,7 @@ import RentalPackageDetail from './components/rental-package-detail.component';
 import InvoicePage from './routes/invoice.component.tsx';
 import AddInvoice from './components/add-invoice.component.tsx';
 import InvoiceDetail from './components/invoice-detail.component.tsx';
+import AuthPage from './routes/auth.component.tsx';
 
 const App = () => {
   useEffect(() => {
@@ -31,6 +32,7 @@ const App = () => {
     <ConfigProvider>
       <Routes>
         <Route path="/" element={<MainLayout />}>
+          <Route path="auth/login" element={<AuthPage />} />
           <Route index element={<Home />} />
           <Route path="customers" element={<CustomerPage />} />
           <Route path="video-games" element={<ProductPage />} />

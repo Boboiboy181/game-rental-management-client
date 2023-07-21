@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { Space, Typography, Divider, Table } from 'antd';
+import Input from './input.component';
 const { Text } = Typography;
 
 type ShowDataProps = {
@@ -28,17 +29,12 @@ const ShowData = (props: ShowDataProps) => {
     <Fragment>
       <Space className="flex justify-between">
         <Text className="text-3xl font-semibold">{pageName}</Text>
-        <div className="input-field">
-          <input
-            className="px-4"
-            type="search"
-            placeholder={`${placeHolder}`}
-            name={`${inputName}`}
-            value={inputValue}
-            onChange={handleChange}
-          />
-          <label htmlFor={`${inputName}`}>{placeHolder}</label>
-        </div>
+        <Input
+          placeHolder={placeHolder}
+          inputName={inputName}
+          inputValue={inputValue}
+          handleChange={handleChange}
+        />
       </Space>
       <div>
         <Divider />
