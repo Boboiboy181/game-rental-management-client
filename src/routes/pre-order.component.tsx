@@ -1,6 +1,6 @@
 import { Button, Space } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Fragment,useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PreOrder } from '../types/pre-order.type';
 import { formatDate } from '../utils/format-date.function';
@@ -8,7 +8,8 @@ import { formatPrice } from '../utils/format-price.function';
 import { deletePreOrder, getPreOrders } from '../api/pre-order.service';
 import ShowData from '../components/page.component';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
-
+import { ToastContainer } from 'react-toastify';
+import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
 type DataType = {
   key: string;
   customerName: string;
@@ -23,7 +24,7 @@ const PreOrderPage = () => {
     useState<PreOrder[]>(preOrders);
   const [searchField, setSearchField] = useState('');
   const navigate = useNavigate();
-
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
@@ -88,10 +89,13 @@ const PreOrderPage = () => {
       setSelectedRowKeys(selectedKeys);
     },
   };
-
-  const handleDeleteBtn = async () => {
+  const handleConfirmDeleteOpen = () => {
+    setIsConfirmDeleteOpen(true);
+  };
+  const handleConfirmDelete = async () => {
     try {
       // Delete selected rows
+      setIsConfirmDeleteOpen(false);
       await Promise.all(
         selectedRowKeys.map(async (key) => {
           await deletePreOrder(key);
@@ -115,6 +119,7 @@ const PreOrderPage = () => {
   };
 
   return (
+    <Fragment>
     <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <ShowData
         pageName="Phiếu đặt trước"
@@ -127,11 +132,21 @@ const PreOrderPage = () => {
         data={data}
       />
       <Space direction="horizontal" className="relative top-[-9%]">
-        <Button danger type="primary" onClick={handleDeleteBtn}>
+        <Button danger type="primary" onClick={handleConfirmDeleteOpen}>
           Xóa
         </Button>
       </Space>
     </div>
+    {
+        isConfirmDeleteOpen && (
+          <DeleteConfirmationDialog
+            onConfirm={handleConfirmDelete}
+            setOpenConfirmation={setIsConfirmDeleteOpen}
+          />
+        )
+      }
+    <ToastContainer />
+    </Fragment>
   );
 };
 

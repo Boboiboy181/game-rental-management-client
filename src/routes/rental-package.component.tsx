@@ -13,6 +13,7 @@ import {
   getRentalPackages,
 } from '../api/rental-package.service.ts';
 import ShowData from '../components/page.component.tsx';
+import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
 
 const { Text } = Typography;
 
@@ -34,7 +35,7 @@ const RentalPackagePage = () => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const navigate = useNavigate();
-
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
@@ -121,9 +122,14 @@ const RentalPackagePage = () => {
 
   const rentalPackagesNameList = rentalPackages.map((pkg) => pkg.packageName);
 
-  const handleDeleteBtn = async () => {
+  const handleConfirmDeleteOpen = () => {
+    setIsConfirmDeleteOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
       // Delete selected rows
+      setIsConfirmDeleteOpen(false);
       await Promise.all(
         selectedRowKeys.map(async (key) => {
           await deleteRentalPackage(key.toString());
@@ -179,7 +185,7 @@ const RentalPackagePage = () => {
           <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
             Thêm
           </Button>
-          <Button danger type="primary" onClick={handleDeleteBtn}>
+          <Button danger type="primary" onClick={handleConfirmDeleteOpen}>
             Xóa
           </Button>
           <Button
@@ -203,6 +209,14 @@ const RentalPackagePage = () => {
           selectedUpdate={selectedRowKeys}
         />
       )}
+      {
+        isConfirmDeleteOpen && (
+          <DeleteConfirmationDialog
+            onConfirm={handleConfirmDelete}
+            setOpenConfirmation={setIsConfirmDeleteOpen}
+          />
+        )
+      }
       <ToastContainer />
     </Fragment>
   );

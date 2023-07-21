@@ -9,6 +9,7 @@ import ShowData from '../components/page.component';
 import { formatDate } from '../utils/format-date.function.ts';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { toast, ToastContainer } from 'react-toastify';
+import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
 
 type DataType = {
   key: string;
@@ -26,7 +27,7 @@ const RentalPage = () => {
   const [filteredRentals, setFilteredRentals] = useState<Rental[]>(rentals);
   const [searchField, setSearchField] = useState('');
   const navigate = useNavigate();
-
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
@@ -126,9 +127,13 @@ const RentalPage = () => {
       );
     });
   };
-
-  const handleDeleteBtn = async () => {
+  const handleConfirmDeleteOpen = () => {
+    setIsConfirmDeleteOpen(true);
+  };
+  const handleConfirmDelete = async () => {
+    
     try {
+      setIsConfirmDeleteOpen(false);
       // Check if any selected row has status of RETURNED or NOT_ENOUGH
       if (checkRentalStatus()) {
         toast.error('Không thể xóa phiếu thuê 😞', {
@@ -201,12 +206,20 @@ const RentalPage = () => {
           <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
             Thêm
           </Button>
-          <Button danger type="primary" onClick={handleDeleteBtn}>
+          <Button danger type="primary" onClick={handleConfirmDeleteOpen}>
             Xóa
           </Button>
         </Space>
       </div>
       <ToastContainer />
+      {
+        isConfirmDeleteOpen && (
+          <DeleteConfirmationDialog
+            onConfirm={handleConfirmDelete}
+            setOpenConfirmation={setIsConfirmDeleteOpen}
+          />
+        )
+      }
     </Fragment>
   );
 };

@@ -8,6 +8,7 @@ import AddProduct from '../components/add-product.component';
 import UpdateProduct from '../components/update-video-game.component';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { deleteProduct, getProducts } from '../api/product.service.ts';
+import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
 
 const { Text } = Typography;
 
@@ -26,6 +27,7 @@ const ProductPage = () => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const [searchField, setSearchField] = useState('');
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
 
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
@@ -86,9 +88,14 @@ const ProductPage = () => {
     },
   };
 
-  const handleDeleteBtn = async () => {
+  const handleConfirmDeleteOpen = () => {
+    setIsConfirmDeleteOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
       // Delete selected rows
+      setIsConfirmDeleteOpen(false);
       await Promise.all(
         selectedRowKeys.map(async (key) => {
           await deleteProduct(key.toString());
@@ -171,7 +178,7 @@ const ProductPage = () => {
           <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
             Thêm
           </Button>
-          <Button danger type="primary" onClick={handleDeleteBtn}>
+          <Button danger type="primary" onClick={handleConfirmDeleteOpen}>
             Xóa
           </Button>
           <Button
@@ -196,6 +203,14 @@ const ProductPage = () => {
           setProducts={setProducts}
         />
       )}
+      {
+        isConfirmDeleteOpen && (
+          <DeleteConfirmationDialog
+            onConfirm={handleConfirmDelete}
+            setOpenConfirmation={setIsConfirmDeleteOpen}
+          />
+        )
+      }
       <ToastContainer />
     </Fragment>
   );
