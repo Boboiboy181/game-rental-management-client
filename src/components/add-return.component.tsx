@@ -45,9 +45,6 @@ const AddReturn = () => {
 
   useEffect(() => {
     setNavigationKey('6');
-  }, []);
-
-  useEffect(() => {
     const fetchRental = async () => {
       try {
         const data: Rental = await getRentalById(rentalID);
@@ -123,15 +120,6 @@ const AddReturn = () => {
       title: 'Số lượng',
       dataIndex: 'preOrderQuantity',
       align: 'center',
-      // render: (_, record) => (
-      //   <Input
-      //     type="number"
-      //     min={1}
-      //     max={record.preOrderQuantity}
-      //     defaultValue={record.preOrderQuantity}
-      //     className="w-[65px]"
-      //   />
-      // ),
     },
     {
       title: 'Số ngày thuê',

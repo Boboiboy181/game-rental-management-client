@@ -2,13 +2,13 @@ import { Button, Divider, Space, Spin, Typography } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Invoice } from '../types/invoice.type';
-import axios from 'axios';
 import Table, { ColumnsType } from 'antd/es/table';
 import { formatDate } from '../utils/format-date.function';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts';
 import { formatPrice } from '../utils/format-price.function.ts';
 import { calculatePrice } from '../utils/caculate-price.function.ts';
 import { Voucher } from '../types/voucher.type.ts';
+import { getInvoice } from '../api/invoice.service.ts';
 
 const { Text } = Typography;
 
@@ -34,9 +34,7 @@ const InvoiceDetail = () => {
   useEffect(() => {
     setNavigationKey('7');
     const fetchInvoice = async () => {
-      const { data }: { data: Invoice } = await axios.get(
-        `https://game-rental-management-app-yh3ve.ondigitalocean.app/invoice/${invoiceID}`,
-      );
+      const data = await getInvoice(invoiceID);
       setInvoice(data);
       setIsLoading(false);
     };

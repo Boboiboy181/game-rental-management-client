@@ -5,6 +5,7 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
   BookOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, Typography } from 'antd';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
@@ -16,7 +17,7 @@ const { Header, Sider } = Layout;
 const { Text } = Typography;
 
 const MainLayout: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const { navigationKey, setNavigationKey } = useContext(NavigationKeyContexts);
   const { user } = useContext(UserContext);
 
@@ -169,7 +170,13 @@ const MainLayout: React.FC = () => {
               className="hover:!bg-red-600 hover:!border-red-600"
               onClick={handleLogOut}
             >
-              <span className="text-white">Đăng xuất</span>
+              {collapsed ? (
+                <div>
+                  <LogoutOutlined />
+                </div>
+              ) : (
+                <span className="text-white">Đăng xuất</span>
+              )}
             </Button>
           </div>
         )}

@@ -58,14 +58,14 @@ const UpdateProduct = ({
     try {
       await updateProduct(id.toString(), updateDto);
       setIsUpdateOpen(false);
-      toast.success('Video game updated successfully 🥳', {
+      toast.success('Cập nhật video game thành công 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
         pauseOnHover: true,
       });
     } catch (error) {
-      toast.error('Failed to update video game 😞', {
+      toast.error('Không thể cập nhật video game 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',

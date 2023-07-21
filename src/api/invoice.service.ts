@@ -17,3 +17,8 @@ export const getInvoices = async (): Promise<Invoice[]> => {
 export const deleteInvoice = async (id: string): Promise<void> => {
   await api.delete(`invoice/${id}`);
 };
+
+export const getInvoice = async (id: string | undefined): Promise<Invoice> => {
+  const { data }: { data: Invoice } = await api.get(`invoice/${id}`);
+  return data;
+};

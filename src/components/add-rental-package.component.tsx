@@ -1,7 +1,7 @@
 import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { useState } from 'react';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { createRentalPackage } from '../api/rental-package.service';
 
 const defaultFormFields = {
   packageName: '',
@@ -35,10 +35,7 @@ const AddRentalPackage = ({
 
   const postRentalPackage = async (data: any) => {
     try {
-      await axios.post(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package',
-        data,
-      );
+      await createRentalPackage(data);
       toast.success('Tạo gói thuê thành công 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
@@ -105,6 +102,7 @@ const AddRentalPackage = ({
         <Form.Item label="Số lượng Games">
           <Input
             required
+            min={0}
             type="number"
             placeholder="Nhập số lượng Games"
             name="numberOfGames"
@@ -115,6 +113,7 @@ const AddRentalPackage = ({
         <Form.Item label="Giá thuê">
           <Input
             required
+            min={0}
             type="number"
             placeholder="Nhập giá thuê"
             name="price"

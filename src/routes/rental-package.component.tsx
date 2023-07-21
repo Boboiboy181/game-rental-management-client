@@ -39,9 +39,6 @@ const RentalPackagePage = () => {
 
   useEffect(() => {
     setNavigationKey('3');
-  }, []);
-
-  useEffect(() => {
     const fetchRentalPackages = async () => {
       try {
         const response = await getRentalPackages();
@@ -52,7 +49,7 @@ const RentalPackagePage = () => {
     };
 
     fetchRentalPackages();
-  }, []);
+  }, [isAddOpen, isUpdateOpen]);
 
   useEffect(() => {
     const newFilteredRentalPackages = rentalPackages.filter((pkg) => {

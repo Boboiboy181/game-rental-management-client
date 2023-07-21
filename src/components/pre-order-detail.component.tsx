@@ -30,10 +30,7 @@ const PreOrderDetail = () => {
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
-    setNavigationKey('3');
-  }, []);
-
-  useEffect(() => {
+    setNavigationKey('4');
     const fetchPreOrder = async () => {
       const preOrderData = await getPreOrder(preOrderID);
       setPreOrder(preOrderData);
@@ -120,7 +117,12 @@ const PreOrderDetail = () => {
   return (
     <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex flex-col items-start">
-        <Text className="text-2xl font-semibold">Phiếu đặt trước</Text>
+        <Text className="text-3xl font-semibold">
+          Phiếu đặt trước{' '}
+          <span className={'text-gray-400 font-light ml-1'}>
+            #{preOrder.preOrderCode}
+          </span>
+        </Text>
         <p className="text-xs text-black/40">
           Ngày lập phiếu {formatDate(preOrder.createdAt.toString())}
         </p>
@@ -146,14 +148,15 @@ const PreOrderDetail = () => {
       <div className="flex justify-between items-center">
         <Space direction="horizontal" className="relative top-[-9%]">
           <Button
-            className="bg-blue-500"
+            className="shadow-2xl"
+            danger
             type="primary"
             onClick={handleCloseDetailBtn}
           >
             Đóng
           </Button>
           <Button
-            className="bg-green-600"
+            className="bg-green-600 hover:!bg-green-500"
             type="primary"
             onClick={() => handleCreateBtn(preOrderID)}
           >

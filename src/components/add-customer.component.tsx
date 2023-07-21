@@ -46,8 +46,6 @@ const AddCustomer = ({
     }
   };
 
-  console.log(customerName, email, phoneNumber, address);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 

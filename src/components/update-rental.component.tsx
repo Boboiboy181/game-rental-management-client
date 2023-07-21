@@ -1,13 +1,12 @@
 import { Button, Divider, Input, Space, Spin, Typography } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import { formatDate } from '../utils/format-date.function';
 import Table, { ColumnsType } from 'antd/es/table';
 import { formatPrice } from '../utils/format-price.function';
 import { calculatePrice } from '../utils/caculate-price.function';
 import { Rental } from '../types/rental.type';
-import { updateRental } from '../api/rental.service';
+import { getRentalById, updateRental } from '../api/rental.service';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
@@ -35,9 +34,7 @@ const UpdateRental = () => {
     setNavigationKey('5');
 
     const fetchRental = async () => {
-      const { data }: { data: Rental } = await axios.get(
-        `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental/${rentalID}`,
-      );
+      const data = await getRentalById(rentalID);
       setRental(data);
       setDeposit(data.deposit);
       setLoading(false);
@@ -113,12 +110,9 @@ const UpdateRental = () => {
     setDeposit(Number(value));
   };
 
-  console.log(deposit);
-
   const handleSaveReturnBtn = async () => {
     try {
-      const respone = await updateRental(rentalID, { deposit: deposit });
-      console.log(respone);
+      await updateRental(rentalID, { deposit: deposit });
     } catch (error) {
       console.log(error);
     }

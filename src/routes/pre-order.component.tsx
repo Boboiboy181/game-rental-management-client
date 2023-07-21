@@ -11,6 +11,7 @@ import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx'
 
 type DataType = {
   key: string;
+  preOrderCode: string;
   customerName: string;
   estimatedPrice: string;
   createdAt: string;
@@ -50,16 +51,22 @@ const PreOrderPage = () => {
 
   const columns: ColumnsType<DataType> = [
     {
+      title: 'Mã đặt trước',
+      dataIndex: 'preOrderCode',
+    },
+    {
       title: 'Tên khách hàng',
       dataIndex: 'customerName',
     },
     {
       title: 'Giá ước tính',
       dataIndex: 'estimatedPrice',
+      align: 'center',
     },
     {
       title: 'Ngày đặt',
       dataIndex: 'createdAt',
+      align: 'center',
     },
     {
       title: 'Thao tác',
@@ -78,6 +85,7 @@ const PreOrderPage = () => {
 
   const data = filteredPreorders.map((preOrder) => ({
     key: preOrder._id,
+    preOrderCode: preOrder.preOrderCode,
     customerName: preOrder.customer.customerName,
     estimatedPrice: formatPrice.format(preOrder.estimatedPrice),
     createdAt: formatDate(preOrder.createdAt.toString()),
