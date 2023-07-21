@@ -7,6 +7,7 @@ import { Customer } from '../types/customer.type';
 import ShowData from '../components/page.component';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { deleteCustomer, getCustomers } from '../api/customer.service.ts';
+import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
 
 const CustomerPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -15,6 +16,7 @@ const CustomerPage = () => {
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const [searchField, setSearchField] = useState('');
   const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>(customers);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
 
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
@@ -78,8 +80,12 @@ const CustomerPage = () => {
       setSelectedRowKeys(selectedKeys);
     },
   };
+  const handleConfirmDeleteOpen = () => {
+    setIsConfirmDeleteOpen(true);
+  };
 
-  const handleDeleteBtn = async () => {
+  // Hàm xác nhận xóa khi người dùng nhấn nút "OK" trong hộp thoại xác nhận
+  const handleConfirmDelete = async () => {
     try {
       await Promise.all(
         selectedRowKeys.map(async (key) => {
@@ -111,6 +117,12 @@ const CustomerPage = () => {
       console.log('Error deleting rows:', error);
     }
   };
+
+  // Hàm hủy bỏ xóa khi người dùng nhấn nút "CANCEL" trong hộp thoại xác nhận
+  const handleCancelDelete = () => {
+    setIsConfirmDeleteOpen(false);
+  };
+
 
   const handleAddBtn = () => {
     setIsAddOpen(true);
@@ -146,7 +158,7 @@ const CustomerPage = () => {
           <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
             Thêm
           </Button>
-          <Button danger type="primary" onClick={handleDeleteBtn}>
+          <Button danger type="primary" onClick={handleConfirmDeleteOpen}>
             Xóa
           </Button>
           <Button
@@ -165,6 +177,12 @@ const CustomerPage = () => {
         />
       )}
       {isAddOpen && <AddCustomer setIsAddOpen={setIsAddOpen} />}
+      <DeleteConfirmationDialog
+        isVisible={isConfirmDeleteOpen}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        // Điền tên sản phẩm cần xóa vào đây
+      />
       <ToastContainer />
     </Fragment>
   );
