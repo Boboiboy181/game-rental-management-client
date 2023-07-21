@@ -3,6 +3,7 @@ import { PreOrder } from '../types/pre-order.type';
 import { CartContext } from '../contexts/cart.context';
 import { toast, ToastContainer } from 'react-toastify';
 import api from '../api/axios.config';
+import { LoadingContext } from '../contexts/loading.context';
 
 type FormFields = {
   email: string;
@@ -19,7 +20,7 @@ const defaultFormFields: FormFields = {
 const ContactInfo = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { cartItems } = useContext(CartContext);
-  const [isLoading, setIsLoading] = useState(false);
+  const { setIsLoading } = useContext(LoadingContext);
   const { email, customerName, phoneNumber } = formFields;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,6 +37,7 @@ const ContactInfo = () => {
 
   const postPreOrder = async (preOrder: PreOrder) => {
     try {
+      setIsLoading(true);
       const response = await api.post('/pre-order', preOrder);
       console.log(response);
       toast.success('Pre-order created successfully 🥳', {
@@ -45,6 +47,7 @@ const ContactInfo = () => {
         pauseOnHover: true,
       });
     } catch (error) {
+      setIsLoading(false);
       toast.error('Failed to create a pre-order 😞', {
         position: toast.POSITION.BOTTOM_LEFT,
         autoClose: 8000,
@@ -54,7 +57,7 @@ const ContactInfo = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const preOrder: PreOrder = {
@@ -64,7 +67,8 @@ const ContactInfo = () => {
       customerName,
       rentedGames: preOrderItems,
     };
-    postPreOrder(preOrder);
+    await postPreOrder(preOrder);
+    setIsLoading(false);
     setFormFields(defaultFormFields);
   };
 

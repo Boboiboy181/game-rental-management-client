@@ -3,9 +3,11 @@ import ContactInfo from '../components/pre-order-info.component';
 import OrderSummary from '../components/pre-order-summary.component';
 import { CartContext } from '../contexts/cart.context';
 import { useNavigate } from 'react-router-dom';
+import { LoadingContext } from '../contexts/loading.context';
 
 const Checkout = () => {
   const { cartItems } = useContext(CartContext);
+  const { isLoading } = useContext(LoadingContext);
   const navigate = useNavigate();
 
   const handleBackToShop = () => navigate('/');
@@ -38,6 +40,11 @@ const Checkout = () => {
         <ContactInfo />
         <OrderSummary />
       </div>
+      {isLoading && (
+        <div className="absolute top-0 left-0 w-full h-full bg-white opacity-70 flex items-center justify-center text-black">
+          Loading...
+        </div>
+      )}
     </div>
   );
 };

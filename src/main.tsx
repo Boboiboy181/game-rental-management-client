@@ -6,15 +6,18 @@ import { BrowserRouter } from 'react-router-dom';
 import { CartProvider } from './contexts/cart.context.tsx';
 import { SearchProvider } from './contexts/search.context.tsx';
 import { UserProvider } from './contexts/user.context.tsx';
+import { LoadingProvider } from './contexts/loading.context.tsx';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
       <UserProvider>
         <CartProvider>
-          <SearchProvider>
-            <App />
-          </SearchProvider>
+          <LoadingProvider>
+            <SearchProvider>
+              <App />
+            </SearchProvider>
+          </LoadingProvider>
         </CartProvider>
       </UserProvider>
     </BrowserRouter>
