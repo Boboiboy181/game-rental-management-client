@@ -10,7 +10,6 @@ import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx'
 import { deleteProduct, getProducts } from '../api/product.service.ts';
 import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
 
-const { Text } = Typography;
 import ShowData from '../components/page.component.tsx';
 
 type DataType = {
@@ -188,14 +187,12 @@ const ProductPage = () => {
           setProducts={setProducts}
         />
       )}
-      {
-        isConfirmDeleteOpen && (
-          <DeleteConfirmationDialog
-            onConfirm={handleConfirmDelete}
-            setOpenConfirmation={setIsConfirmDeleteOpen}
-          />
-        )
-      }
+      {isConfirmDeleteOpen && (
+        <DeleteConfirmationDialog
+          onConfirm={handleConfirmDelete}
+          setOpenConfirmation={setIsConfirmDeleteOpen}
+        />
+      )}
       <ToastContainer />
     </Fragment>
   );

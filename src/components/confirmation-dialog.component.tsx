@@ -19,9 +19,9 @@ const DeleteConfirmationDialog = ({
     <div className="fixed w-full h-full">
       <div
         className="absolute flex flex-col justify-between rounded-lg bg-white
-        mt-6 p-6 left-[28%] top-[30%] shadow-[0px_50px_60px_5px_rgba(0,0,0,0.3)]"
+        mt-6 p-6 left-[32%] top-[30%] shadow-[0px_50px_60px_5px_rgba(0,0,0,0.3)]"
       >
-        <h1 className="text-2xl  text-center font-semibold mb-6">
+        <h1 className="text-2xl text-center font-semibold mb-6">
           Xác nhận xóa
         </h1>
         <Text className=" text-center mb-6 text-xl">

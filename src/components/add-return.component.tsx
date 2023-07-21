@@ -253,7 +253,7 @@ const AddReturn = () => {
               >
                 Xác nhận phiếu trả
               </Button>
-              {returnGames.length === 0 && (
+              {returnGames.length < returnGamesBackup.length && (
                 <Button
                   className="bg-blue-600 hover:!bg-blue-500"
                   type="primary"
