@@ -179,7 +179,7 @@ const ReturnPage = () => {
       setReturnTickets(returnList);
       setSelectedRowKeys([]);
     } catch (error) {
-      toast.success('Không thể xóa phiếu trả', {
+      toast.success('Không thể xóa phiếu trả 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',

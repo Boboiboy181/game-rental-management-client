@@ -1,8 +1,7 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
-import { updateCustomer } from '../api/customer.service.ts';
+import { getCustomer, updateCustomer } from '../api/customer.service.ts';
 
 const defaultFormFields = {
   customerName: '',
@@ -30,10 +29,8 @@ const UpdateCustomer = ({
   useEffect(() => {
     const fetchCustomerData = async () => {
       try {
-        const response = await axios.get(
-          `https://game-rental-management-app-yh3ve.ondigitalocean.app/customer/${selectedUpdate[0]}`,
-        );
-        const { customerName, email, phoneNumber, address } = response.data;
+        const response = await getCustomer(selectedUpdate[0].toString());
+        const { customerName, email, phoneNumber, address } = response;
 
         // Cập nhật giá trị mặc định cho formFields từ CSDL
         setFormFields({
@@ -143,21 +140,23 @@ const UpdateCustomer = ({
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item className="flex items-center justify-between">
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="bg-blue-500 mr-[14rem]"
-          >
-            Gửi
-          </Button>
-          <Button
-            type="primary"
-            className="bg-red-500"
-            onClick={handleCloseBtn}
-          >
-            Đóng
-          </Button>
+        <Form.Item>
+          <Space className="flex items-center justify-between">
+            <Button
+              type="primary"
+              className="bg-red-500"
+              onClick={handleCloseBtn}
+            >
+              Đóng
+            </Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="bg-blue-500 w-[70px] "
+            >
+              Gửi
+            </Button>
+          </Space>
         </Form.Item>
       </Form>
       <ToastContainer />

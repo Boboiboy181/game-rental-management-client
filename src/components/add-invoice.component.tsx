@@ -188,7 +188,7 @@ const AddInvoice = () => {
 
     try {
       const respone = await createInvoice(createInvoiceDto);
-      console.log(respone);
+      navigate(`/invoices/${respone._id}`);
       setVoucher({} as Voucher);
       setIsCreating(false);
     } catch (error) {

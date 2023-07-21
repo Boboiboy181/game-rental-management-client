@@ -148,7 +148,6 @@ const CustomerPage = () => {
           <Button danger type="primary" onClick={handleDeleteBtn}>
             Xóa
           </Button>
-
           <Button
             type="primary"
             className="bg-green-600 hover:!bg-green-500"

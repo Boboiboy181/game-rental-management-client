@@ -28,9 +28,6 @@ const PreOrderPage = () => {
 
   useEffect(() => {
     setNavigationKey('4');
-  }, []);
-
-  useEffect(() => {
     const fetchCustomers = async () => {
       const preOrderData: PreOrder[] = await getPreOrders();
       setPreorder(preOrderData);
@@ -46,7 +43,7 @@ const PreOrderPage = () => {
 
   useEffect(() => {
     const newFilterPreOrders = preOrders.filter((preOrder) =>
-      preOrder.customer.customerName.toLowerCase().includes(searchField),
+      preOrder.preOrderCode.toLowerCase().includes(searchField),
     );
     setFilteredPreorders(newFilterPreOrders);
   }, [searchField, preOrders]);
@@ -65,7 +62,7 @@ const PreOrderPage = () => {
       dataIndex: 'createdAt',
     },
     {
-      title: 'Hành động',
+      title: 'Thao tác',
       align: 'center',
       render: (_, record) => (
         <Button
@@ -121,7 +118,7 @@ const PreOrderPage = () => {
     <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <ShowData
         pageName="Phiếu đặt trước"
-        placeHolder="Tìm kiếm khách hàng"
+        placeHolder="Mã phiếu đặt trước"
         inputName="searchField"
         inputValue={searchField}
         handleChange={handleChange}

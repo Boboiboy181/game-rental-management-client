@@ -13,6 +13,11 @@ export const getCustomers = async (): Promise<Customer[]> => {
   return data;
 };
 
+export const getCustomer = async (id: string): Promise<Customer> => {
+  const { data }: { data: Customer } = await api.get(`/customer/${id}`);
+  return data;
+};
+
 export const deleteCustomer = async (id: string): Promise<void> => {
   await api.delete(`/customer/${id}`);
 };

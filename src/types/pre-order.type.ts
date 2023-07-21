@@ -2,6 +2,7 @@ import { Customer } from './customer.type';
 import { Product } from "./product.type";
 
 export type PreOrder = {
+  preOrderCode: string;
   _id: string;
   customer: Customer;
   rentedGames: [
