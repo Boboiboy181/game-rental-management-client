@@ -9,6 +9,7 @@ import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx'
 import { deleteInvoice, getInvoices } from '../api/invoice.service.ts';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
 
 const { Text } = Typography;
 
@@ -27,6 +28,7 @@ const InvoicePage = () => {
   const [filteredInvoice, setFilteredInvoice] = useState<Invoice[]>(invoices);
   const [searchField, setSearchField] = useState('');
   const { setNavigationKey } = useContext(NavigationKeyContexts);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -113,9 +115,14 @@ const InvoicePage = () => {
     },
   };
 
-  const handleDeleteBtn = async () => {
+  const handleConfirmDeleteOpen = () => {
+    setIsConfirmDeleteOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
       // Delete selected rows
+      setIsConfirmDeleteOpen(false);
       await Promise.all(
         selectedRowKeys.map(async (key) => {
           await deleteInvoice(key.toString());
@@ -163,11 +170,19 @@ const InvoicePage = () => {
           handleChange={handleChange}
         />
         <Space direction="horizontal" className="relative top-[-9%]">
-          <Button danger type="primary" onClick={handleDeleteBtn}>
+          <Button danger type="primary" onClick={handleConfirmDeleteOpen}>
             Xóa
           </Button>
         </Space>
       </div>
+      {
+        isConfirmDeleteOpen && (
+          <DeleteConfirmationDialog
+            onConfirm={handleConfirmDelete}
+            setOpenConfirmation={setIsConfirmDeleteOpen}
+          />
+        )
+      }
       <ToastContainer />
     </Fragment>
   );

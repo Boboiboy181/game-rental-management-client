@@ -7,6 +7,7 @@ import { Customer } from '../types/customer.type';
 import ShowData from '../components/page.component';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { deleteCustomer, getCustomers } from '../api/customer.service.ts';
+import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
 
 const CustomerPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -14,8 +15,8 @@ const CustomerPage = () => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const [searchField, setSearchField] = useState('');
-  const [filteredCustomers, setFilteredCustomers] =
-    useState<Customer[]>(customers);
+  const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>(customers);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
 
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
@@ -81,9 +82,14 @@ const CustomerPage = () => {
       setSelectedRowKeys(selectedKeys);
     },
   };
+  const handleConfirmDeleteOpen = () => {
+    setIsConfirmDeleteOpen(true);
+  };
 
-  const handleDeleteBtn = async () => {
+  // Hàm xác nhận xóa khi người dùng nhấn nút "OK" trong hộp thoại xác nhận
+  const handleConfirmDelete = async () => {
     try {
+      setIsConfirmDeleteOpen(false);
       await Promise.all(
         selectedRowKeys.map(async (key) => {
           await deleteCustomer(key as string);
@@ -149,7 +155,7 @@ const CustomerPage = () => {
           <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
             Thêm
           </Button>
-          <Button danger type="primary" onClick={handleDeleteBtn}>
+          <Button danger type="primary" onClick={handleConfirmDeleteOpen}>
             Xóa
           </Button>
           <Button
@@ -168,6 +174,14 @@ const CustomerPage = () => {
         />
       )}
       {isAddOpen && <AddCustomer setIsAddOpen={setIsAddOpen} />}
+      {
+        isConfirmDeleteOpen && (
+          <DeleteConfirmationDialog
+            onConfirm={handleConfirmDelete}
+            setOpenConfirmation={setIsConfirmDeleteOpen}
+          />
+        )
+      }
       <ToastContainer />
     </Fragment>
   );
