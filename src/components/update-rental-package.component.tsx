@@ -2,7 +2,10 @@ import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { UpdateRentalPackageDto } from '../types/update-rental-package.type';
-import { getRentalPackageByID } from '../api/rental-package.service';
+import {
+  getRentalPackageByID,
+  updateRentalPackage,
+} from '../api/rental-package.service';
 
 const defaultFormFields = {
   packageName: '',
@@ -43,7 +46,6 @@ const UpdateRentalPackage = ({
   }, [selectedUpdate]);
 
   const { packageName, price, numberOfGames, timeOfRental } = formFields;
-  console.log(formFields);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,12 +58,12 @@ const UpdateRentalPackage = ({
 
   const handleCloseBtn = () => setIsUpdateOpen(false);
 
-  const updateRentalPackage = async (
+  const patchRentalPackage = async (
     id: React.Key,
     updateDto: UpdateRentalPackageDto,
   ) => {
     try {
-      await updateRentalPackage(id, updateDto);
+      await updateRentalPackage(id.toString(), updateDto);
       setIsUpdateOpen(false);
 
       toast.success('Cập nhật gói thuê thành công 🥳', {
@@ -83,9 +85,7 @@ const UpdateRentalPackage = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const _id = selectedUpdate[0];
-
     const rentalpackage: UpdateRentalPackageDto = {
       packageName,
       price,
@@ -93,7 +93,8 @@ const UpdateRentalPackage = ({
       timeOfRental,
     };
 
-    await updateRentalPackage(_id, rentalpackage);
+    await patchRentalPackage(_id, rentalpackage);
+    setIsUpdateOpen(false);
     setFormFields(defaultFormFields);
   };
 
@@ -101,11 +102,12 @@ const UpdateRentalPackage = ({
     <div className="fixed bg-black/[.5] w-full h-full">
       <Form
         layout="horizontal"
-        className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 left-[25%] top-[25%]"
+        className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 
+        left-[50%] top-[50%] translate-x-[-70%] translate-y-[-60%]"
         onSubmitCapture={handleSubmit}
       >
         <h1 className="text-2xl text-center font-semibold mb-4">
-          Sửa gói thuê
+          Cập nhật thông tin gói thuê
         </h1>
         <Form.Item label="Tên gói thuê">
           <Input

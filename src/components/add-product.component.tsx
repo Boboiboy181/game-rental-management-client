@@ -129,7 +129,7 @@ const AddProduct = ({
       <Form
         layout="horizontal"
         className={
-          'absolute bg-white flex flex-col rounded-lg p-6 pb-8 px-10 top-[50%] left-[50%] translate-x-[-75%] translate-y-[-50%]'
+          'absolute bg-white flex flex-col rounded-lg p-6 pb-8 px-10 top-[50%] left-[50%] translate-x-[-65%] translate-y-[-50%]'
         }
         onSubmitCapture={handleSubmit}
       >

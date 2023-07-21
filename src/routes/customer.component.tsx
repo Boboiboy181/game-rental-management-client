@@ -45,6 +45,7 @@ const CustomerPage = () => {
     {
       title: 'Email',
       dataIndex: 'email',
+      align: 'center',
     },
     {
       title: 'Số điện thoại',
@@ -53,6 +54,7 @@ const CustomerPage = () => {
     {
       title: 'Địa chỉ',
       dataIndex: 'address',
+      align: 'center',
     },
     {
       title: 'Điểm tích lũy',
@@ -67,6 +69,7 @@ const CustomerPage = () => {
     email: customer.email,
     address: customer.address,
     phoneNumber: customer.phoneNumber,
+    point: customer.point,
   }));
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,7 +96,7 @@ const CustomerPage = () => {
         }),
       );
 
-      toast.success('Xóa khách hàng thành công 😞', {
+      toast.success('Xóa khách hàng thành công ', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -124,7 +127,7 @@ const CustomerPage = () => {
 
   const handleUpdateBtn = () => {
     if (selectedRowKeys.length === 0 || selectedRowKeys.length > 1) {
-      toast.error('Please select only 1 customer to update 😞', {
+      toast.error('Vui lòng chọn 1 khách hàng 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',

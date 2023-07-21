@@ -1,4 +1,4 @@
-import { Button, Space } from 'antd';
+import { Button, Space, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import React, { Fragment,useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,9 +12,11 @@ import { ToastContainer } from 'react-toastify';
 import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
 type DataType = {
   key: string;
+  preOrderCode: string;
   customerName: string;
   estimatedPrice: string;
   createdAt: string;
+  createdAtDate: Date;
 };
 
 const PreOrderPage = () => {
@@ -51,16 +53,54 @@ const PreOrderPage = () => {
 
   const columns: ColumnsType<DataType> = [
     {
+      title: 'Mã đặt trước',
+      dataIndex: 'preOrderCode',
+    },
+    {
       title: 'Tên khách hàng',
       dataIndex: 'customerName',
     },
     {
       title: 'Giá ước tính',
       dataIndex: 'estimatedPrice',
+      align: 'center',
     },
     {
       title: 'Ngày đặt',
       dataIndex: 'createdAt',
+      align: 'center',
+    },
+    {
+      title: 'Trạng thái',
+      align: 'center',
+      render: (_, record) => {
+        const status = {
+          color: '',
+          text: '',
+        };
+        let countHours = 0;
+        const dateString = record.createdAtDate; 
+        const createdAtDate = new Date(dateString);
+        if (createdAtDate instanceof Date && !isNaN(createdAtDate.getTime())) {
+          countHours =
+            Math.abs(new Date().getTime() - createdAtDate.getTime()) / 3600000;
+        } else {
+          console.log('Invalid createdAtDate.');
+        }
+        if (countHours < 6) {
+          status.text = 'Đang chờ';
+          status.color = 'green';
+        }
+        if (countHours >= 6) {
+          status.text = 'Đã hủy';
+          status.color = 'red';
+        }
+        return (
+          <Tag key={status.text} color={status.color} className="ml-2">
+            {status.text}
+          </Tag>
+        );
+      },
     },
     {
       title: 'Thao tác',
@@ -79,9 +119,11 @@ const PreOrderPage = () => {
 
   const data = filteredPreorders.map((preOrder) => ({
     key: preOrder._id,
+    preOrderCode: preOrder.preOrderCode,
     customerName: preOrder.customer.customerName,
     estimatedPrice: formatPrice.format(preOrder.estimatedPrice),
     createdAt: formatDate(preOrder.createdAt.toString()),
+    createdAtDate: preOrder.createdAt,
   }));
 
   const rowSelection = {

@@ -40,14 +40,13 @@ const AddReturn = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [rental, setRental] = useState<Rental>({} as Rental);
   const [returnGames, setReturnGames] = useState<DataType[]>([]);
+  const [returnGamesBackup, setReturnGamesBackup] = useState<DataType[]>([]);
+
 
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
     setNavigationKey('6');
-  }, []);
-
-  useEffect(() => {
     const fetchRental = async () => {
       try {
         const data: Rental = await getRentalById(rentalID);
@@ -100,6 +99,7 @@ const AddReturn = () => {
 
         // set the video-games to be returned
         setReturnGames(returnGamesData);
+        setReturnGamesBackup(returnGamesData);
       };
 
       handleGameReturned();
@@ -123,15 +123,6 @@ const AddReturn = () => {
       title: 'Số lượng',
       dataIndex: 'preOrderQuantity',
       align: 'center',
-      // render: (_, record) => (
-      //   <Input
-      //     type="number"
-      //     min={1}
-      //     max={record.preOrderQuantity}
-      //     defaultValue={record.preOrderQuantity}
-      //     className="w-[65px]"
-      //   />
-      // ),
     },
     {
       title: 'Số ngày thuê',
@@ -180,6 +171,10 @@ const AddReturn = () => {
     setReturnGames(newReturnGames);
   };
 
+  const handleResetBtn = () => {
+    setReturnGames(returnGamesBackup);
+  }
+
   const handleCreateBtn = async () => {
     if (!rentalID) return;
     if (!returnGames.length) {
@@ -198,8 +193,6 @@ const AddReturn = () => {
         preOrderQuantity: item.preOrderQuantity,
       })),
     };
-
-    console.log(createReturnDto);
 
     try {
       const respone: Return = await createReturn(createReturnDto);
@@ -247,6 +240,7 @@ const AddReturn = () => {
               <Button
                 className="bg-blue-500"
                 type="primary"
+                danger
                 onClick={handleCloseBtn}
               >
                 Đóng
@@ -259,6 +253,16 @@ const AddReturn = () => {
               >
                 Xác nhận phiếu trả
               </Button>
+              {returnGames.length === 0 && (
+                <Button
+                  className="bg-blue-600 hover:!bg-blue-500"
+                  type="primary"
+                  htmlType="submit"
+                  onClick={handleResetBtn}
+                >
+                  Đặt lại
+                </Button>
+              )}
             </Space>
           </div>
         </div>

@@ -46,8 +46,6 @@ const AddCustomer = ({
     }
   };
 
-  console.log(customerName, email, phoneNumber, address);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -68,7 +66,7 @@ const AddCustomer = ({
     <div className="fixed bg-black/[.5] w-full h-full">
       <Form
         layout="horizontal"
-        className="absolute w-[25rem] bg-white flex flex-col rounded-lg mt-6 p-6 pb-0 left-[25%] top-[25%]"
+        className="absolute w-[25rem] bg-white flex flex-col rounded-lg mt-6 p-6 pb-0 left-[50%] top-[50%] translate-x-[-70%] translate-y-[-60%]"
         onSubmitCapture={handleSubmit}
       >
         <h1 className="text-2xl text-center font-semibold mb-4">

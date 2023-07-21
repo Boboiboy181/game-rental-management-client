@@ -1,7 +1,7 @@
 import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { useState } from 'react';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { createRentalPackage } from '../api/rental-package.service';
 
 const defaultFormFields = {
   packageName: '',
@@ -35,10 +35,7 @@ const AddRentalPackage = ({
 
   const postRentalPackage = async (data: any) => {
     try {
-      await axios.post(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/rental-package',
-        data,
-      );
+      await createRentalPackage(data);
       toast.success('Tạo gói thuê thành công 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
@@ -86,7 +83,7 @@ const AddRentalPackage = ({
     <div className="fixed bg-black/[.5] w-full h-full">
       <Form
         layout="horizontal"
-        className="absolute w-[25rem] bg-white flex flex-col rounded-lg mt-6 p-6 left-[25%] top-[25%]"
+        className="absolute w-[25rem] bg-white flex flex-col rounded-lg mt-6 p-6 left-[50%] top-[50%] translate-x-[-70%] translate-y-[-60%]"
         onSubmitCapture={handleSubmit}
       >
         <h1 className="text-2xl text-center font-semibold mb-4">
@@ -105,6 +102,7 @@ const AddRentalPackage = ({
         <Form.Item label="Số lượng Games">
           <Input
             required
+            min={0}
             type="number"
             placeholder="Nhập số lượng Games"
             name="numberOfGames"
@@ -115,6 +113,7 @@ const AddRentalPackage = ({
         <Form.Item label="Giá thuê">
           <Input
             required
+            min={0}
             type="number"
             placeholder="Nhập giá thuê"
             name="price"
@@ -125,7 +124,9 @@ const AddRentalPackage = ({
         <Form.Item label="Thời gian cho thuê gói theo ngày">
           <Select
             value={timeOfRental}
-            onSelect={(value) => selectHandler(value.toString(), 'timeOfRental')}
+            onSelect={(value) =>
+              selectHandler(value.toString(), 'timeOfRental')
+            }
           >
             <Select.Option value="7">7</Select.Option>
             <Select.Option value="14">14</Select.Option>

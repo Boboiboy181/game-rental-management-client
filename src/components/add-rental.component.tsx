@@ -57,9 +57,6 @@ const AddRental = () => {
 
   useEffect(() => {
     setNavigationKey('5');
-  }, []);
-
-  useEffect(() => {
     // Convert selectQuantity into an array of { productId, quantity } pairs
     const updatedItems = Object.entries(selectQuantity).map(
       ([productId, quantity]) => ({

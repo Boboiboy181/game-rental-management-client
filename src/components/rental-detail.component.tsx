@@ -1,13 +1,13 @@
 import { Button, Divider, Space, Spin, Typography } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import { formatDate } from '../utils/format-date.function';
 import Table, { ColumnsType } from 'antd/es/table';
 import { formatPrice } from '../utils/format-price.function';
 import { calculatePrice } from '../utils/caculate-price.function';
 import { Rental } from '../types/rental.type';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { getRentalById } from '../api/rental.service.ts';
 
 const { Text } = Typography;
 
@@ -31,13 +31,8 @@ const RentalDetail = () => {
 
   useEffect(() => {
     setNavigationKey('5');
-  }, []);
-
-  useEffect(() => {
     const fetchRental = async () => {
-      const { data }: { data: Rental } = await axios.get(
-        `https://game-rental-management-app-yh3ve.ondigitalocean.app/rental/${rentalID}`,
-      );
+      const data = await getRentalById(rentalID);
       setRental(data);
       setLoading(false);
     };
@@ -157,7 +152,8 @@ const RentalDetail = () => {
       <div className="flex justify-between items-center">
         <Space direction="horizontal" className="relative top-[-9%]">
           <Button
-            className="bg-blue-500 shadow-xl"
+            className="shadow-xl"
+            danger
             type="primary"
             onClick={handleCloseDetailBtn}
           >

@@ -58,14 +58,14 @@ const UpdateProduct = ({
     try {
       await updateProduct(id.toString(), updateDto);
       setIsUpdateOpen(false);
-      toast.success('Video game updated successfully 🥳', {
+      toast.success('Cập nhật video game thành công 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
         pauseOnHover: true,
       });
     } catch (error) {
-      toast.error('Failed to update video game 😞', {
+      toast.error('Không thể cập nhật video game 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -88,7 +88,7 @@ const UpdateProduct = ({
     <div className="fixed bg-black/[.5] w-full h-full">
       <Form
         layout="horizontal"
-        className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 pb-0 left-[25%] top-[25%]"
+        className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 pb-0 left-[50%] top-[50%] translate-x-[-70%] translate-y-[-60%]"
         onSubmitCapture={handleSubmit}
       >
         <h1 className="text-2xl text-center font-semibold mb-6">

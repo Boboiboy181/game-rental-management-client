@@ -96,10 +96,11 @@ const UpdateCustomer = ({
     <div className="fixed bg-black/[.5] w-full h-full">
       <Form
         layout="horizontal"
-        className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 pb-0 left-[25%] top-[25%]"
+        className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 pb-0 
+        left-[50%] top-[50%] translate-x-[-70%] translate-y-[-60%]"
         onSubmitCapture={handleSubmit}
       >
-        <h1 className="text-2xl font-semibold mb-4">
+        <h1 className="text-2xl font-semibold mb-4 text-center">
           Cập nhật thông tin khách hàng
         </h1>
         <Form.Item label="Họ và tên">
@@ -146,7 +147,8 @@ const UpdateCustomer = ({
           <Space className="flex items-center justify-between">
             <Button
               type="primary"
-              className="bg-red-500"
+              danger
+              className="bg-red-500 "
               onClick={handleCloseBtn}
             >
               Đóng

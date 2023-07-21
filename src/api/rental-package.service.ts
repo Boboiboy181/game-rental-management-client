@@ -70,3 +70,13 @@ export const deleteRegister = async (
     `rental-package/registration-list/${registerID}`,
   );
 };
+
+export const createRentalPackage = async (
+  rentalPackage: RentalPackage,
+): Promise<RentalPackage> => {
+  const { data }: { data: RentalPackage } = await api.post(
+    'rental-package',
+    { ...rentalPackage },
+  );
+  return data;
+}

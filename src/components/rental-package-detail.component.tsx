@@ -166,6 +166,16 @@ const RentalPackageDetail = () => {
 
   const handleDeleteBtn = async (record: DataType) => {
     try {
+      if (record.numberOfGameRemaining !== rentalPackage.numberOfGames) {
+        toast.error('Không thể xóa đăng ký gói thuê', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 5000,
+          theme: 'colored',
+          pauseOnHover: true,
+        });
+        return;
+      }
+
       await deleteRegister(record.key);
       const newRegisterList = registerList.filter(
         (register) => register._id !== record.key,

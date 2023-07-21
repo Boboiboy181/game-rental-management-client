@@ -33,9 +33,6 @@ const ReturnDetail = () => {
 
   useEffect(() => {
     setNavigationKey('6');
-  }, []);
-
-  useEffect(() => {
     const fetchRental = async () => {
       const data = await getReturnByID(returnID || '');
       setReturnTicket(data);
@@ -160,7 +157,8 @@ const ReturnDetail = () => {
       <div className="flex justify-between items-center">
         <Space direction="horizontal" className="relative top-[-9%]">
           <Button
-            className="bg-blue-500 shadow-xl"
+            className="shadow-xl"
+            danger
             type="primary"
             onClick={handleCloseDetailBtn}
           >

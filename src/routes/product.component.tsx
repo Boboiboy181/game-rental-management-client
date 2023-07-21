@@ -1,5 +1,5 @@
-import { Button, Divider, Space, Typography } from 'antd';
-import Table, { ColumnsType } from 'antd/es/table';
+import { Button, Space } from 'antd';
+import { ColumnsType } from 'antd/es/table';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Product } from '../types/product.type';
 import { toast, ToastContainer } from 'react-toastify';
@@ -11,6 +11,7 @@ import { deleteProduct, getProducts } from '../api/product.service.ts';
 import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
 
 const { Text } = Typography;
+import ShowData from '../components/page.component.tsx';
 
 type DataType = {
   key: string;
@@ -18,7 +19,7 @@ type DataType = {
   price: string;
   quantity: number;
   releaseDate: string;
-}
+};
 
 const ProductPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -134,7 +135,7 @@ const ProductPage = () => {
 
   const handleUpdateBtn = () => {
     if (selectedRowKeys.length === 0 || selectedRowKeys.length > 1) {
-      toast.error('Vui lòng chỉ chọn 1 sản phẩm để cập nhật 😞', {
+      toast.error('Vui lòng chọn 1 video game để cập nhật 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -148,32 +149,16 @@ const ProductPage = () => {
   return (
     <Fragment>
       <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
-        <Space className="flex justify-between">
-          <Text className="text-2xl font-semibold">Sản phẩm</Text>
-          <div className="input-field">
-            <input
-              className="px-4"
-              type="search"
-              placeholder="Tên sản phẩm"
-              name="searchField"
-              value={searchField}
-              onChange={handleChange}
-            />
-            <label htmlFor="searchfield">Tên sản phẩm</label>
-          </div>
-        </Space>
-        <div className="relative">
-          <Divider />
-          <Table
-            rowSelection={{
-              type: 'checkbox',
-              ...rowSelection,
-            }}
-            columns={columns}
-            dataSource={data}
-            pagination={{ pageSize: 5 }}
-          />
-        </div>
+        <ShowData
+          pageName="Video game"
+          placeHolder="Tên video game"
+          columns={columns}
+          data={data}
+          inputName="searchField"
+          inputValue={searchField}
+          rowSelection={rowSelection}
+          handleChange={handleChange}
+        />
         <Space direction="horizontal" className="relative top-[-9%]">
           <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
             Thêm

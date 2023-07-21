@@ -5,7 +5,7 @@ import { formatPrice } from '../utils/format-price.function';
 import { RentalPackage } from '../types/rental-package.type';
 import AddRentalPackage from '../components/add-rental-package.component';
 import UpdateRentalPackage from '../components/update-rental-package.component';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts';
 import {
@@ -40,9 +40,6 @@ const RentalPackagePage = () => {
 
   useEffect(() => {
     setNavigationKey('3');
-  }, []);
-
-  useEffect(() => {
     const fetchRentalPackages = async () => {
       try {
         const response = await getRentalPackages();
@@ -53,7 +50,7 @@ const RentalPackagePage = () => {
     };
 
     fetchRentalPackages();
-  }, []);
+  }, [isAddOpen, isUpdateOpen]);
 
   useEffect(() => {
     const newFilteredRentalPackages = rentalPackages.filter((pkg) => {
@@ -136,14 +133,29 @@ const RentalPackagePage = () => {
         }),
       );
 
+      toast.success('Xóa gói thuê thành công ', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+
       // Fetch updated rental packages data
       const response = await getRentalPackages();
       setRentalPackages(response);
       setSelectedRowKeys([]);
-
       setSearchField('');
-    } catch (error) {
-      console.log('Error deleting rental packages:', error);
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        toast.error('Không thể xóa gói thuê 😞', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 8000,
+          theme: 'colored',
+          pauseOnHover: true,
+        });
+        return;
+      }
+      console.log('Error deleting rows:', error);
     }
   };
 
