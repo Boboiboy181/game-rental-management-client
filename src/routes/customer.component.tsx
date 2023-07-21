@@ -20,7 +20,6 @@ const CustomerPage = () => {
 
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
-
   useEffect(() => {
     setNavigationKey('1');
     const fetchCustomers = async () => {
@@ -87,6 +86,7 @@ const CustomerPage = () => {
   // Hàm xác nhận xóa khi người dùng nhấn nút "OK" trong hộp thoại xác nhận
   const handleConfirmDelete = async () => {
     try {
+      setIsConfirmDeleteOpen(false);
       await Promise.all(
         selectedRowKeys.map(async (key) => {
           await deleteCustomer(key as string);
@@ -117,12 +117,6 @@ const CustomerPage = () => {
       console.log('Error deleting rows:', error);
     }
   };
-
-  // Hàm hủy bỏ xóa khi người dùng nhấn nút "CANCEL" trong hộp thoại xác nhận
-  const handleCancelDelete = () => {
-    setIsConfirmDeleteOpen(false);
-  };
-
 
   const handleAddBtn = () => {
     setIsAddOpen(true);
@@ -177,12 +171,14 @@ const CustomerPage = () => {
         />
       )}
       {isAddOpen && <AddCustomer setIsAddOpen={setIsAddOpen} />}
-      <DeleteConfirmationDialog
-        isVisible={isConfirmDeleteOpen}
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCancelDelete}
-        // Điền tên sản phẩm cần xóa vào đây
-      />
+      {
+        isConfirmDeleteOpen && (
+          <DeleteConfirmationDialog
+            onConfirm={handleConfirmDelete}
+            setOpenConfirmation={setIsConfirmDeleteOpen}
+          />
+        )
+      }
       <ToastContainer />
     </Fragment>
   );
