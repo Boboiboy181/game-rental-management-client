@@ -2,11 +2,11 @@ import { Button, Space } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PreOrder } from '../types/pre-order.type';
+import { PreOrder } from '../types/pre-order/pre-order.type.ts';
 import { formatDate } from '../utils/format-date.function';
 import { formatPrice } from '../utils/format-price.function';
 import { deletePreOrder, getPreOrders } from '../api/pre-order.service';
-import ShowData from '../components/page.component';
+import ShowData from '../components/others/page.component.tsx';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 
 type DataType = {

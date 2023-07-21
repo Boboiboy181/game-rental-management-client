@@ -1,4 +1,4 @@
-import { RegisterRentalPackage } from '../types/register-rental-package.type.ts';
+import { RegisterRentalPackage } from '../types/rental-package/register-rental-package.type.ts';
 import { RentalPackageRegistration } from '../types/rental-package-registration.type.ts';
 import { RentalPackage } from '../types/rental-package.type.ts';
 import { UpdateRentalPackageDto } from '../types/update-rental-package.type.ts';
@@ -63,10 +63,6 @@ export const registerRentalPackage = async (
   return data;
 };
 
-export const deleteRegister = async (
-  registerID: string,
-): Promise<void> => {
-  await api.delete(
-    `rental-package/registration-list/${registerID}`,
-  );
+export const deleteRegister = async (registerID: string): Promise<void> => {
+  await api.delete(`rental-package/registration-list/${registerID}`);
 };

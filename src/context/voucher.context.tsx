@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { Voucher } from '../types/voucher.type.ts';
+import { Voucher } from '../types/invoice/voucher.type.ts';
 
 type VoucherContextType = {
   voucher: Voucher;

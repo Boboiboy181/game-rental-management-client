@@ -1,19 +1,19 @@
 import { AutoComplete, Button, Input, Space, Typography } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { formatDate } from '../utils/format-date.function';
+import { formatDate } from '../../utils/format-date.function.ts';
 import Table, { ColumnsType } from 'antd/es/table';
-import AddProductToCart from './add-product-to-cart.component';
-import { CartContext } from '../context/cart.context';
-import { ProductForCart } from '../types/product-cart.type';
-import { formatPrice } from '../utils/format-price.function';
-import { RentalDaysEnum } from '../enums/rental-days.enum';
+import AddProductToCart from '../product/add-product-to-cart.component.tsx';
+import { CartContext } from '../../context/cart.context.tsx';
+import { ProductForCart } from '../../types/product/product-cart.type.ts';
+import { formatPrice } from '../../utils/format-price.function.ts';
+import { RentalDaysEnum } from '../../enums/rental-days.enum.ts';
 import { toast, ToastContainer } from 'react-toastify';
-import { getCustomers } from '../api/customer.service';
-import { createRental } from '../api/rental.service';
-import { CreateRental } from '../types/create-rental.type';
-import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
-import IsCreating from './is-creating.component.tsx';
+import { getCustomers } from '../../api/customer.service.ts';
+import { createRental } from '../../api/rental.service.ts';
+import { CreateRental } from '../../types/rental/create-rental.type.ts';
+import { NavigationKeyContexts } from '../../context/navigation-key.context.ts.tsx';
+import IsCreating from '../others/is-creating.component.tsx';
 
 const { Text } = Typography;
 

@@ -1,9 +1,9 @@
 import { Button, Space, Tag } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { Return } from '../types/return.type';
+import { Return } from '../types/return/return.type.ts';
 import { useNavigate } from 'react-router-dom';
 import { ColumnsType } from 'antd/es/table';
-import PageComponent from '../components/page.component.tsx';
+import PageComponent from '../components/others/page.component.tsx';
 import { formatPrice } from '../utils/format-price.function.ts';
 import { deleteReturn, getReturns } from '../api/return.service.ts';
 import { formatDate } from '../utils/format-date.function.ts';
@@ -105,9 +105,7 @@ const ReturnPage = () => {
 
   useEffect(() => {
     const newFilteredReturns = returnTickets.filter((returnTicket) => {
-      return returnTicket.returnCode
-        .toLowerCase()
-        .includes(searchField);
+      return returnTicket.returnCode.toLowerCase().includes(searchField);
     });
     setFilteredReturns(newFilteredReturns);
   }, [returnTickets, searchField]);

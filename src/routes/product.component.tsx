@@ -1,11 +1,11 @@
 import { Button, Divider, Space, Typography } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { Product } from '../types/product.type';
+import { Product } from '../types/product/product.type.ts';
 import { toast, ToastContainer } from 'react-toastify';
 import { formatPrice } from '../utils/format-price.function';
-import AddProduct from '../components/add-product.component';
-import UpdateProduct from '../components/update-video-game.component';
+import AddProduct from '../components/product/add-product.component.tsx';
+import UpdateProduct from '../components/product/update-product.component.tsx';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { deleteProduct, getProducts } from '../api/product.service.ts';
 
@@ -17,7 +17,7 @@ type DataType = {
   price: string;
   quantity: number;
   releaseDate: string;
-}
+};
 
 const ProductPage = () => {
   const [products, setProducts] = useState<Product[]>([]);

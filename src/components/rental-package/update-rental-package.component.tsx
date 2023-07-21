@@ -1,8 +1,8 @@
 import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { UpdateRentalPackageDto } from '../types/update-rental-package.type';
-import { getRentalPackageByID } from '../api/rental-package.service';
+import { UpdateRentalPackageDto } from '../../types/update-rental-package.type';
+import { getRentalPackageByID } from '../../api/rental-package.service';
 
 const defaultFormFields = {
   packageName: '',

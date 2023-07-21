@@ -3,8 +3,8 @@ import { ColumnsType } from 'antd/es/table';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { formatPrice } from '../utils/format-price.function';
 import { RentalPackage } from '../types/rental-package.type';
-import AddRentalPackage from '../components/add-rental-package.component';
-import UpdateRentalPackage from '../components/update-rental-package.component';
+import AddRentalPackage from '../components/rental-package/add-rental-package.component.tsx';
+import UpdateRentalPackage from '../components/rental-package/update-rental-package.component.tsx';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts';
@@ -12,7 +12,7 @@ import {
   deleteRentalPackage,
   getRentalPackages,
 } from '../api/rental-package.service.ts';
-import ShowData from '../components/page.component.tsx';
+import ShowData from '../components/others/page.component.tsx';
 
 const { Text } = Typography;
 

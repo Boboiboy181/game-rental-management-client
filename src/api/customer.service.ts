@@ -1,4 +1,4 @@
-import { Customer } from '../types/customer.type';
+import { Customer } from '../types/customer/customer.type';
 import api from './axios.config';
 
 type CreateCustomerDto = {

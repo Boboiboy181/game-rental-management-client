@@ -1,43 +1,39 @@
 import { Button, Form, Input, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
-import { getCustomer, updateCustomer } from '../api/customer.service.ts';
+import { Product } from '../../types/product/product.type.ts';
+import { getProduct, updateProduct } from '../../api/product.service.ts';
 
 const defaultFormFields = {
-  customerName: '',
-  email: '',
-  phoneNumber: '',
-  address: '',
+  price: 0,
+  quantity: 0,
 };
 
 type UpdateDto = {
-  customerName: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
+  price: number;
+  quantity: number;
 };
 
-const UpdateCustomer = ({
+const UpdateProduct = ({
   setIsUpdateOpen,
   selectedUpdate,
 }: {
   setIsUpdateOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   selectedUpdate: React.Key[];
 }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
 
   useEffect(() => {
-    const fetchCustomerData = async () => {
+    const fetchProducts = async () => {
       try {
-        const response = await getCustomer(selectedUpdate[0].toString());
-        const { customerName, email, phoneNumber, address } = response;
+        const response = await getProduct(selectedUpdate[0].toString());
+        const { price, quantity } = response;
 
         // Cập nhật giá trị mặc định cho formFields từ CSDL
         setFormFields({
-          customerName,
-          email,
-          phoneNumber,
-          address,
+          price,
+          quantity,
         });
       } catch (error) {
         console.log(error);
@@ -45,11 +41,11 @@ const UpdateCustomer = ({
     };
 
     if (selectedUpdate.length > 0) {
-      fetchCustomerData();
+      fetchProducts();
     }
   }, [selectedUpdate]);
 
-  const { customerName, email, phoneNumber, address } = formFields;
+  const { price, quantity } = formFields;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -58,19 +54,18 @@ const UpdateCustomer = ({
 
   const handleCloseBtn = () => setIsUpdateOpen(false);
 
-  const UpdateCustomer = async (id: string, updateDto: UpdateDto) => {
+  const updateVideoGame = async (id: React.Key, updateDto: UpdateDto) => {
     try {
-      await updateCustomer(id, updateDto);
-
+      await updateProduct(id.toString(), updateDto);
       setIsUpdateOpen(false);
-      toast.success('Cập nhật thông tin thành công 🥳', {
+      toast.success('Video game updated successfully 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
         pauseOnHover: true,
       });
     } catch (error) {
-      toast.error('Không thể cập nhật thông tin 😞', {
+      toast.error('Failed to update video game 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -83,10 +78,9 @@ const UpdateCustomer = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const _id = selectedUpdate[0].toString();
-    const customer: UpdateDto = { customerName, email, phoneNumber, address };
-
-    await UpdateCustomer(_id, customer);
+    const _id = selectedUpdate[0];
+    const videoGame: UpdateDto = { price, quantity };
+    await updateVideoGame(_id, videoGame);
     setFormFields(defaultFormFields);
   };
 
@@ -97,54 +91,34 @@ const UpdateCustomer = ({
         className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 pb-0 left-[25%] top-[25%]"
         onSubmitCapture={handleSubmit}
       >
-        <h1 className="text-2xl font-semibold mb-4">
-          Cập nhật thông tin khách hàng
+        <h1 className="text-2xl text-center font-semibold mb-6">
+          Cập nhật sản phẩm
         </h1>
-        <Form.Item label="Họ và tên">
+        <Form.Item label="Giá tiền">
           <Input
             required
-            type="string"
-            placeholder="Nhập tên khách hàng"
-            name="customerName"
-            value={customerName}
+            type="number"
+            placeholder="Nhập giá tiền"
+            name="price"
+            value={price}
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item label="Email của khách hàng">
+        <Form.Item label="Số lượng">
           <Input
             required
-            type="string"
-            placeholder="Nhập email"
-            name="email"
-            value={email}
-            onChange={handleChange}
-          />
-        </Form.Item>
-        <Form.Item label="SDT của khách hàng">
-          <Input
-            required
-            type="string"
-            placeholder="Nhập SDT"
-            name="phoneNumber"
-            value={phoneNumber}
-            onChange={handleChange}
-          />
-        </Form.Item>
-        <Form.Item label="Địa chỉ">
-          <Input
-            required
-            type="string"
-            placeholder="Nhập địa chỉ"
-            name="address"
-            value={address}
+            type="number"
+            placeholder="Nhập số lượng"
+            name="quantity"
+            value={quantity}
             onChange={handleChange}
           />
         </Form.Item>
         <Form.Item>
-          <Space className="flex items-center justify-between">
+          <Space className={'flex justify-between items-center'}>
             <Button
               type="primary"
-              className="bg-red-500"
+              className="bg-red-500 hover:!bg-red-400"
               onClick={handleCloseBtn}
             >
               Đóng
@@ -152,7 +126,7 @@ const UpdateCustomer = ({
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-blue-500 w-[70px] "
+              className="bg-blue-500 w-[70px]"
             >
               Gửi
             </Button>
@@ -164,4 +138,4 @@ const UpdateCustomer = ({
   );
 };
 
-export default UpdateCustomer;
+export default UpdateProduct;

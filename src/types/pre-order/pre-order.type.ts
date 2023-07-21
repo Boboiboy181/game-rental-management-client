@@ -1,5 +1,5 @@
-import { Customer } from './customer.type';
-import { Product } from "./product.type";
+import { Customer } from '../customer/customer.type';
+import { Product } from '../product/product.type';
 
 export type PreOrder = {
   preOrderCode: string;

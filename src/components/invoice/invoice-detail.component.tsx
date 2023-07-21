@@ -1,13 +1,14 @@
 import { Button, Divider, Space, Spin, Typography } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { formatDate } from '../utils/format-date.function';
+import { Invoice } from '../../types/invoice/invoice.type.ts';
+import axios from 'axios';
 import Table, { ColumnsType } from 'antd/es/table';
-import { formatPrice } from '../utils/format-price.function';
-import { calculatePrice } from '../utils/caculate-price.function';
-import { Return } from '../types/return.type.ts';
-import { getReturnByID } from '../api/return.service.ts';
-import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { formatDate } from '../../utils/format-date.function.ts';
+import { NavigationKeyContexts } from '../../context/navigation-key.context.ts.tsx';
+import { formatPrice } from '../../utils/format-price.function.ts';
+import { calculatePrice } from '../../utils/caculate-price.function.ts';
+import { Voucher } from '../../types/invoice/voucher.type.ts';
 
 const { Text } = Typography;
 
@@ -22,35 +23,33 @@ type DataType = {
   fine: number;
 };
 
-const ReturnDetail = () => {
-  const { returnID } = useParams();
+const InvoiceDetail = () => {
+  const { invoiceID } = useParams();
   const navigate = useNavigate();
-  const handleCloseDetailBtn = () => navigate('/returns');
-  const [returnTicket, setReturnTicket] = useState<Return>({} as Return);
-  const [loading, setLoading] = useState(true);
-
+  const [invoice, setInvoice] = useState<Invoice>({} as Invoice);
   const { setNavigationKey } = useContext(NavigationKeyContexts);
+  const [loading, setIsLoading] = useState(true);
+  const handleCloseDetailBtn = () => navigate('/invoices');
 
   useEffect(() => {
-    setNavigationKey('6');
-  }, []);
-
-  useEffect(() => {
-    const fetchRental = async () => {
-      const data = await getReturnByID(returnID || '');
-      setReturnTicket(data);
-      setLoading(false);
+    setNavigationKey('7');
+    const fetchInvoice = async () => {
+      const { data }: { data: Invoice } = await axios.get(
+        `https://game-rental-management-app-yh3ve.ondigitalocean.app/invoice/${invoiceID}`,
+      );
+      setInvoice(data);
+      setIsLoading(false);
     };
 
-    fetchRental();
-  }, [setReturnTicket]);
+    fetchInvoice();
+  }, [invoiceID]);
 
   if (loading) {
     return (
       <Spin className="text-lg mt-[30%]" size="large" tip="Loading">
         <div className="content"></div>
       </Spin>
-    ); // Render a loading state while fetching the data
+    );
   }
 
   const columns: ColumnsType<DataType> = [
@@ -99,7 +98,7 @@ const ReturnDetail = () => {
     },
   ];
 
-  const data = returnTicket.rentedGames.map((rentedGame, index) => ({
+  const data = invoice.rentedGames.map((rentedGame, index) => ({
     key: index,
     productName: rentedGame.game.productName,
     price: rentedGame.game.price,
@@ -110,44 +109,46 @@ const ReturnDetail = () => {
     returnDate: formatDate(rentedGame.returnDate.toString()),
   }));
 
-  const handleCreateInvoiceBtn = () => {
-    navigate(`/invoices/create/${returnID}`);
+  const calculateDiscount = (voucher: Voucher) => {
+    if (!voucher.voucherName) return 0;
+    const { voucherValue } = voucher;
+    return invoice.finalPrice * (voucherValue / 100);
   };
 
   return (
     <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex flex-col items-start">
         <Text className="text-3xl font-semibold">
-          Phiếu trả{' '}
+          Hóa đơn{' '}
           <span className={'text-gray-400 font-light ml-1'}>
-            #{returnTicket.returnCode}
+            #{invoice.invoiceID}
           </span>
         </Text>
         <p className="text-xs text-black/40">
-          Ngày lập phiếu {formatDate(returnTicket.createdAt.toString())}
+          Ngày lập phiếu {formatDate(invoice.createdAt)}
         </p>
       </Space>
       <div className="flex items-end justify-between">
         <Space className="mt-6">
           <div className="flex flex-col mr-10 border-black/20 border-b pb-1">
-            <p className="text-xs text-black/40">Mã phiếu thuê</p>
-            <p className="mt-2">{returnTicket.rentalCode}</p>
+            <p className="text-xs text-black/40">Mã phiếu trả</p>
+            {<p className="mt-2">{invoice.return.returnCode}</p>}
           </div>
           <div className="flex flex-col mr-10 border-black/20 border-b pb-1">
             <p className="text-xs text-black/40">Số điện thoại</p>
-            <p className="mt-2">{returnTicket.customer.phoneNumber}</p>
+            <p className="mt-2">{invoice.customer.phoneNumber}</p>
           </div>
           <div className="flex flex-col border-black/20 border-b pb-1">
             <p className="text-xs text-black/40">Tên khách hàng</p>
-            <p className="mt-2">{returnTicket.customer.customerName}</p>
+            <p className="mt-2">{invoice.customer.customerName}</p>
           </div>
         </Space>
-        <p className="text-lg">
-          Tiền đặt cọc{' '}
-          <span className="font-semibold text-red-600">
-            {formatPrice.format(returnTicket.deposit)}
-          </span>
-        </p>
+        {invoice.voucher ? (
+          <div className="flex flex-col mr-10 border-black/20 border-b pb-1">
+            <p className="text-xs text-black/40">Mã giảm giá</p>
+            <p className="mt-2">{invoice.voucher.voucherCode}</p>
+          </div>
+        ) : null}
       </div>
       <div>
         <Divider />
@@ -158,38 +159,49 @@ const ReturnDetail = () => {
         />
       </div>
       <div className="flex justify-between items-center">
-        <Space direction="horizontal" className="relative top-[-9%]">
-          <Button
-            className="bg-blue-500 shadow-xl"
-            type="primary"
-            onClick={handleCloseDetailBtn}
-          >
-            Đóng
-          </Button>
-          <Button
-            className="bg-green-600 hover:!bg-green-500 shadow-xl"
-            type="primary"
-            onClick={handleCreateInvoiceBtn}
-            disabled={returnTicket.paymentState === 'PAID'}
-          >
-            Tạo hóa đơn
-          </Button>
-        </Space>
+        <Button
+          className="shadow-xl"
+          type="primary"
+          danger={true}
+          onClick={handleCloseDetailBtn}
+        >
+          Đóng
+        </Button>
         <Space className="flex flex-col items-end">
-          <p className="text-lg">
-            Tổng tiền phạt:{' '}
-            <span className="font-semibold text-red-600">
-              {formatPrice.format(
-                returnTicket.rentedGames.reduce((acc, currentValue) => {
-                  return acc + currentValue.fine;
-                }, 0),
-              )}
-            </span>
-          </p>
+          {invoice.fine > 0 ? (
+            <p className="text-lg">
+              Phạt:{' '}
+              <span className="font-semibold text-red-600">
+                {formatPrice.format(invoice.fine)}
+              </span>
+            </p>
+          ) : (
+            <p className="text-lg">
+              Phạt:{' '}
+              <span className="font-semibold text-red-600">
+                {formatPrice.format(0)}
+              </span>
+            </p>
+          )}
+          {invoice.voucher ? (
+            <p className="text-lg">
+              Giảm:{' '}
+              <span className="font-semibold text-red-600">
+                {formatPrice.format(calculateDiscount(invoice.voucher))}
+              </span>
+            </p>
+          ) : (
+            <p className="text-lg">
+              Giảm:{' '}
+              <span className="font-semibold text-red-600">
+                {formatPrice.format(0)}
+              </span>
+            </p>
+          )}
           <p className="text-2xl">
             Tổng tiền:{' '}
             <span className="font-semibold text-red-600">
-              {formatPrice.format(returnTicket.estimatedPrice)}
+              {formatPrice.format(invoice.finalPrice)}
             </span>
           </p>
         </Space>
@@ -198,4 +210,4 @@ const ReturnDetail = () => {
   );
 };
 
-export default ReturnDetail;
+export default InvoiceDetail;

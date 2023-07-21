@@ -1,6 +1,6 @@
-import { CreateRental } from '../types/create-rental.type';
-import { Rental } from '../types/rental.type';
-import { UpdateRental } from '../types/update-rental.type';
+import { CreateRental } from '../types/rental/create-rental.type';
+import { Rental } from '../types/rental/rental.type';
+import { UpdateRental } from '../types/rental/update-rental.type';
 import api from './axios.config';
 
 export const getRentals = async (): Promise<Rental[]> => {

@@ -4,22 +4,22 @@ import MainLayout from './routes/main-layout.component';
 import { ConfigProvider } from 'antd';
 import { useEffect } from 'react';
 import Home from './routes/home.component';
-import PreOrderDetail from './components/pre-order-detail.component';
+import PreOrderDetail from './components/pre-order/pre-order-detail.component.tsx';
 import CustomerPage from './routes/customer.component';
 import PreOrderPage from './routes/pre-order.component';
 import ProductPage from './routes/product.component';
 import RentalPage from './routes/rental.component';
 import ReturnPage from './routes/return.component';
-import RentalDetail from './components/rental-detail.component';
-import AddRental from './components/add-rental.component';
-import UpdateRental from './components/update-rental.component';
-import ReturnDetail from './components/return-detail.component.tsx';
-import AddReturn from './components/add-return.component.tsx';
+import RentalDetail from './components/rental/rental-detail.component.tsx';
+import AddRental from './components/rental/add-rental.component.tsx';
+import UpdateRental from './components/rental/update-rental.component.tsx';
+import ReturnDetail from './components/return/return-detail.component.tsx';
+import AddReturn from './components/return/add-return.component.tsx';
 import RentalPackagePage from './routes/rental-package.component';
-import RentalPackageDetail from './components/rental-package-detail.component';
+import RentalPackageDetail from './components/rental-package/rental-package-detail.component.tsx';
 import InvoicePage from './routes/invoice.component.tsx';
-import AddInvoice from './components/add-invoice.component.tsx';
-import InvoiceDetail from './components/invoice-detail.component.tsx';
+import AddInvoice from './components/invoice/add-invoice.component.tsx';
+import InvoiceDetail from './components/invoice/invoice-detail.component.tsx';
 
 const App = () => {
   useEffect(() => {

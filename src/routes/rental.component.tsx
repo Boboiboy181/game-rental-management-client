@@ -1,11 +1,11 @@
 import { Button, Space, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { Rental } from '../types/rental.type';
+import { Rental } from '../types/rental/rental.type.ts';
 import { formatPrice } from '../utils/format-price.function';
 import { useNavigate } from 'react-router-dom';
 import { delelteRental, getRentals } from '../api/rental.service';
-import ShowData from '../components/page.component';
+import ShowData from '../components/others/page.component.tsx';
 import { formatDate } from '../utils/format-date.function.ts';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { toast, ToastContainer } from 'react-toastify';

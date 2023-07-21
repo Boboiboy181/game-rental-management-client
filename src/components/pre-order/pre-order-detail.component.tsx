@@ -1,14 +1,14 @@
 import { Button, Divider, Space, Spin, Typography } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { formatDate } from '../utils/format-date.function';
-import { PreOrder } from '../types/pre-order.type';
+import { formatDate } from '../../utils/format-date.function.ts';
+import { PreOrder } from '../../types/pre-order/pre-order.type.ts';
 import Table, { ColumnsType } from 'antd/es/table';
-import { formatPrice } from '../utils/format-price.function';
-import { calculatePrice } from '../utils/caculate-price.function';
-import { createRental } from '../api/rental.service';
-import { deletePreOrder, getPreOrder } from '../api/pre-order.service';
-import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { formatPrice } from '../../utils/format-price.function.ts';
+import { calculatePrice } from '../../utils/caculate-price.function.ts';
+import { createRental } from '../../api/rental.service.ts';
+import { deletePreOrder, getPreOrder } from '../../api/pre-order.service.ts';
+import { NavigationKeyContexts } from '../../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
 
