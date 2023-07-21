@@ -46,6 +46,8 @@ const AddCustomer = ({
     }
   };
 
+  console.log(customerName, email, phoneNumber, address);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -59,6 +61,7 @@ const AddCustomer = ({
     await postCustomer(customer);
     setIsAddOpen(false);
     setFormFields(defaultFormFields);
+    setIsAddOpen(false);
   };
 
   return (

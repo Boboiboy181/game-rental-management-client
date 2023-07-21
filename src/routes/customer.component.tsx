@@ -15,7 +15,9 @@ const CustomerPage = () => {
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const [searchField, setSearchField] = useState('');
   const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>(customers);
+
   const { setNavigationKey } = useContext(NavigationKeyContexts);
+
 
   useEffect(() => {
     setNavigationKey('1');
@@ -62,9 +64,8 @@ const CustomerPage = () => {
     key: customer._id,
     customerName: customer.customerName,
     email: customer.email,
-    phoneNumber: customer.phoneNumber,
     address: customer.address,
-    point: customer.point,
+    phoneNumber: customer.phoneNumber,
   }));
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

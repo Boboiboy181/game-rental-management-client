@@ -83,11 +83,13 @@ const UpdateCustomer = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+
     const _id = selectedUpdate[0].toString();
+
     const customer: UpdateDto = { customerName, email, phoneNumber, address };
 
     await UpdateCustomer(_id, customer);
-    setFormFields(defaultFormFields);
+    setIsUpdateOpen(false);
   };
 
   return (
@@ -110,7 +112,7 @@ const UpdateCustomer = ({
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item label="Email của khách hàng">
+        <Form.Item label="Email">
           <Input
             required
             type="string"
@@ -120,11 +122,11 @@ const UpdateCustomer = ({
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item label="SDT của khách hàng">
+        <Form.Item label="SĐT">
           <Input
             required
             type="string"
-            placeholder="Nhập SDT"
+            placeholder="Nhập SĐT"
             name="phoneNumber"
             value={phoneNumber}
             onChange={handleChange}
