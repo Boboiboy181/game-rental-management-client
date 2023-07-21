@@ -7,7 +7,6 @@ import { formatDate } from '../utils/format-date.function';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts';
 import { formatPrice } from '../utils/format-price.function.ts';
 import { calculatePrice } from '../utils/caculate-price.function.ts';
-import { Voucher } from '../types/voucher.type.ts';
 import { getInvoice } from '../api/invoice.service.ts';
 
 const { Text } = Typography;
@@ -34,7 +33,7 @@ const InvoiceDetail = () => {
   useEffect(() => {
     setNavigationKey('7');
     const fetchInvoice = async () => {
-      const data = await getInvoice(invoiceID);
+      const data = await getInvoice(invoiceID);      
       setInvoice(data);
       setIsLoading(false);
     };
@@ -95,7 +94,7 @@ const InvoiceDetail = () => {
       ),
     },
   ];
-
+  
   const data = invoice.rentedGames.map((rentedGame, index) => ({
     key: index,
     productName: rentedGame.game.productName,
@@ -107,9 +106,8 @@ const InvoiceDetail = () => {
     returnDate: formatDate(rentedGame.returnDate.toString()),
   }));
 
-  const calculateDiscount = (voucher: Voucher) => {
-    if (!voucher.voucherName) return 0;
-    const { voucherValue } = voucher;
+  const calculateDiscount = (voucherValue: number) => {
+    if (!voucherValue) return 0;
     return invoice.finalPrice * (voucherValue / 100);
   };
 
@@ -185,7 +183,7 @@ const InvoiceDetail = () => {
             <p className="text-lg">
               Giảm:{' '}
               <span className="font-semibold text-red-600">
-                {formatPrice.format(calculateDiscount(invoice.voucher))}
+                {formatPrice.format(calculateDiscount(invoice.voucher.voucherValue))}
               </span>
             </p>
           ) : (

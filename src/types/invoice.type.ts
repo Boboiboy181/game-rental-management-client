@@ -23,7 +23,12 @@ export type Invoice = {
       _id: string;
     },
   ];
-  voucher: Voucher;
+  voucher: {
+    _id: string,
+    voucherName: string,
+    voucherCode: string,
+    voucherValue: number,
+  };
   fine: number;
   finalPrice: number;
   return: {

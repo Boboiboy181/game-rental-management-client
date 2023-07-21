@@ -40,6 +40,8 @@ const AddReturn = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [rental, setRental] = useState<Rental>({} as Rental);
   const [returnGames, setReturnGames] = useState<DataType[]>([]);
+  const [returnGamesBackup, setReturnGamesBackup] = useState<DataType[]>([]);
+
 
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
@@ -97,6 +99,7 @@ const AddReturn = () => {
 
         // set the video-games to be returned
         setReturnGames(returnGamesData);
+        setReturnGamesBackup(returnGamesData);
       };
 
       handleGameReturned();
@@ -168,6 +171,10 @@ const AddReturn = () => {
     setReturnGames(newReturnGames);
   };
 
+  const handleResetBtn = () => {
+    setReturnGames(returnGamesBackup);
+  }
+
   const handleCreateBtn = async () => {
     if (!rentalID) return;
     if (!returnGames.length) {
@@ -186,8 +193,6 @@ const AddReturn = () => {
         preOrderQuantity: item.preOrderQuantity,
       })),
     };
-
-    console.log(createReturnDto);
 
     try {
       const respone: Return = await createReturn(createReturnDto);
@@ -248,6 +253,16 @@ const AddReturn = () => {
               >
                 Xác nhận phiếu trả
               </Button>
+              {returnGames.length === 0 && (
+                <Button
+                  className="bg-blue-600 hover:!bg-blue-500"
+                  type="primary"
+                  htmlType="submit"
+                  onClick={handleResetBtn}
+                >
+                  Đặt lại
+                </Button>
+              )}
             </Space>
           </div>
         </div>

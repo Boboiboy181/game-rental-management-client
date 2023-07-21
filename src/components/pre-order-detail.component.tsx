@@ -114,6 +114,15 @@ const PreOrderDetail = () => {
     }
   };
 
+  const calculateHour = (createdAt: Date) => {
+    const dateString = createdAt;
+    const createdAtDate = new Date(dateString);
+
+    const countHours =
+      Math.abs(new Date().getTime() - createdAtDate.getTime()) / 3600000;
+    return countHours;
+  };  
+
   return (
     <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex flex-col items-start">
@@ -159,6 +168,7 @@ const PreOrderDetail = () => {
             className="bg-green-600 hover:!bg-green-500"
             type="primary"
             onClick={() => handleCreateBtn(preOrderID)}
+            disabled={calculateHour(preOrder.createdAt) >= 6}
           >
             Tạo phiếu thuê
           </Button>
