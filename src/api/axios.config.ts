@@ -12,6 +12,7 @@ const api = axios.create({
   headers: {
     'Access-Control-Allow-Origin': 'http://localhost:5173',
     'Access-Control-Allow-Credentials': true,
+    // Authorization: `Bearer ${sessionStorage.getItem('token')}`,
   },
 });
 

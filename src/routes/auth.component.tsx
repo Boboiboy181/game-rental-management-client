@@ -3,6 +3,7 @@ import Input from '../components/input.component';
 import React, { useState } from 'react';
 import { SignIn } from '../types/sign-in.type';
 import { signIn } from '../api/auth.service';
+import { useNavigate } from 'react-router-dom';
 
 const { Text } = Typography;
 
@@ -13,6 +14,7 @@ const defaultValues = {
 
 const AuthPage = () => {
   const [formFields, setFormFields] = useState<SignIn>(defaultValues);
+  const navigate = useNavigate();
   const { username, password } = formFields;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,14 +29,15 @@ const AuthPage = () => {
       username,
       password,
     };
-
     try {
       const respone = await signIn(signInDto);
-      console.log(respone);
+      sessionStorage.setItem('token', respone.token);
+      sessionStorage.setItem('username', username);
+      navigate('/');
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
-
   };
 
   return (

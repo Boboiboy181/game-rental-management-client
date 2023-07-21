@@ -9,6 +9,8 @@ import {
 import { Button, Layout, Menu, Typography } from 'antd';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { UserContext } from '../context/user.context.tsx';
+import { logOut } from '../api/auth.service.ts';
 
 const { Header, Sider } = Layout;
 const { Text } = Typography;
@@ -16,6 +18,7 @@ const { Text } = Typography;
 const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const { navigationKey, setNavigationKey } = useContext(NavigationKeyContexts);
+  const { user } = useContext(UserContext);
 
   const items = [
     {
@@ -23,6 +26,7 @@ const MainLayout: React.FC = () => {
       icon: <UserOutlined />,
       label: 'Khách hàng',
       path: '/customers',
+      isPrivate: true,
     },
     {
       key: '2',
@@ -41,24 +45,28 @@ const MainLayout: React.FC = () => {
       ),
       label: 'Video game',
       path: '/video-games',
+      isPrivate: true,
     },
     {
       key: '3',
       icon: <BookOutlined />,
       label: 'Gói thuê',
       path: '/rental-packages',
+      isPrivate: true,
     },
     {
       key: '4',
       icon: <ContainerOutlined />,
       label: 'Phiếu đặt trước',
       path: '/pre-orders',
+      isPrivate: true,
     },
     {
       key: '5',
       icon: <ContainerOutlined />,
       label: 'Phiếu thuê',
       path: '/rentals',
+      isPrivate: true,
     },
     {
       key: '6',
@@ -79,6 +87,7 @@ const MainLayout: React.FC = () => {
       ),
       label: 'Phiếu trả',
       path: '/returns',
+      isPrivate: true,
     },
     {
       key: '7',
@@ -97,14 +106,18 @@ const MainLayout: React.FC = () => {
       ),
       label: 'Hóa đơn',
       path: '/invoices',
+      isPrivate: true,
     },
   ];
 
   const navigate = useNavigate();
-
   const logoOnClick = () => navigate('/');
-
   const changeNavigationKey = (e: any) => setNavigationKey(e.key);
+
+  const handleLogOut = () => {
+    navigate('/');
+    logOut();
+  };
 
   return (
     <Layout className="h-screen">
@@ -132,16 +145,34 @@ const MainLayout: React.FC = () => {
           defaultSelectedKeys={['0']}
           selectedKeys={[navigationKey]}
         >
-          {items.map((item) => (
-            <Menu.Item
-              key={item.key}
-              icon={item.icon}
-              onClick={changeNavigationKey}
-            >
-              <Link to={item.path}>{item.label}</Link>
-            </Menu.Item>
-          ))}
+          {items.map((item) => {
+            if (item.isPrivate && user) {
+              return (
+                <Menu.Item
+                  key={item.key}
+                  icon={item.icon}
+                  onClick={changeNavigationKey}
+                >
+                  <Link to={item.path}>{item.label}</Link>
+                </Menu.Item>
+              );
+            } else {
+              return null;
+            }
+          })}
         </Menu>
+        {user && (
+          <div className="text-center relative bottom-[-35%]">
+            <Button
+              danger
+              size="large"
+              className="hover:!bg-red-600 hover:!border-red-600"
+              onClick={handleLogOut}
+            >
+              <span className="text-white">Đăng xuất</span>
+            </Button>
+          </div>
+        )}
       </Sider>
       <Layout>
         <Header className="flex bg-white p-0 items-center">

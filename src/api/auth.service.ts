@@ -10,10 +10,15 @@ export const signIn = async (signInDto: SignIn): Promise<AccessToken> => {
     '/auth/login',
     signInDto,
   );
-
-  // if (data.token) {
-  //   localStorage.setItem('token', data.token);
-  // }
-
   return data;
+};
+
+export const logOut = () => {
+  sessionStorage.clear();
+  window.location.reload();
+};
+
+export const getCurrentUser = (): string => {
+  const username = sessionStorage.getItem('username');
+  return username ? username : '';
 };
