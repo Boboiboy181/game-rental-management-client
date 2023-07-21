@@ -1,7 +1,7 @@
-import { Button, Form, Input, Select } from 'antd';
-import { useState } from 'react';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { Button, Form, Input, Select, Space, Spin } from 'antd';
+import React, { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import { createProduct } from '../api/product.service.ts';
 
 const defaultFormFields = {
   productName: '',
@@ -15,14 +15,17 @@ const defaultFormFields = {
   system: '',
 };
 
-const AddVideoGame = ({
+const AddProduct = ({
   setIsAddOpen,
+  productsNameList,
 }: {
+  productsNameList: string[];
   setIsAddOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   // const { setIsOpen } = useContext(OverlayContext);
   const [formFields, setFormFields] = useState(defaultFormFields);
   const [image, setImage] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     productName,
@@ -52,20 +55,35 @@ const AddVideoGame = ({
     setImage(file);
   };
 
+  if (isLoading) {
+    return (
+      <div className="fixed bg-black/[.5] w-full h-full">
+        <div className="absolute bg-white flex flex-col rounded-lg p-6 pb-8 px-10 top-[50%] left-[30%] translate-y-[-50%]">
+          <h1 className="text-2xl text-center font-semibold mb-6">
+            Thêm sản phẩm
+          </h1>
+          <div className="flex justify-center items-center">
+            <Spin size="large" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const postVideoGame = async (data: FormData) => {
     try {
-      await axios.post(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
-        data,
-      );
-      toast.success('Video game created successfully 🥳', {
+      setIsLoading(true);
+      const respone = await createProduct(data);
+      respone.productName ? setIsLoading(false) : setIsLoading(true);
+      toast.success('Thêm video game thành công 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
         pauseOnHover: true,
       });
     } catch (error) {
-      toast.error('Failed to create a video 😞', {
+      setIsLoading(false);
+      toast.error('Không thể thêm video game mới 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -90,7 +108,19 @@ const AddVideoGame = ({
     videoGame.append('system', system);
     videoGame.append('file', image!);
 
+    // check if product name already exists
+    if (productsNameList.includes(productName)) {
+      toast.error('Video game đã tồn tại 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+      return;
+    }
+
     await postVideoGame(videoGame);
+    setIsAddOpen(false);
     setFormFields(defaultFormFields);
   };
 
@@ -98,9 +128,14 @@ const AddVideoGame = ({
     <div className="fixed bg-black/[.5] w-full h-full">
       <Form
         layout="horizontal"
-        className="absolute w-[25rem] bg-white flex flex-col rounded-lg mt-6 h-[85%] p-6 left-[25%]"
+        className={
+          'absolute bg-white flex flex-col rounded-lg p-6 pb-8 px-10 top-[50%] left-[50%] translate-x-[-75%] translate-y-[-50%]'
+        }
         onSubmitCapture={handleSubmit}
       >
+        <h1 className="text-2xl text-center font-semibold mb-6">
+          Thêm sản phẩm
+        </h1>
         <Form.Item label="Tên video game">
           <Input
             required
@@ -111,26 +146,30 @@ const AddVideoGame = ({
             onChange={handleChange}
           />
         </Form.Item>
-        <Form.Item label="Giá tiền">
-          <Input
-            required
-            type="number"
-            placeholder="Nhập giá tiền"
-            name="price"
-            value={price}
-            onChange={handleChange}
-          />
-        </Form.Item>
-        <Form.Item label="Số lượng">
-          <Input
-            required
-            type="number"
-            placeholder="Nhập số lượng"
-            name="quantity"
-            value={quantity}
-            onChange={handleChange}
-          />
-        </Form.Item>
+        <Space>
+          <Form.Item label="Giá tiền">
+            <Input
+              required
+              type="number"
+              placeholder="Nhập giá tiền"
+              name="price"
+              value={price}
+              min={0}
+              onChange={handleChange}
+            />
+          </Form.Item>
+          <Form.Item label="Số lượng">
+            <Input
+              required
+              type="number"
+              placeholder="Nhập số lượng"
+              name="quantity"
+              value={quantity}
+              min={0}
+              onChange={handleChange}
+            />
+          </Form.Item>
+        </Space>
         <Form.Item label="Nhà sản xuất">
           <Input
             required
@@ -218,26 +257,33 @@ const AddVideoGame = ({
             onChange={handleUpload}
           />
         </Form.Item>
-        <Form.Item className="flex items-center justify-between">
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="bg-blue-500 mr-[14rem]"
-          >
-            Gửi
-          </Button>
-          <Button
-            type="primary"
-            className="bg-red-500"
-            onClick={handleCloseBtn}
-          >
-            Đóng
-          </Button>
+        <Form.Item className="mb-0">
+          <Space className={'justify-between w-full mb-0'}>
+            <Button
+              type="primary"
+              className="bg-red-500 hover:!bg-red-400"
+              onClick={handleCloseBtn}
+            >
+              Đóng
+            </Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="bg-blue-500 w-[70px]"
+            >
+              Gửi
+            </Button>
+          </Space>
         </Form.Item>
       </Form>
       <ToastContainer />
+      {isLoading && (
+        <div className="flex justify-center items-center">
+          <Spin size="large" />
+        </div>
+      )}
     </div>
   );
 };
 
-export default AddVideoGame;
+export default AddProduct;

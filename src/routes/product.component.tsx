@@ -1,13 +1,23 @@
-import { Space, Typography, Divider, Button } from 'antd';
-import Table from 'antd/es/table';
-import { Fragment, useEffect, useState } from 'react';
-import axios from 'axios';
-import AddVideoGame from '../components/add-video-game.component';
+import { Button, Divider, Space, Typography } from 'antd';
+import Table, { ColumnsType } from 'antd/es/table';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Product } from '../types/product.type';
-import UpdateVideoGame from '../components/update-video-game.component';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import { formatPrice } from '../utils/format-price.function';
+import AddProduct from '../components/add-product.component';
+import UpdateProduct from '../components/update-video-game.component';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { deleteProduct, getProducts } from '../api/product.service.ts';
 
 const { Text } = Typography;
+
+type DataType = {
+  key: string;
+  productName: string;
+  price: string;
+  quantity: number;
+  releaseDate: string;
+}
 
 const ProductPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -17,38 +27,41 @@ const ProductPage = () => {
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const [searchField, setSearchField] = useState('');
 
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLocaleLowerCase();
     setSearchField(value);
   };
 
   useEffect(() => {
+    setNavigationKey('2');
     const fetchProducts = async () => {
-      const { data }: { data: Product[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
-      );
+      const data = await getProducts();
       setProducts(data);
     };
 
     fetchProducts();
-  }, []);
+  }, [isAddOpen, isUpdateOpen]);
 
-  const columns = [
+  const columns: ColumnsType<DataType> = [
     {
-      title: 'Product Name',
+      title: 'Tên sản phẩm',
       dataIndex: 'productName',
     },
     {
-      title: 'Price',
+      title: 'Giá tiền',
       dataIndex: 'price',
     },
     {
-      title: 'Quantity',
+      title: 'Số lượng',
       dataIndex: 'quantity',
+      align: 'center',
     },
     {
-      title: 'Release Date',
+      title: 'Ngày sản xuất',
       dataIndex: 'releaseDate',
+      align: 'center',
     },
   ];
 
@@ -62,7 +75,7 @@ const ProductPage = () => {
   const data = filteredProducts.map((product) => ({
     key: product._id,
     productName: product.productName,
-    price: product.price,
+    price: formatPrice.format(product.price),
     quantity: product.quantity,
     releaseDate: product.releaseDate,
   }));
@@ -78,24 +91,35 @@ const ProductPage = () => {
       // Delete selected rows
       await Promise.all(
         selectedRowKeys.map(async (key) => {
-          await axios.delete(
-            `https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game/${key}`,
-          );
+          await deleteProduct(key.toString());
         }),
       );
 
-      // Fetch updated products data
-      const { data }: { data: Product[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/video-game',
-      );
+      toast.success('Xóa video game thành công 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
 
-      // Update products state and selectedRowKeys state
+      const data = await getProducts();
       setProducts(data);
       setSelectedRowKeys([]);
-    } catch (error) {
+    } catch (error: any) {
+      // if (error.response.status === 404) {
+      toast.error('Không thể xóa video game 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+      // return;
+      // }
       console.log('Error deleting rows:', error);
     }
   };
+
+  const productsNameList = products.map((product) => product.productName);
 
   const handleAddBtn = () => {
     setIsAddOpen(true);
@@ -103,7 +127,7 @@ const ProductPage = () => {
 
   const handleUpdateBtn = () => {
     if (selectedRowKeys.length === 0 || selectedRowKeys.length > 1) {
-      toast.error('Please select only 1 video game to update 😞', {
+      toast.error('Vui lòng chỉ chọn 1 sản phẩm để cập nhật 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -118,20 +142,20 @@ const ProductPage = () => {
     <Fragment>
       <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
         <Space className="flex justify-between">
-          <Text className="text-2xl font-semibold">Video Games</Text>
+          <Text className="text-2xl font-semibold">Sản phẩm</Text>
           <div className="input-field">
             <input
               className="px-4"
               type="search"
-              placeholder="Search game"
+              placeholder="Tên sản phẩm"
               name="searchField"
               value={searchField}
               onChange={handleChange}
             />
-            <label htmlFor="searchfield">Search game</label>
+            <label htmlFor="searchfield">Tên sản phẩm</label>
           </div>
         </Space>
-        <div>
+        <div className="relative">
           <Divider />
           <Table
             rowSelection={{
@@ -152,16 +176,21 @@ const ProductPage = () => {
           </Button>
           <Button
             type="primary"
-            className="bg-green-600"
+            className="bg-green-600 hover:!bg-green-500"
             onClick={handleUpdateBtn}
           >
             Sửa
           </Button>
         </Space>
       </div>
-      {isAddOpen && <AddVideoGame setIsAddOpen={setIsAddOpen} />}
+      {isAddOpen && (
+        <AddProduct
+          setIsAddOpen={setIsAddOpen}
+          productsNameList={productsNameList}
+        />
+      )}
       {isUpdateOpen && (
-        <UpdateVideoGame
+        <UpdateProduct
           setIsUpdateOpen={setIsUpdateOpen}
           selectedUpdate={selectedRowKeys}
           setProducts={setProducts}

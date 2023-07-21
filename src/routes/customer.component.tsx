@@ -1,13 +1,12 @@
-import { Space, Typography, Divider, Button } from 'antd';
-import Table from 'antd/es/table';
-import { ToastContainer, toast } from 'react-toastify';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
+import { Button, Space } from 'antd';
+import { toast, ToastContainer } from 'react-toastify';
 import UpdateCustomer from '../components/update-customer.component';
-import { Fragment, useEffect, useState } from 'react';
-import axios from 'axios';
 import AddCustomer from '../components/add-customer.component';
 import { Customer } from '../types/customer.type';
-
-const { Text } = Typography;
+import ShowData from '../components/page.component';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { deleteCustomer, getCustomers } from '../api/customer.service.ts';
 
 const CustomerPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -17,39 +16,18 @@ const CustomerPage = () => {
   const [searchField, setSearchField] = useState('');
   const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>(customers);
 
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+
   useEffect(() => {
+    setNavigationKey('1');
     const fetchCustomers = async () => {
-      const { data }: { data: Customer[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/customer',
-      );
+      const data = await getCustomers();
       setCustomers(data);
     };
 
     fetchCustomers();
-  }, []);
-
-  const columns = [
-    {
-      title: 'Customer Name',
-      dataIndex: 'customerName',
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-    },
-    {
-      title: 'Phone Number',
-      dataIndex: 'phoneNumber',
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-    },
-    {
-      title: 'Point',
-      dataIndex: 'point',
-    },
-  ];
+  }, [isAddOpen, isUpdateOpen]);
 
   useEffect(() => {
     const newFilteredCustomers = customers.filter((customer) => {
@@ -57,6 +35,30 @@ const CustomerPage = () => {
     });
     setFilteredCustomers(newFilteredCustomers);
   }, [customers, searchField]);
+
+  const columns = [
+    {
+      title: 'Tên khách hàng',
+      dataIndex: 'customerName',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+    },
+    {
+      title: 'Số điện thoại',
+      dataIndex: 'phoneNumber',
+    },
+    {
+      title: 'Địa chỉ',
+      dataIndex: 'address',
+    },
+    {
+      title: 'Điểm tích lũy',
+      dataIndex: 'point',
+      align: 'center',
+    },
+  ];
 
   const data = filteredCustomers.map((customer) => ({
     key: customer._id,
@@ -66,9 +68,8 @@ const CustomerPage = () => {
     phoneNumber: customer.phoneNumber,
   }));
 
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toLocaleLowerCase();
+    const value = e.target.value.toLowerCase();
     setSearchField(value);
   };
 
@@ -80,26 +81,33 @@ const CustomerPage = () => {
 
   const handleDeleteBtn = async () => {
     try {
-      // Delete selected rows
       await Promise.all(
         selectedRowKeys.map(async (key) => {
-          await axios.delete(
-            `https://game-rental-management-app-yh3ve.ondigitalocean.app/customer/${key}`,
-          );
+          await deleteCustomer(key as string);
         }),
       );
 
-      // Fetch updated products data
-      const { data }: { data: Customer[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/customer',
-      );
-      // Update customer state and selectedRowKeys state
+      toast.success('Xóa khách hàng thành công 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
+
+      const data = await getCustomers();
       setCustomers(data);
       setSelectedRowKeys([]);
-
-      // Refresh the page by updating the searchField state
       setSearchField('');
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        toast.error('Không thể xóa khách hàng 😞', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 8000,
+          theme: 'colored',
+          pauseOnHover: true,
+        });
+        return;
+      }
       console.log('Error deleting rows:', error);
     }
   };
@@ -124,50 +132,32 @@ const CustomerPage = () => {
   return (
     <Fragment>
       <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
-        <Space className="flex justify-between">
-          <Text className="text-2xl font-semibold">Customer</Text>
-          <div className="input-field">
-            <input
-              className="px-4"
-              type="search"
-              placeholder="Search customer"
-              name="searchField"
-              value={searchField}
-              onChange={handleChange}
-            />
-            <label htmlFor="searchfield">Search customer</label>
-          </div>
-        </Space>
-        <div>
-          <Divider />
-          <Table
-            rowSelection={{
-              type: 'checkbox',
-              ...rowSelection,
-            }}
-            columns={columns}
-            dataSource={data}
-            pagination={{ pageSize: 5 }}
-          />
-        </div>
-        <Space direction="horizontal" className="relative top-[-9%]">
+        <ShowData
+          pageName="Khách hàng"
+          placeHolder="Tên khách hàng"
+          inputName="Tìm khách hàng"
+          inputValue={searchField}
+          handleChange={handleChange}
+          columns={columns}
+          data={data}
+          rowSelection={rowSelection}
+        />
+        <Space direction="horizontal" className={'relative top-[-9%]'}>
           <Button type="primary" className="bg-blue-500" onClick={handleAddBtn}>
             Thêm
           </Button>
           <Button danger type="primary" onClick={handleDeleteBtn}>
             Xóa
           </Button>
-
           <Button
             type="primary"
-            className="bg-green-600"
+            className="bg-green-600 hover:!bg-green-500"
             onClick={handleUpdateBtn}
           >
             Sửa
           </Button>
         </Space>
       </div>
-
       {isUpdateOpen && (
         <UpdateCustomer
           setIsUpdateOpen={setIsUpdateOpen}

@@ -1,7 +1,7 @@
-import { Button, Form, Input } from 'antd';
-import { useState } from 'react';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { Button, Form, Input, Space } from 'antd';
+import React, { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import { createCustomer } from '../api/customer.service.ts';
 
 const defaultFormFields = {
   customerName: '',
@@ -28,18 +28,15 @@ const AddCustomer = ({
 
   const postCustomer = async (data: any) => {
     try {
-      await axios.post(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/customer',
-        data,
-      );
-      toast.success('New customer created successfully 🥳', {
+      await createCustomer(data);
+      toast.success('Tạo khách hàng mới thành công 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
         pauseOnHover: true,
       });
     } catch (error) {
-      toast.error('Failed to create a customer 😞', {
+      toast.error('Không thể tạo khách hàng mới 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -62,6 +59,7 @@ const AddCustomer = ({
     };
 
     await postCustomer(customer);
+    setIsAddOpen(false);
     setFormFields(defaultFormFields);
     setIsAddOpen(false);
   };
@@ -117,21 +115,23 @@ const AddCustomer = ({
           />
         </Form.Item>
 
-        <Form.Item className="flex items-center justify-between">
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="bg-blue-500 mr-[14rem]"
-          >
-            Gửi
-          </Button>
-          <Button
-            type="primary"
-            className="bg-red-500"
-            onClick={handleCloseBtn}
-          >
-            Đóng
-          </Button>
+        <Form.Item>
+          <Space className="flex justify-between">
+            <Button
+              type="primary"
+              className="bg-red-500 hover:!bg-red-400"
+              onClick={handleCloseBtn}
+            >
+              Đóng
+            </Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="bg-blue-500 w-[70px]"
+            >
+              Gửi
+            </Button>
+          </Space>
         </Form.Item>
       </Form>
       <ToastContainer />

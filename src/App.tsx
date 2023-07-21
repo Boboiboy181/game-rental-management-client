@@ -1,37 +1,24 @@
-import { Route, Routes } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
-import MainLayout from './routes/main-layout.component';
 import { ConfigProvider } from 'antd';
-import { useEffect } from 'react';
-import Home from './routes/home.component';
-import PreOrderDetail from './components/pre-order-detail.component';
-import CustomerPage from './routes/customer.component';
-import PreOrderPage from './routes/pre-order.component';
-import ProductPage from './routes/product.component';
-import RentalPage from './routes/rental.component';
-import ReturnPage from './routes/return.component';
+import { useContext, useEffect } from 'react';
+import RouteWrapper from './routes/routes-wrapper.tsx';
+import { UserContext } from './context/user.context.tsx';
+import { getCurrentUser } from './api/auth.service.ts';
 
 const App = () => {
+  const { setUser } = useContext(UserContext);
+
   useEffect(() => {
-    // Update the system font
+    const user = getCurrentUser();
+    if (user) {
+      setUser(user);
+    }
     document.body.style.fontFamily = 'Be Vietnam Pro, sans-serif';
   }, []);
 
   return (
     <ConfigProvider>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home />} />
-          <Route path="customers" element={<CustomerPage />} />
-          <Route path="video-games" element={<ProductPage />} />
-          <Route path="pre-orders" element={<PreOrderPage />} />
-          <Route path="pre-orders/:preOrderID" element={<PreOrderDetail />} />
-          <Route path="rentals" element={<RentalPage />} />
-          <Route path="rentals/create/:preOrderID?" element={<p>Tao phieu thue</p>}/>
-          <Route path="returns" element={<ReturnPage />} />
-          <Route path="invoices" element={<div>Invoices</div>} />
-        </Route>
-      </Routes>
+      <RouteWrapper />
     </ConfigProvider>
   );
 };

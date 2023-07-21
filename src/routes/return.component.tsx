@@ -1,31 +1,44 @@
-import { Space, Typography, Divider, Button, Table } from 'antd';
-import { Fragment, useEffect, useState } from 'react';
-import axios from 'axios';
+import { Button, Space, Tag } from 'antd';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Return } from '../types/return.type';
 import { useNavigate } from 'react-router-dom';
 import { ColumnsType } from 'antd/es/table';
-const { Text } = Typography;
+import PageComponent from '../components/page.component.tsx';
+import { formatPrice } from '../utils/format-price.function.ts';
+import { deleteReturn, getReturns } from '../api/return.service.ts';
+import { formatDate } from '../utils/format-date.function.ts';
+import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { toast, ToastContainer } from 'react-toastify';
 
 type DataType = {
   key: React.Key;
+  returnCode: string;
+  rentalCode: string;
   customer: string;
   paymentState: string;
-  estimatedPrice: number;
+  estimatedPrice: string;
   createdAt: string;
 };
 
 const ReturnPage = () => {
   const [returnTickets, setReturnTickets] = useState<Return[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [filteredReturns, setFilteredReturns] =
+    useState<Return[]>(returnTickets);
+  const [searchField, setSearchField] = useState('');
   const navigate = useNavigate();
+
+  const { setNavigationKey } = useContext(NavigationKeyContexts);
+
+  useEffect(() => {
+    setNavigationKey('6');
+  }, []);
 
   useEffect(() => {
     const fetchReturnTicket = async () => {
       try {
-        const { data }: { data: Return[] } = await axios.get(
-          'https://game-rental-management-app-yh3ve.ondigitalocean.app/return'
-        );
-        setReturnTickets(data);
+        const returnList: Return[] = await getReturns();
+        setReturnTickets(returnList);
       } catch (error) {
         console.log('Error fetching return tickets:', error);
       }
@@ -34,25 +47,26 @@ const ReturnPage = () => {
     fetchReturnTicket();
   }, []);
 
-  const formatCreatedAt = (date: Date) => {
-    const formattedDate = date.toISOString().slice(0, 10);
-    return formattedDate;
-  };
-
   const columns: ColumnsType<DataType> = [
+    {
+      title: 'Mã phiếu trả',
+      dataIndex: 'returnCode',
+      key: 'returnCode',
+      width: 150,
+    },
+    {
+      title: 'Mã phiếu thuê',
+      dataIndex: 'rentalCode',
+      key: 'rentalCode',
+      width: 150,
+    },
     {
       title: 'Khách hàng',
       dataIndex: 'customer',
       key: 'customer',
     },
     {
-      title: 'Tổng tiền thuê',
-      dataIndex: 'estimatedPrice',
-      align: 'center',
-      key: 'estimatedPrice',
-    },
-    {
-      title: 'Ngày tạo',
+      title: 'Ngày trả',
       dataIndex: 'createdAt',
       align: 'center',
       key: 'createdAt',
@@ -62,32 +76,55 @@ const ReturnPage = () => {
       dataIndex: 'paymentState',
       align: 'center',
       key: 'paymentState',
+      render: (_, { paymentState }) => {
+        let color = 'green';
+        if (paymentState === 'NOT_PAID') color = 'red';
+        if (paymentState === 'NOT_ENOUGH') color = 'orange';
+        return (
+          <Tag key={paymentState} color={color} className="ml-2">
+            {paymentState}
+          </Tag>
+        );
+      },
     },
     {
       title: 'Thao tác',
       width: 100,
       align: 'center',
       render: (_, record) => (
-        <Button type="primary" className="bg-blue-600" onClick={() => handleDetailBtn(record.key)}>
+        <Button
+          type="primary"
+          className="bg-blue-600"
+          onClick={() => handleDetailBtn(record.key)}
+        >
           Chi tiết
         </Button>
       ),
     },
   ];
 
-  const data: DataType[] = returnTickets.map((returnTicket) => ({
+  useEffect(() => {
+    const newFilteredReturns = returnTickets.filter((returnTicket) => {
+      return returnTicket.returnCode
+        .toLowerCase()
+        .includes(searchField);
+    });
+    setFilteredReturns(newFilteredReturns);
+  }, [returnTickets, searchField]);
+
+  const data: DataType[] = filteredReturns.map((returnTicket) => ({
     key: returnTicket._id,
-    customer: returnTicket.customer,
+    returnCode: returnTicket.returnCode,
+    rentalCode: returnTicket.rentalCode,
+    customer: returnTicket.customer.customerName,
     paymentState: returnTicket.paymentState,
-    estimatedPrice: returnTicket.estimatedPrice,
-    createdAt: formatCreatedAt(new Date(returnTicket.createdAt)), // Convert createdAt to a Date object before formatting
+    estimatedPrice: formatPrice.format(returnTicket.estimatedPrice),
+    createdAt: formatDate(returnTicket.createdAt.toString()), // Convert createdAt to a Date object before formatting
   }));
 
   const handleDetailBtn = (key: React.Key) => {
-    navigate(`/return/${key}`);
+    navigate(`/returns/${key}`);
   };
-
-  const [searchField, setSearchField] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
@@ -100,65 +137,86 @@ const ReturnPage = () => {
     },
   };
 
+  const checkReturnStatus = () => {
+    return selectedRowKeys.some((key) => {
+      const returnTicket = filteredReturns.find(
+        (returnTicket) => returnTicket._id === key,
+      );
+      return returnTicket?.paymentState === 'PAID';
+    });
+  };
+
   const handleDeleteBtn = async () => {
     try {
+      if (checkReturnStatus()) {
+        toast.error('Không thể xóa phiếu trả 😞', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 8000,
+          theme: 'colored',
+          pauseOnHover: true,
+        });
+        return;
+      }
+
       // Delete selected rows
       await Promise.all(
         selectedRowKeys.map(async (key) => {
-          await axios.delete(
-            `https://game-rental-management-app-yh3ve.ondigitalocean.app/return/${key}`
-          );
-        })
+          await deleteReturn(key as string);
+        }),
       );
+
+      toast.success('Xóa phiếu trả thành công', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
 
       // Fetch updated return tickets data
-      const { data }: { data: Return[] } = await axios.get(
-        'https://game-rental-management-app-yh3ve.ondigitalocean.app/return'
-      );
+      const returnList: Return[] = await getReturns();
 
       // Update return tickets state and selectedRowKeys state
-      setReturnTickets(data);
+      setReturnTickets(returnList);
       setSelectedRowKeys([]);
     } catch (error) {
+      toast.success('Không thể xóa phiếu trả 😞', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 8000,
+        theme: 'colored',
+        pauseOnHover: true,
+      });
       console.log('Error deleting rows:', error);
     }
   };
 
   return (
     <Fragment>
-      <div className="w-[1080px] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10">
-        <Space className="flex justify-between">
-          <Text className="text-2xl font-semibold">Phiếu trả</Text>
-          <div className="input-field">
-            <input
-              className="px-4"
-              type="search"
-              placeholder="Tên khách hàng"
-              name="searchField"
-              value={searchField}
-              onChange={handleChange}
-            />
-            <label htmlFor="searchField">Tên khách hàng</label>
-          </div>
-        </Space>
-        <div>
-          <Divider />
-          <Table
-            rowSelection={{
-              type: 'checkbox',
-              ...rowSelection,
-            }}
-            columns={columns}
-            dataSource={data}
-            pagination={{ pageSize: 5 }}
-          />
-        </div>
+      <div
+        className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%]
+      translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl"
+      >
+        <PageComponent
+          pageName="Phiếu trả"
+          columns={columns}
+          data={data}
+          rowSelection={rowSelection}
+          placeHolder="Mã phiếu trả"
+          inputName="searchField"
+          inputValue={searchField}
+          handleChange={handleChange}
+        />
         <Space direction="horizontal" className="relative top-[-9%]">
-          <Button danger type="primary" className="bg-blue-600" onClick={handleDeleteBtn}>
+          <Button
+            danger
+            type="primary"
+            className="bg-blue-600 "
+            onClick={handleDeleteBtn}
+          >
             Xóa
           </Button>
         </Space>
       </div>
+      <ToastContainer />
     </Fragment>
   );
 };
