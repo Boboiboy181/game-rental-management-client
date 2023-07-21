@@ -116,7 +116,7 @@ const AddCustomer = ({
           <Space className="flex justify-between">
             <Button
               type="primary"
-              className="bg-red-500"
+              className="bg-red-500 hover:!bg-red-400"
               onClick={handleCloseBtn}
             >
               Đóng
