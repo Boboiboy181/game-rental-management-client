@@ -1,5 +1,3 @@
-import { Voucher } from './voucher.type.ts';
-
 export type Invoice = {
   _id: string;
   invoiceID: string;
