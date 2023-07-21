@@ -122,10 +122,15 @@ const ProductDetail = () => {
           />
           <div className="flex justify-between items-center mt-5">
             <button
-              className="rounded-md bg-blue-600 text-white px-6 py-2 transition duration-500 hover:bg-indigo-600 w-full focus:-translate-y-[.1rem] focus:outline-none focus:shadow-xl"
+              className={`rounded-md bg-blue-600 text-white px-6 py-2 transition duration-500 hover:bg-indigo-600 
+            w-full focus:-translate-y-[.1rem] focus:outline-none focus:shadow-xl ${
+              product.quantity <= 0
+                ? 'cursor-not-allowed bg-gray-400 hover:bg-gray-400'
+                : ''
+            }`}
               type="submit"
               onClick={handleAddToCart}
-              disabled={product.quantity < 0}
+              disabled={product.quantity <= 0}
             >
               Add to cart
             </button>

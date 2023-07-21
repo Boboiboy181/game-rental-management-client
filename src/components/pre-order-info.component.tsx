@@ -19,6 +19,7 @@ const defaultFormFields: FormFields = {
 const ContactInfo = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { cartItems } = useContext(CartContext);
+  const [isLoading, setIsLoading] = useState(false);
   const { email, customerName, phoneNumber } = formFields;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
