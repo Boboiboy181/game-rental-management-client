@@ -269,6 +269,7 @@ const AddInvoice = () => {
               <Button
                 className="bg-blue-500 shadow-xl"
                 type="primary"
+                danger
                 onClick={handleCloseBtn}
               >
                 Đóng

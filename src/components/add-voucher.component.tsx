@@ -109,7 +109,7 @@ const AddVoucher = ({
   return (
     <Fragment>
       <div className="fixed bg-black/[.5] w-screen h-screen">
-        <div className="w-[50%] bg-white rounded-md relative p-5 shadow-2xl top-[20%] left-[14%]">
+        <div className="w-[50%] bg-white rounded-md relative p-5 shadow-2xl top-[20%] left-[21%]">
           <Space className="flex justify-between">
             <Text className="text-3xl font-semibold">Chọn voucher</Text>
             <Text className="text-xl">Điểm tích lũy: {customerPoint}</Text>

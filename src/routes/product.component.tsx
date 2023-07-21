@@ -141,8 +141,8 @@ const ProductPage = () => {
     <Fragment>
       <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
         <ShowData
-          pageName="Khách hàng"
-          placeHolder="Tên khách hàng"
+          pageName="Video game"
+          placeHolder="Tên video game"
           columns={columns}
           data={data}
           inputName="searchField"

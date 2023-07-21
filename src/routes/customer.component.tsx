@@ -14,7 +14,8 @@ const CustomerPage = () => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const [searchField, setSearchField] = useState('');
-  const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>(customers);
+  const [filteredCustomers, setFilteredCustomers] =
+    useState<Customer[]>(customers);
 
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
@@ -89,7 +90,7 @@ const CustomerPage = () => {
         }),
       );
 
-      toast.success('Xóa khách hàng thành công 😞', {
+      toast.success('Xóa khách hàng thành công ', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',

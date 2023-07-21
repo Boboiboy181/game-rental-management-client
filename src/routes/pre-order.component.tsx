@@ -69,6 +69,11 @@ const PreOrderPage = () => {
       align: 'center',
     },
     {
+      title: 'Trạng thái',
+      dataIndex: 'createdAt',
+      align: 'center',
+    },
+    {
       title: 'Thao tác',
       align: 'center',
       render: (_, record) => (

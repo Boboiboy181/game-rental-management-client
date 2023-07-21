@@ -235,6 +235,7 @@ const AddReturn = () => {
               <Button
                 className="bg-blue-500"
                 type="primary"
+                danger
                 onClick={handleCloseBtn}
               >
                 Đóng

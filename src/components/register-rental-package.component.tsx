@@ -98,7 +98,7 @@ const RentalPackageRegistration = ({
       <Form
         layout="horizontal"
         className={
-          'absolute bg-white flex flex-col rounded-lg p-6 pb-8 px-10 top-[50%] left-[50%] translate-x-[-100%] translate-y-[-50%]'
+          'absolute bg-white flex flex-col rounded-lg p-6 pb-8 px-10 left-[50%] top-[50%] translate-x-[-70%] translate-y-[-60%]'
         }
         onSubmitCapture={handleSubmit}
       >

@@ -1,4 +1,4 @@
-import { Space, Typography, Divider, Button, Select } from 'antd';
+import { Button, Divider, Select, Space, Typography } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { Product } from '../types/product.type';
@@ -6,7 +6,7 @@ import { CartContext } from '../context/cart.context';
 import { calculatePrice } from '../utils/caculate-price.function';
 import { ProductForCart } from '../types/product-cart.type';
 import { RentalDaysEnum } from '../enums/rental-days.enum';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { formatPrice } from '../utils/format-price.function';
 import { getProducts } from '../api/product.service';
 
@@ -129,6 +129,7 @@ const AddProductToCart = ({
         <Button
           className="bg-blue-600 text-white"
           type="primary"
+          disabled={record.quantity === 0}
           onClick={() => handleAddProductBtn(record.key)}
         >
           Thêm
@@ -179,7 +180,7 @@ const AddProductToCart = ({
       // check if product is already in cart
       const productInCart = cartItems.find((item) => item._id === productID);
       if (productInCart) {
-        toast.error('Game already in cart !', {
+        toast.error('Game đã được thêm vào đơn hàng !', {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 5000,
           theme: 'colored',
@@ -187,7 +188,7 @@ const AddProductToCart = ({
         });
       } else {
         addItemToCart(product, rentalDays, priceByDays);
-        toast.success('Added to cart successfully. 🥳', {
+        toast.success('Thêm game vào đơn hàng thành công', {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 5000,
           theme: 'colored',
@@ -200,7 +201,7 @@ const AddProductToCart = ({
   return (
     <Fragment>
       <div className="fixed bg-black/[.5] w-screen h-screen">
-        <div className="w-[60%] bg-white rounded-md relative p-5 shadow-2xl top-[20%] left-[7%]">
+        <div className="w-[60%] bg-white rounded-md relative p-5 shadow-2xl top-[20%] left-[17%]">
           <Space className="flex justify-between">
             <Text className="text-3xl font-semibold">Thêm game</Text>
             <div className="input-field">
