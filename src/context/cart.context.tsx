@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useState } from 'react';
-import { Product } from '../types/product.type';
-import { ProductForCart } from '../types/product-cart.type';
+import { Product } from '../types/product/product.type';
+import { ProductForCart } from '../types/product/product-cart.type';
 
 type CartContextType = {
   cartItems: ProductForCart[];
@@ -128,7 +128,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const deleteCartItem = (productToDelete: ProductForCart) => {
     setCartItems(deleteCartItemFromCart(cartItems, productToDelete));
   };
-  const resetCart= () => {
+  const resetCart = () => {
     setCartItems([] as ProductForCart[]);
   };
 
@@ -137,7 +137,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     addItemToCart,
     updateCartItem,
     deleteCartItem,
-    resetCart
+    resetCart,
   };
 
   return <CartContext.Provider value={values}>{children}</CartContext.Provider>;

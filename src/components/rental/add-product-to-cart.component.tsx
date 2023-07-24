@@ -1,14 +1,14 @@
 import { Button, Divider, Select, Space, Typography } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
 import { Fragment, useContext, useEffect, useState } from 'react';
-import { Product } from '../types/product.type';
-import { CartContext } from '../context/cart.context';
-import { calculatePrice } from '../utils/caculate-price.function';
-import { ProductForCart } from '../types/product-cart.type';
-import { RentalDaysEnum } from '../enums/rental-days.enum';
+import { Product } from '../../types/product/product.type';
+import { CartContext } from '../../context/cart.context';
+import { calculatePrice } from '../../utils/caculate-price.function';
+import { ProductForCart } from '../../types/product/product-cart.type';
+import { RentalDaysEnum } from '../../enums/rental-days.enum';
 import { toast, ToastContainer } from 'react-toastify';
-import { formatPrice } from '../utils/format-price.function';
-import { getProducts } from '../api/product.service';
+import { formatPrice } from '../../utils/format-price.function';
+import { getProducts } from '../../api/product.service';
 
 const { Text } = Typography;
 

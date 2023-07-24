@@ -1,18 +1,18 @@
 import { Button, Divider, Space, Spin, Table, Typography } from 'antd';
-import { RentalPackage } from '../types/rental-package.type';
+import { RentalPackage } from '../../types/rental-package/rental-package.type.ts';
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { formatPrice } from '../utils/format-price.function';
-import { RegisterRentalPackage } from '../types/register-rental-package.type';
+import { formatPrice } from '../../utils/format-price.function.ts';
+import { RegisterRentalPackage } from '../../types/rental-package/register-rental-package.type.ts';
 import { ColumnsType } from 'antd/es/table';
-import { formatDate } from '../utils/format-date.function';
-import RentalPackageRegistration from './register-rental-package.component';
-import { NavigationKeyContexts } from '../context/navigation-key.context.ts';
+import { formatDate } from '../../utils/format-date.function.ts';
+import RentalPackageRegistration from './register-rental-package.component.tsx';
+import { NavigationKeyContexts } from '../../context/navigation-key.context.ts.tsx';
 import {
   deleteRegister,
   getRegisterList,
   getRentalPackageByID,
-} from '../api/rental-package.service.ts';
+} from '../../api/rental-package.service.ts';
 import { ToastContainer, toast } from 'react-toastify';
 
 const { Text } = Typography;

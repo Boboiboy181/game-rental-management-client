@@ -1,7 +1,7 @@
 import { Button, Form, Input, Space } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
-import { createCustomer } from '../api/customer.service.ts';
+import { getCustomer, updateCustomer } from '../../api/customer.service.ts';
 
 const defaultFormFields = {
   customerName: '',
@@ -10,12 +10,44 @@ const defaultFormFields = {
   address: '',
 };
 
-const AddCustomer = ({
-  setIsAddOpen,
+type UpdateDto = {
+  customerName: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+};
+
+const UpdateCustomer = ({
+  setIsUpdateOpen,
+  selectedUpdate,
 }: {
-  setIsAddOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsUpdateOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedUpdate: React.Key[];
 }) => {
   const [formFields, setFormFields] = useState(defaultFormFields);
+
+  useEffect(() => {
+    const fetchCustomerData = async () => {
+      try {
+        const response = await getCustomer(selectedUpdate[0].toString());
+        const { customerName, email, phoneNumber, address } = response;
+
+        // Cập nhật giá trị mặc định cho formFields từ CSDL
+        setFormFields({
+          customerName,
+          email,
+          phoneNumber,
+          address,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (selectedUpdate.length > 0) {
+      fetchCustomerData();
+    }
+  }, [selectedUpdate]);
 
   const { customerName, email, phoneNumber, address } = formFields;
 
@@ -24,19 +56,21 @@ const AddCustomer = ({
     setFormFields((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleCloseBtn = () => setIsAddOpen(false);
+  const handleCloseBtn = () => setIsUpdateOpen(false);
 
-  const postCustomer = async (data: any) => {
+  const UpdateCustomer = async (id: string, updateDto: UpdateDto) => {
     try {
-      await createCustomer(data);
-      toast.success('Tạo khách hàng mới thành công 🥳', {
+      await updateCustomer(id, updateDto);
+
+      setIsUpdateOpen(false);
+      toast.success('Cập nhật thông tin thành công 🥳', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
         pauseOnHover: true,
       });
     } catch (error) {
-      toast.error('Không thể tạo khách hàng mới 😞', {
+      toast.error('Không thể cập nhật thông tin 😞', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 8000,
         theme: 'colored',
@@ -49,33 +83,29 @@ const AddCustomer = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const customer = {
-      customerName,
-      email,
-      phoneNumber,
-      address,
-    };
+    const _id = selectedUpdate[0].toString();
 
-    await postCustomer(customer);
-    setIsAddOpen(false);
-    setFormFields(defaultFormFields);
-    setIsAddOpen(false);
+    const customer: UpdateDto = { customerName, email, phoneNumber, address };
+
+    await UpdateCustomer(_id, customer);
+    setIsUpdateOpen(false);
   };
 
   return (
     <div className="fixed bg-black/[.5] w-full h-full">
       <Form
         layout="horizontal"
-        className="absolute w-[25rem] bg-white flex flex-col rounded-lg mt-6 p-6 pb-0 left-[50%] top-[50%] translate-x-[-70%] translate-y-[-60%]"
+        className="absolute w-[25rem] bg-white flex flex-col justify-between rounded-lg mt-6 p-6 pb-0 
+        left-[50%] top-[50%] translate-x-[-70%] translate-y-[-60%]"
         onSubmitCapture={handleSubmit}
       >
-        <h1 className="text-2xl text-center font-semibold mb-4">
-          Thêm khách hàng
+        <h1 className="text-2xl font-semibold mb-4 text-center">
+          Cập nhật thông tin khách hàng
         </h1>
         <Form.Item label="Họ và tên">
           <Input
             required
-            type="text"
+            type="string"
             placeholder="Nhập tên khách hàng"
             name="customerName"
             value={customerName}
@@ -85,7 +115,7 @@ const AddCustomer = ({
         <Form.Item label="Email">
           <Input
             required
-            type="text"
+            type="string"
             placeholder="Nhập email"
             name="email"
             value={email}
@@ -95,8 +125,8 @@ const AddCustomer = ({
         <Form.Item label="SĐT">
           <Input
             required
-            type="text"
-            placeholder="Nhập số điện thoại"
+            type="string"
+            placeholder="Nhập SĐT"
             name="phoneNumber"
             value={phoneNumber}
             onChange={handleChange}
@@ -105,19 +135,19 @@ const AddCustomer = ({
         <Form.Item label="Địa chỉ">
           <Input
             required
-            type="text"
+            type="string"
             placeholder="Nhập địa chỉ"
             name="address"
             value={address}
             onChange={handleChange}
           />
         </Form.Item>
-
         <Form.Item>
-          <Space className="flex justify-between">
+          <Space className="flex items-center justify-between">
             <Button
               type="primary"
-              className="bg-red-500 hover:!bg-red-400"
+              danger
+              className="bg-red-500 "
               onClick={handleCloseBtn}
             >
               Đóng
@@ -125,7 +155,7 @@ const AddCustomer = ({
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-blue-500 w-[70px]"
+              className="bg-blue-500 w-[70px] "
             >
               Gửi
             </Button>
@@ -137,4 +167,4 @@ const AddCustomer = ({
   );
 };
 
-export default AddCustomer;
+export default UpdateCustomer;

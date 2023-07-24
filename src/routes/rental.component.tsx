@@ -1,15 +1,15 @@
 import { Button, Space, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { Rental } from '../types/rental.type';
+import { Rental } from '../types/rental/rental.type.ts';
 import { formatPrice } from '../utils/format-price.function';
 import { useNavigate } from 'react-router-dom';
 import { delelteRental, getRentals } from '../api/rental.service';
-import ShowData from '../components/page.component';
+import ShowData from '../components/common/page.component.tsx';
 import { formatDate } from '../utils/format-date.function.ts';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { toast, ToastContainer } from 'react-toastify';
-import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
+import DeleteConfirmationDialog from '../components/common/confirmation-dialog.component.tsx';
 
 type DataType = {
   key: string;
@@ -131,7 +131,6 @@ const RentalPage = () => {
     setIsConfirmDeleteOpen(true);
   };
   const handleConfirmDelete = async () => {
-    
     try {
       setIsConfirmDeleteOpen(false);
       // Check if any selected row has status of RETURNED or NOT_ENOUGH
@@ -212,14 +211,12 @@ const RentalPage = () => {
         </Space>
       </div>
       <ToastContainer />
-      {
-        isConfirmDeleteOpen && (
-          <DeleteConfirmationDialog
-            onConfirm={handleConfirmDelete}
-            setOpenConfirmation={setIsConfirmDeleteOpen}
-          />
-        )
-      }
+      {isConfirmDeleteOpen && (
+        <DeleteConfirmationDialog
+          onConfirm={handleConfirmDelete}
+          setOpenConfirmation={setIsConfirmDeleteOpen}
+        />
+      )}
     </Fragment>
   );
 };

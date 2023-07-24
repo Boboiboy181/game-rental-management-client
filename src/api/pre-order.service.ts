@@ -1,4 +1,4 @@
-import { PreOrder } from '../types/pre-order.type';
+import { PreOrder } from '../types/pre-order/pre-order.type';
 import api from './axios.config';
 
 export const getPreOrders = async (): Promise<PreOrder[]> => {

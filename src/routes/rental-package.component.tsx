@@ -2,9 +2,9 @@ import { Button, Space, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { formatPrice } from '../utils/format-price.function';
-import { RentalPackage } from '../types/rental-package.type';
-import AddRentalPackage from '../components/add-rental-package.component';
-import UpdateRentalPackage from '../components/update-rental-package.component';
+import { RentalPackage } from '../types/rental-package/rental-package.type.ts';
+import AddRentalPackage from '../components/rental-package/add-rental-package.component.tsx';
+import UpdateRentalPackage from '../components/rental-package/update-rental-package.component.tsx';
 import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts';
@@ -12,8 +12,8 @@ import {
   deleteRentalPackage,
   getRentalPackages,
 } from '../api/rental-package.service.ts';
-import ShowData from '../components/page.component.tsx';
-import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
+import ShowData from '../components/common/page.component.tsx';
+import DeleteConfirmationDialog from '../components/common/confirmation-dialog.component.tsx';
 
 const { Text } = Typography;
 
@@ -221,14 +221,12 @@ const RentalPackagePage = () => {
           selectedUpdate={selectedRowKeys}
         />
       )}
-      {
-        isConfirmDeleteOpen && (
-          <DeleteConfirmationDialog
-            onConfirm={handleConfirmDelete}
-            setOpenConfirmation={setIsConfirmDeleteOpen}
-          />
-        )
-      }
+      {isConfirmDeleteOpen && (
+        <DeleteConfirmationDialog
+          onConfirm={handleConfirmDelete}
+          setOpenConfirmation={setIsConfirmDeleteOpen}
+        />
+      )}
       <ToastContainer />
     </Fragment>
   );

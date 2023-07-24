@@ -1,16 +1,16 @@
 import { Button, Space } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { Product } from '../types/product.type';
+import { Product } from '../types/product/product.type.ts';
 import { toast, ToastContainer } from 'react-toastify';
 import { formatPrice } from '../utils/format-price.function';
-import AddProduct from '../components/add-product.component';
-import UpdateProduct from '../components/update-video-game.component';
+import AddProduct from '../components/product/add-product.component.tsx';
+import UpdateProduct from '../components/product/update-video-game.component.tsx';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { deleteProduct, getProducts } from '../api/product.service.ts';
-import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
+import DeleteConfirmationDialog from '../components/common/confirmation-dialog.component.tsx';
 
-import ShowData from '../components/page.component.tsx';
+import ShowData from '../components/common/page.component.tsx';
 
 type DataType = {
   key: string;

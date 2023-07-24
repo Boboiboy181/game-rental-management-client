@@ -1,9 +1,9 @@
 import { AutoComplete, Button, Form, Input, Space, Typography } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
-import { getCustomers } from '../api/customer.service';
+import { getCustomers } from '../../api/customer.service';
 import { useEffect, useState } from 'react';
-import { Customer } from '../types/customer.type';
-import { registerRentalPackage } from '../api/rental-package.service';
+import { Customer } from '../../types/customer/customer.type';
+import { registerRentalPackage } from '../../api/rental-package.service';
 
 const { Text } = Typography;
 

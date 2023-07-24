@@ -1,4 +1,4 @@
-import { SignIn } from '../types/sign-in.type';
+import { SignIn } from '../types/auth/sign-in.type';
 import api from './axios.config';
 
 type AccessToken = {

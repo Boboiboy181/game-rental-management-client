@@ -1,15 +1,15 @@
 import { Button, Space, Tag } from 'antd';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { Return } from '../types/return.type';
+import { Return } from '../types/return/return.type.ts';
 import { useNavigate } from 'react-router-dom';
 import { ColumnsType } from 'antd/es/table';
-import PageComponent from '../components/page.component.tsx';
+import PageComponent from '../components/common/page.component.tsx';
 import { formatPrice } from '../utils/format-price.function.ts';
 import { deleteReturn, getReturns } from '../api/return.service.ts';
 import { formatDate } from '../utils/format-date.function.ts';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { toast, ToastContainer } from 'react-toastify';
-import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
+import DeleteConfirmationDialog from '../components/common/confirmation-dialog.component.tsx';
 
 type DataType = {
   key: React.Key;
@@ -106,9 +106,7 @@ const ReturnPage = () => {
 
   useEffect(() => {
     const newFilteredReturns = returnTickets.filter((returnTicket) => {
-      return returnTicket.returnCode
-        .toLowerCase()
-        .includes(searchField);
+      return returnTicket.returnCode.toLowerCase().includes(searchField);
     });
     setFilteredReturns(newFilteredReturns);
   }, [returnTickets, searchField]);
@@ -223,14 +221,12 @@ const ReturnPage = () => {
         </Space>
       </div>
       <ToastContainer />
-      {
-        isConfirmDeleteOpen && (
-          <DeleteConfirmationDialog
-            onConfirm={handleConfirmDelete}
-            setOpenConfirmation={setIsConfirmDeleteOpen}
-          />
-        )
-      }
+      {isConfirmDeleteOpen && (
+        <DeleteConfirmationDialog
+          onConfirm={handleConfirmDelete}
+          setOpenConfirmation={setIsConfirmDeleteOpen}
+        />
+      )}
     </Fragment>
   );
 };

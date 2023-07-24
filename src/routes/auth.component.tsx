@@ -1,7 +1,7 @@
 import { Button, Form, Space, Typography } from 'antd';
-import Input from '../components/input.component';
+import Input from '../components/common/input.component';
 import React, { useState } from 'react';
-import { SignIn } from '../types/sign-in.type';
+import { SignIn } from '../types/auth/sign-in.type';
 import { signIn } from '../api/auth.service';
 import { useNavigate } from 'react-router-dom';
 

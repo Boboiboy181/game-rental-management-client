@@ -1,8 +1,8 @@
 import React, { Fragment, useContext } from 'react';
 import { Button, Divider, Space, Typography } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
-import { VoucherContext } from '../context/voucher.context.tsx';
-import { Voucher } from '../types/voucher.type.ts';
+import { VoucherContext } from '../../context/voucher.context.tsx';
+import { Voucher } from '../../types/invoice/voucher.type.ts';
 
 const { Text } = Typography;
 

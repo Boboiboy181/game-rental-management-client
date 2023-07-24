@@ -1,15 +1,15 @@
 import { Button, Space, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { Invoice } from '../types/invoice.type';
+import { Invoice } from '../types/invoice/invoice.type.ts';
 import { formatPrice } from '../utils/format-price.function.ts';
 import { formatDate } from '../utils/format-date.function.ts';
-import ShowData from '../components/page.component.tsx';
+import ShowData from '../components/common/page.component.tsx';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { deleteInvoice, getInvoices } from '../api/invoice.service.ts';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
+import DeleteConfirmationDialog from '../components/common/confirmation-dialog.component.tsx';
 
 const { Text } = Typography;
 
@@ -175,14 +175,12 @@ const InvoicePage = () => {
           </Button>
         </Space>
       </div>
-      {
-        isConfirmDeleteOpen && (
-          <DeleteConfirmationDialog
-            onConfirm={handleConfirmDelete}
-            setOpenConfirmation={setIsConfirmDeleteOpen}
-          />
-        )
-      }
+      {isConfirmDeleteOpen && (
+        <DeleteConfirmationDialog
+          onConfirm={handleConfirmDelete}
+          setOpenConfirmation={setIsConfirmDeleteOpen}
+        />
+      )}
       <ToastContainer />
     </Fragment>
   );

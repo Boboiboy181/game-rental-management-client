@@ -1,15 +1,15 @@
 import { Button, Space, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import React, { Fragment,useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PreOrder } from '../types/pre-order.type';
+import { PreOrder } from '../types/pre-order/pre-order.type.ts';
 import { formatDate } from '../utils/format-date.function';
 import { formatPrice } from '../utils/format-price.function';
 import { deletePreOrder, getPreOrders } from '../api/pre-order.service';
-import ShowData from '../components/page.component';
+import ShowData from '../components/common/page.component.tsx';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { ToastContainer } from 'react-toastify';
-import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
+import DeleteConfirmationDialog from '../components/common/confirmation-dialog.component.tsx';
 type DataType = {
   key: string;
   preOrderCode: string;
@@ -79,7 +79,7 @@ const PreOrderPage = () => {
           text: '',
         };
         let countHours = 0;
-        const dateString = record.createdAtDate; 
+        const dateString = record.createdAtDate;
         const createdAtDate = new Date(dateString);
         if (createdAtDate instanceof Date && !isNaN(createdAtDate.getTime())) {
           countHours =
@@ -162,32 +162,30 @@ const PreOrderPage = () => {
 
   return (
     <Fragment>
-    <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
-      <ShowData
-        pageName="Phiếu đặt trước"
-        placeHolder="Mã phiếu đặt trước"
-        inputName="searchField"
-        inputValue={searchField}
-        handleChange={handleChange}
-        rowSelection={rowSelection}
-        columns={columns}
-        data={data}
-      />
-      <Space direction="horizontal" className="relative top-[-9%]">
-        <Button danger type="primary" onClick={handleConfirmDeleteOpen}>
-          Xóa
-        </Button>
-      </Space>
-    </div>
-    {
-        isConfirmDeleteOpen && (
-          <DeleteConfirmationDialog
-            onConfirm={handleConfirmDelete}
-            setOpenConfirmation={setIsConfirmDeleteOpen}
-          />
-        )
-      }
-    <ToastContainer />
+      <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
+        <ShowData
+          pageName="Phiếu đặt trước"
+          placeHolder="Mã phiếu đặt trước"
+          inputName="searchField"
+          inputValue={searchField}
+          handleChange={handleChange}
+          rowSelection={rowSelection}
+          columns={columns}
+          data={data}
+        />
+        <Space direction="horizontal" className="relative top-[-9%]">
+          <Button danger type="primary" onClick={handleConfirmDeleteOpen}>
+            Xóa
+          </Button>
+        </Space>
+      </div>
+      {isConfirmDeleteOpen && (
+        <DeleteConfirmationDialog
+          onConfirm={handleConfirmDelete}
+          setOpenConfirmation={setIsConfirmDeleteOpen}
+        />
+      )}
+      <ToastContainer />
     </Fragment>
   );
 };

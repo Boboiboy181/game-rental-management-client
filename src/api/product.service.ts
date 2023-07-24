@@ -1,5 +1,5 @@
-import { ProductForCart } from '../types/product-cart.type';
-import { Product } from '../types/product.type.ts';
+import { ProductForCart } from '../types/product/product-cart.type.ts';
+import { Product } from '../types/product/product.type.ts';
 import api from './axios.config';
 
 type UpdateProductDto = {

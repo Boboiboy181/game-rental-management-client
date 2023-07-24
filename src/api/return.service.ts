@@ -1,6 +1,6 @@
-import { Return } from '../types/return.type.ts';
+import { Return } from '../types/return/return.type.ts';
 import api from './axios.config.ts';
-import { CreateReturn } from '../types/create-return.type.ts';
+import { CreateReturn } from '../types/return/create-return.type.ts';
 
 export const getReturns = async (): Promise<Return[]> => {
   const { data }: { data: Return[] } = await api.get('return');

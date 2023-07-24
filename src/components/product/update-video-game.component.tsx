@@ -1,8 +1,8 @@
 import { Button, Form, Input, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
-import { Product } from '../types/product.type';
-import { getProduct, updateProduct } from '../api/product.service.ts';
+import { Product } from '../../types/product/product.type.ts';
+import { getProduct, updateProduct } from '../../api/product.service.ts';
 
 const defaultFormFields = {
   price: 0,

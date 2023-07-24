@@ -1,7 +1,7 @@
 import { Button, Form, Input, Select, Space, Spin } from 'antd';
 import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
-import { createProduct } from '../api/product.service.ts';
+import { createProduct } from '../../api/product.service.ts';
 
 const defaultFormFields = {
   productName: '',

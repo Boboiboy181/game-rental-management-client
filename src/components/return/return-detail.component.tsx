@@ -1,13 +1,13 @@
-import { Button, Divider, Input, Space, Spin, Typography } from 'antd';
+import { Button, Divider, Space, Spin, Typography } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { formatDate } from '../utils/format-date.function';
+import { formatDate } from '../../utils/format-date.function.ts';
 import Table, { ColumnsType } from 'antd/es/table';
-import { formatPrice } from '../utils/format-price.function';
-import { calculatePrice } from '../utils/caculate-price.function';
-import { Rental } from '../types/rental.type';
-import { getRentalById, updateRental } from '../api/rental.service';
-import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { formatPrice } from '../../utils/format-price.function.ts';
+import { calculatePrice } from '../../utils/caculate-price.function.ts';
+import { Return } from '../../types/return/return.type.ts';
+import { getReturnByID } from '../../api/return.service.ts';
+import { NavigationKeyContexts } from '../../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
 
@@ -17,31 +17,30 @@ type DataType = {
   price: number;
   preOrderQuantity: number;
   numberOfRentalDays: number;
+  dayPastDue: number;
   returnDate: string;
+  fine: number;
 };
 
-const UpdateRental = () => {
-  const { rentalID } = useParams();
+const ReturnDetail = () => {
+  const { returnID } = useParams();
   const navigate = useNavigate();
-  const handleCloseDetailBtn = () => navigate(`/rentals/${rentalID}`);
-  const [rental, setRental] = useState<Rental>({} as Rental);
+  const handleCloseDetailBtn = () => navigate('/returns');
+  const [returnTicket, setReturnTicket] = useState<Return>({} as Return);
   const [loading, setLoading] = useState(true);
-  const [deposit, setDeposit] = useState<number>(0);
 
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
   useEffect(() => {
-    setNavigationKey('5');
-
+    setNavigationKey('6');
     const fetchRental = async () => {
-      const data = await getRentalById(rentalID);
-      setRental(data);
-      setDeposit(data.deposit);
+      const data = await getReturnByID(returnID || '');
+      setReturnTicket(data);
       setLoading(false);
     };
 
     fetchRental();
-  }, [setRental]);
+  }, [setReturnTicket]);
 
   if (loading) {
     return (
@@ -66,20 +65,21 @@ const UpdateRental = () => {
       align: 'center',
     },
     {
-      title: 'Số ngày thuê',
-      dataIndex: 'numberOfRentalDays',
+      title: 'Số ngày trễ hạn',
+      dataIndex: 'dayPastDue',
       align: 'center',
+      render: (_, record) =>
+        record.dayPastDue > 0 ? (
+          <span>{record.dayPastDue}</span>
+        ) : (
+          <span>0</span>
+        ),
     },
     {
-      title: 'Đơn giá',
+      title: 'Tiền phạt',
       align: 'center',
       render: (_, record) => (
-        <p className="font-semibold">
-          {formatPrice.format(
-            record.preOrderQuantity *
-              calculatePrice(record.price, record.numberOfRentalDays),
-          )}
-        </p>
+        <p className="font-semibold">{formatPrice.format(record.fine)}</p>
       ),
     },
     {
@@ -96,61 +96,55 @@ const UpdateRental = () => {
     },
   ];
 
-  const data = rental.rentedGames.map((rentedGame, index) => ({
+  const data = returnTicket.rentedGames.map((rentedGame, index) => ({
     key: index,
     productName: rentedGame.game.productName,
     price: rentedGame.game.price,
     preOrderQuantity: rentedGame.preOrderQuantity,
     numberOfRentalDays: rentedGame.numberOfRentalDays,
+    dayPastDue: rentedGame.daysPastDue,
+    fine: rentedGame.fine,
     returnDate: formatDate(rentedGame.returnDate.toString()),
   }));
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setDeposit(Number(value));
-  };
-
-  const handleSaveReturnBtn = async () => {
-    try {
-      await updateRental(rentalID, { deposit: deposit });
-    } catch (error) {
-      console.log(error);
-    }
-    navigate(`/rentals/${rentalID}`);
+  const handleCreateInvoiceBtn = () => {
+    navigate(`/invoices/create/${returnID}`);
   };
 
   return (
     <div className="w-[90%] h-[80%] bg-white rounded-md relative top-[30%] left-[50%] translate-x-[-50%] translate-y-[-30%] p-10 shadow-2xl">
       <Space className="flex flex-col items-start">
-        <Text className="text-3xl font-semibold">Phiếu thuê</Text>
+        <Text className="text-3xl font-semibold">
+          Phiếu trả{' '}
+          <span className={'text-gray-400 font-light ml-1'}>
+            #{returnTicket.returnCode}
+          </span>
+        </Text>
         <p className="text-xs text-black/40">
-          Ngày lập phiếu {formatDate(rental.createdAt.toString())}
+          Ngày lập phiếu {formatDate(returnTicket.createdAt.toString())}
         </p>
       </Space>
       <div className="flex items-end justify-between">
         <Space className="mt-6">
           <div className="flex flex-col mr-10 border-black/20 border-b pb-1">
+            <p className="text-xs text-black/40">Mã phiếu thuê</p>
+            <p className="mt-2">{returnTicket.rentalCode}</p>
+          </div>
+          <div className="flex flex-col mr-10 border-black/20 border-b pb-1">
             <p className="text-xs text-black/40">Số điện thoại</p>
-            <p className="mt-2">{rental.customer.phoneNumber}</p>
+            <p className="mt-2">{returnTicket.customer.phoneNumber}</p>
           </div>
           <div className="flex flex-col border-black/20 border-b pb-1">
             <p className="text-xs text-black/40">Tên khách hàng</p>
-            <p className="mt-2">{rental.customer.customerName}</p>
+            <p className="mt-2">{returnTicket.customer.customerName}</p>
           </div>
         </Space>
-        <div className="flex flex-col border-b-black/20 border-b w-[180px]">
-          <p className="text-xs text-black/40">Tiền đặt cọc</p>
-          <Input
-            className="p-0 py-1"
-            allowClear
-            required
-            bordered={false}
-            type="number"
-            name="deposit"
-            value={deposit}
-            onChange={handleChange}
-          />
-        </div>
+        <p className="text-lg">
+          Tiền đặt cọc{' '}
+          <span className="font-semibold text-red-600">
+            {formatPrice.format(returnTicket.deposit)}
+          </span>
+        </p>
       </div>
       <div>
         <Divider />
@@ -163,7 +157,8 @@ const UpdateRental = () => {
       <div className="flex justify-between items-center">
         <Space direction="horizontal" className="relative top-[-9%]">
           <Button
-            className="bg-blue-500 shadow-xl"
+            className="shadow-xl"
+            danger
             type="primary"
             onClick={handleCloseDetailBtn}
           >
@@ -172,20 +167,33 @@ const UpdateRental = () => {
           <Button
             className="bg-green-600 hover:!bg-green-500 shadow-xl"
             type="primary"
-            onClick={handleSaveReturnBtn}
+            onClick={handleCreateInvoiceBtn}
+            disabled={returnTicket.paymentState === 'PAID'}
           >
-            Lưu
+            Tạo hóa đơn
           </Button>
         </Space>
-        <p className="text-xl">
-          Tổng tiền:{' '}
-          <span className="font-semibold text-red-600">
-            {formatPrice.format(rental.estimatedPrice)}
-          </span>
-        </p>
+        <Space className="flex flex-col items-end">
+          <p className="text-lg">
+            Tổng tiền phạt:{' '}
+            <span className="font-semibold text-red-600">
+              {formatPrice.format(
+                returnTicket.rentedGames.reduce((acc, currentValue) => {
+                  return acc + currentValue.fine;
+                }, 0),
+              )}
+            </span>
+          </p>
+          <p className="text-2xl">
+            Tổng tiền:{' '}
+            <span className="font-semibold text-red-600">
+              {formatPrice.format(returnTicket.estimatedPrice)}
+            </span>
+          </p>
+        </Space>
       </div>
     </div>
   );
 };
 
-export default UpdateRental;
+export default ReturnDetail;

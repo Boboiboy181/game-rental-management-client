@@ -1,13 +1,13 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { Button, Space } from 'antd';
 import { toast, ToastContainer } from 'react-toastify';
-import UpdateCustomer from '../components/update-customer.component';
-import AddCustomer from '../components/add-customer.component';
-import { Customer } from '../types/customer.type';
-import ShowData from '../components/page.component';
+import UpdateCustomer from '../components/customer/update-customer.component.tsx';
+import AddCustomer from '../components/customer/add-customer.component.tsx';
+import { Customer } from '../types/customer/customer.type.ts';
+import ShowData from '../components/common/page.component.tsx';
 import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
 import { deleteCustomer, getCustomers } from '../api/customer.service.ts';
-import DeleteConfirmationDialog from '../components/confirmation-dialog.component.tsx';
+import DeleteConfirmationDialog from '../components/common/confirmation-dialog.component.tsx';
 
 const CustomerPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -15,7 +15,8 @@ const CustomerPage = () => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
   const [searchField, setSearchField] = useState('');
-  const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>(customers);
+  const [filteredCustomers, setFilteredCustomers] =
+    useState<Customer[]>(customers);
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
 
   const { setNavigationKey } = useContext(NavigationKeyContexts);
@@ -174,14 +175,12 @@ const CustomerPage = () => {
         />
       )}
       {isAddOpen && <AddCustomer setIsAddOpen={setIsAddOpen} />}
-      {
-        isConfirmDeleteOpen && (
-          <DeleteConfirmationDialog
-            onConfirm={handleConfirmDelete}
-            setOpenConfirmation={setIsConfirmDeleteOpen}
-          />
-        )
-      }
+      {isConfirmDeleteOpen && (
+        <DeleteConfirmationDialog
+          onConfirm={handleConfirmDelete}
+          setOpenConfirmation={setIsConfirmDeleteOpen}
+        />
+      )}
       <ToastContainer />
     </Fragment>
   );

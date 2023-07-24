@@ -1,13 +1,13 @@
 import { Button, Divider, Space, Spin, Typography } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Invoice } from '../types/invoice.type';
+import { Invoice } from '../../types/invoice/invoice.type.ts';
 import Table, { ColumnsType } from 'antd/es/table';
-import { formatDate } from '../utils/format-date.function';
-import { NavigationKeyContexts } from '../context/navigation-key.context.ts';
-import { formatPrice } from '../utils/format-price.function.ts';
-import { calculatePrice } from '../utils/caculate-price.function.ts';
-import { getInvoice } from '../api/invoice.service.ts';
+import { formatDate } from '../../utils/format-date.function.ts';
+import { NavigationKeyContexts } from '../../context/navigation-key.context.ts.tsx';
+import { formatPrice } from '../../utils/format-price.function.ts';
+import { calculatePrice } from '../../utils/caculate-price.function.ts';
+import { getInvoice } from '../../api/invoice.service.ts';
 
 const { Text } = Typography;
 
@@ -33,7 +33,7 @@ const InvoiceDetail = () => {
   useEffect(() => {
     setNavigationKey('7');
     const fetchInvoice = async () => {
-      const data = await getInvoice(invoiceID);      
+      const data = await getInvoice(invoiceID);
       setInvoice(data);
       setIsLoading(false);
     };
@@ -94,7 +94,7 @@ const InvoiceDetail = () => {
       ),
     },
   ];
-  
+
   const data = invoice.rentedGames.map((rentedGame, index) => ({
     key: index,
     productName: rentedGame.game.productName,
@@ -183,7 +183,9 @@ const InvoiceDetail = () => {
             <p className="text-lg">
               Giảm:{' '}
               <span className="font-semibold text-red-600">
-                {formatPrice.format(calculateDiscount(invoice.voucher.voucherValue))}
+                {formatPrice.format(
+                  calculateDiscount(invoice.voucher.voucherValue),
+                )}
               </span>
             </p>
           ) : (

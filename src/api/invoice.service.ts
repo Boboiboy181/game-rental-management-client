@@ -1,5 +1,5 @@
-import { CreateInvoice } from '../types/create-invoice.type.ts';
-import { Invoice } from '../types/invoice.type.ts';
+import { CreateInvoice } from '../types/invoice/create-invoice.type.ts';
+import { Invoice } from '../types/invoice/invoice.type.ts';
 import api from './axios.config.ts';
 
 export const createInvoice = async (

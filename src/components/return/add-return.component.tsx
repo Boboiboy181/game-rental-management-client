@@ -1,15 +1,15 @@
 import { Button, Space, Spin, Typography } from 'antd';
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { formatDate } from '../utils/format-date.function';
+import { formatDate } from '../../utils/format-date.function.ts';
 import Table, { ColumnsType } from 'antd/es/table';
 import { toast, ToastContainer } from 'react-toastify';
-import { Rental } from '../types/rental.type.ts';
-import { getRentalById } from '../api/rental.service.ts';
-import { CreateReturn } from '../types/create-return.type.ts';
-import { Return } from '../types/return.type.ts';
-import { createReturn, getReturnByID } from '../api/return.service.ts';
-import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { Rental } from '../../types/rental/rental.type.ts';
+import { getRentalById } from '../../api/rental.service.ts';
+import { CreateReturn } from '../../types/return/create-return.type.ts';
+import { Return } from '../../types/return/return.type.ts';
+import { createReturn, getReturnByID } from '../../api/return.service.ts';
+import { NavigationKeyContexts } from '../../context/navigation-key.context.ts.tsx';
 
 const { Text } = Typography;
 
@@ -41,7 +41,6 @@ const AddReturn = () => {
   const [rental, setRental] = useState<Rental>({} as Rental);
   const [returnGames, setReturnGames] = useState<DataType[]>([]);
   const [returnGamesBackup, setReturnGamesBackup] = useState<DataType[]>([]);
-
 
   const { setNavigationKey } = useContext(NavigationKeyContexts);
 
@@ -173,7 +172,7 @@ const AddReturn = () => {
 
   const handleResetBtn = () => {
     setReturnGames(returnGamesBackup);
-  }
+  };
 
   const handleCreateBtn = async () => {
     if (!rentalID) return;

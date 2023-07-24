@@ -1,21 +1,21 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
-import { NavigationKeyContexts } from '../context/navigation-key.context.ts.tsx';
+import { NavigationKeyContexts } from '../../context/navigation-key.context.ts.tsx';
 import { Button, Divider, Space, Spin, Typography } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Return } from '../types/return.type.ts';
-import { getReturnByID } from '../api/return.service.ts';
-import { formatDate } from '../utils/format-date.function.ts';
-import { formatPrice } from '../utils/format-price.function.ts';
-import { calculatePrice } from '../utils/caculate-price.function.ts';
-import { CreateInvoice } from '../types/create-invoice.type.ts';
-import { getRegistrationByCustomerID } from '../api/rental-package.service.ts';
+import { Return } from '../../types/return/return.type.ts';
+import { getReturnByID } from '../../api/return.service.ts';
+import { formatDate } from '../../utils/format-date.function.ts';
+import { formatPrice } from '../../utils/format-price.function.ts';
+import { calculatePrice } from '../../utils/caculate-price.function.ts';
+import { CreateInvoice } from '../../types/invoice/create-invoice.type.ts';
+import { getRegistrationByCustomerID } from '../../api/rental-package.service.ts';
 import AddVoucher from './add-voucher.component.tsx';
-import { VoucherContext } from '../context/voucher.context.tsx';
-import { Voucher } from '../types/voucher.type.ts';
+import { VoucherContext } from '../../context/voucher.context.tsx';
+import { Voucher } from '../../types/invoice/voucher.type.ts';
 import { CloseOutlined } from '@ant-design/icons';
-import IsCreating from './is-creating.component.tsx';
-import { createInvoice } from '../api/invoice.service.ts';
+import IsCreating from '../common/is-creating.component.tsx';
+import { createInvoice } from '../../api/invoice.service.ts';
 
 const { Text } = Typography;
 

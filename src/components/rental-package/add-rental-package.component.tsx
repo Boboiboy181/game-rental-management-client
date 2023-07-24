@@ -1,7 +1,7 @@
 import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { createRentalPackage } from '../api/rental-package.service';
+import { createRentalPackage } from '../../api/rental-package.service';
 
 const defaultFormFields = {
   packageName: '',
