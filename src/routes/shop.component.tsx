@@ -1,9 +1,9 @@
 import { MouseEventHandler, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ProductList from '../components/product-list.component';
-import { Product } from '../types/product.type';
-import { SearchContext } from '../contexts/search.context';
 import api from '../api/axios.config';
+import ProductList from '../components/product-list.component';
+import { SearchContext } from '../contexts/search.context';
+import { Product } from '../types/product.type';
 
 const Shop = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -38,6 +38,14 @@ const Shop = () => {
       <h1 className="text-5xl font-semibold font-cursive text-center mt-16 mb-10 tracking-wider">
         Our Store
       </h1>
+      <p className="pl-10">
+        Group 4:
+        <ul>
+          <li>Tran Truc Quynh</li>
+          <li>Dao Gia Hai</li>
+          <li>Le Bao Chau</li>
+        </ul>
+      </p>
       <ProductList products={filteredProducts} onClickHandler={handleClick} />
     </div>
   );
