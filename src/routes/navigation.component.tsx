@@ -4,6 +4,7 @@ import { SearchContext } from '../contexts/search.context';
 import CartIcon from '../components/cart-icon.component';
 import { CartContext } from '../contexts/cart.context';
 import CartDropdown from '../components/cart-dropdown.component';
+import Input from '../components/input.component';
 
 const Navigation = () => {
   const { searchField, setSearchField } = useContext(SearchContext);
@@ -18,17 +19,13 @@ const Navigation = () => {
   return (
     <Fragment>
       <div className="h-[5.5rem] w-full flex justify-between px-16 items-center border-solid border-gray-300 border-b text-center">
-        <div className="input-field">
-          <input
-            className="px-4"
-            type="search"
-            placeholder="Search game"
-            name="searchField"
-            value={searchField}
-            onChange={handleChange}
-          />
-          <label htmlFor="searchfield">Search game</label>
-        </div>
+        <Input
+          inputType="search"
+          inputName="searchField"
+          inputPlaceholder="Search game"
+          inputValue={searchField}
+          onChangeHandler={handleChange}
+        />
         <Link className="" to="/">
           <div className="flex justify-center items-center relative right-9">
             <img

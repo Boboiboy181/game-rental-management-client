@@ -10,10 +10,10 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Navigation />}>
         <Route index element={<Shop />} />
-        <Route path="/products/:productId" element={<ProductDetail />} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path="products/:productId" element={<ProductDetail />} />
+        <Route path="checkout" element={<Checkout />} />
       </Route>
-      <Route path="/auth" element={<Authentication />} />
+      <Route path="auth" element={<Authentication />} />
     </Routes>
   );
 };

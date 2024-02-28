@@ -1,9 +1,9 @@
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { PreOrder } from '../types/pre-order.type';
 import { CartContext } from '../contexts/cart.context';
 import { toast, ToastContainer } from 'react-toastify';
-import api from '../api/axios.config';
 import { LoadingContext } from '../contexts/loading.context';
+import api from '../api/axios.config.ts';
 
 type FormFields = {
   email: string;
@@ -38,8 +38,7 @@ const ContactInfo = () => {
   const postPreOrder = async (preOrder: PreOrder) => {
     try {
       setIsLoading(true);
-      const response = await api.post('/pre-order', preOrder);
-      console.log(response);
+      await api.post('/pre-order', preOrder);
       toast.success('Pre-order created successfully 🥳', {
         position: toast.POSITION.BOTTOM_LEFT,
         autoClose: 8000,

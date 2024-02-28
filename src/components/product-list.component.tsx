@@ -9,7 +9,7 @@ type ProductListProps = {
 
 const ProductList = ({ products, onClickHandler }: ProductListProps) => {
   return (
-    <div className="flex flex-wrap text-center items-center p-10">
+    <div className="flex flex-wrap text-center items-center p-10 max-w-[1440px]">
       {products.map((product: Product) => {
         return (
           <ProductCard

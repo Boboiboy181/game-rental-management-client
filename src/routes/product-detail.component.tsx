@@ -30,8 +30,6 @@ const ProductDetail = () => {
     fetchProduct();
   }, [productId]);
 
-  console.log(product);
-
   const priceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = e.target.value;
@@ -63,10 +61,9 @@ const ProductDetail = () => {
 
   // check the game is in the cart or not
   const isGameInCart = (product: ProductForOrder) => {
-    const game = cartItems.find((item: ProductForOrder) => {
+    return cartItems.find((item: ProductForOrder) => {
       return item._id === product._id;
     });
-    return game;
   };
 
   const handleAddToCart = () => {

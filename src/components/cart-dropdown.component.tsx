@@ -13,7 +13,10 @@ const CartDropdown = () => {
   };
 
   return (
-    <div className="absolute w-[280px] flex flex-col rounded-xl z-[5] top-[90px] right-[20px] bg-white shadow-2xl pb-2">
+    <div
+      className="absolute w-[250px] flex flex-col rounded-md z-[5] top-[90px] right-[20px]
+     bg-white shadow-2xl p-2 pb-4 border-blue-600 border"
+    >
       {cartItems.length === 0 ? (
         <div className="text-center text-lg font-semibold flex flex-col justify-around items-center">
           <p className="mt-2">Your cart is empty !</p>
@@ -25,7 +28,8 @@ const CartDropdown = () => {
             <CartDropdownList />
           </div>
           <button
-            className="rounded-md bg-blue-600 text-white hover:bg-indigo-600 w-[50%] text-center self-center p-2 mt-2"
+            className="rounded-md text-blue-600 border-blue-600 border hover:bg-blue-600 hover:text-white
+             w-[90%] text-center self-center p-2 mt-2"
             onClick={handleCheckoutBtn}
           >
             Checkout
