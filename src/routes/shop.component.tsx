@@ -38,14 +38,6 @@ const Shop = () => {
       <h1 className="text-5xl font-semibold font-cursive text-center mt-16 mb-10 tracking-wider">
         Our Store
       </h1>
-      <p className="pl-10">
-        Group 4:
-        <ul>
-          <li>Tran Truc Quynh</li>
-          <li>Dao Gia Hai</li>
-          <li>Le Bao Chau</li>
-        </ul>
-      </p>
       <ProductList products={filteredProducts} onClickHandler={handleClick} />
     </div>
   );
