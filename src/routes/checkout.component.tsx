@@ -1,8 +1,8 @@
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ContactInfo from '../components/pre-order-info.component';
 import OrderSummary from '../components/pre-order-summary.component';
 import { CartContext } from '../contexts/cart.context';
-import { useNavigate } from 'react-router-dom';
 import { LoadingContext } from '../contexts/loading.context';
 
 const Checkout = () => {
@@ -28,23 +28,25 @@ const Checkout = () => {
       </button>
     </div>
   ) : (
-    <div className="px-14 pb-24">
-      <p
-        className="cursor-pointer pt-10 text-sm text-black/[.6] hover:text-blue-600 underline-hover italic"
-        onClick={handleBackToShop}
-      >
-        Back to shop
-      </p>
-      <div className="pt-5 h-full flex justify-between flex-wrap md:flex-wrap">
-        {/*{!user && <ContactInfo />}*/}
-        <ContactInfo />
-        <OrderSummary />
-      </div>
-      {isLoading && (
-        <div className="absolute top-0 left-0 w-full h-full bg-white opacity-70 flex items-center justify-center text-black">
-          Loading...
+    <div className="px-14 pb-24 flex flex-col justify-center items-center">
+      <div className="max-w-[1440px]">
+        <p
+          className="cursor-pointer pt-10 text-sm text-black/[.6] hover:text-blue-600 underline-hover italic"
+          onClick={handleBackToShop}
+        >
+          Back to shop
+        </p>
+        <div className="pt-5 h-full flex justify-between flex-wrap md:flex-wrap">
+          {/*{!user && <ContactInfo />}*/}
+          <ContactInfo />
+          <OrderSummary />
         </div>
-      )}
+        {isLoading && (
+          <div className="absolute top-0 left-0 w-full h-full bg-white opacity-70 flex items-center justify-center text-black">
+            Loading...
+          </div>
+        )}
+      </div>
     </div>
   );
 };

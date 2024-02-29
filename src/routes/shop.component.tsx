@@ -2,6 +2,7 @@ import { MouseEventHandler, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios.config';
 import ProductList from '../components/product-list.component';
+import Spinner from '../components/spinner.component';
 import { SearchContext } from '../contexts/search.context';
 import { Product } from '../types/product.type';
 
@@ -34,11 +35,15 @@ const Shop = () => {
     };
 
   return (
-    <div>
+    <div className="flex flex-col justify-center items-center">
       <h1 className="text-5xl font-semibold font-cursive text-center mt-16 mb-10 tracking-wider">
         Our Store
       </h1>
-      <ProductList products={filteredProducts} onClickHandler={handleClick} />
+      {products.length !== 0 ? (
+        <ProductList products={filteredProducts} onClickHandler={handleClick} />
+      ) : (
+        <Spinner />
+      )}
     </div>
   );
 };
