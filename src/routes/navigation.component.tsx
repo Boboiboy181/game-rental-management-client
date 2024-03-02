@@ -33,7 +33,7 @@ const Navigation = () => {
               src="https://vitejs.dev/logo.svg"
               alt="Tailwind CSS Logo"
             />
-            <p className="font-cursive text-3xl ml-1">Fanstactic</p>
+            <p className="font-cursive text-3xl ml-1">Fantastic</p>
           </div>
         </Link>
         <div className="flex justify-center items-center relative">
