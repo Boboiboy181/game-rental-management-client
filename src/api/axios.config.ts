@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const URL = {
-  DEPLOY_URL: 'https://game-rental-management-app-yh3ve.ondigitalocean.app/',
+  DEPLOY_URL: 'https://game-rental-management-server.onrender.com',
   LOCALHOST: 'http://localhost:3000/',
 };
 const BASE_URL = URL.DEPLOY_URL;
